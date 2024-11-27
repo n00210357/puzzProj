@@ -107,6 +107,20 @@ function draw()
 
   textSize(12);
   text(letters, width / 2, height - border / 2)
+
+  if (clicked)
+  {
+    if ((keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122))
+    {
+      addToGrid()
+    }
+  }
+}
+
+function addToGrid()
+{
+  console.log(String(recX - 2,),", ", String(recY - 2),", ", String.fromCharCode(keyCode))
+  clicked = false
 }
 
 //checks to see if the user has clicked
@@ -128,22 +142,24 @@ function mousePressed()
 //draws the border and the puzzle key
 function puzzleKey()
 {
+  //creates borders
   fill(0)
   rect(0, 0, xSketchSize, border)
   rect(0, 0, border, ySketchSize)
   rect(width - border, 0, border, ySketchSize)
   rect(0, height - border, xSketchSize, border)
 
+  //draws currently assign goal
   fill(255);
   textSize(32);
-  textAlign(CENTER, CENTER);
-  
+  textAlign(CENTER, CENTER);  
   for(i = 0; i < goal.length; i++)
   {
     text(i, width - border + 20, border + i * 40 + 20)
     text(goal[i], width - border + 40 + 20, border + i * 40 + 20)
   }
  
+  //draws the input and delete from goal inputs
   inputBox.position(width - border + 40 + 20, border + goal.length * 40 + 100);
   insertBut.position(width, border + (goal.length + 1) * 40 + 100);
   deleteBut.position(width, border + (goal.length + 2) * 40 + 100);
@@ -154,6 +170,7 @@ function puzzleKey()
   }  
 }
 
+//adds a new goal
 function addToGoal()
 {
   append(goal, inputBox.value())
