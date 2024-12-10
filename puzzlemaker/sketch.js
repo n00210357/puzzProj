@@ -164,6 +164,7 @@ function puzzleKey()
   insertBut.position(width, border + (goal.length + 1) * 40 + 100);
   deleteBut.position(width, border + (goal.length + 2) * 40 + 100);
 
+  //inserts if text box not empty
   if (inputBox.value() != "" && inputBox.value() != null)
   {
     insertBut.mousePressed(addToGoal)
