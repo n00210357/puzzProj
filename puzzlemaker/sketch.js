@@ -28,6 +28,7 @@ let ySketchSize = (boxSize * yGridAmount) + border * 2
 
 //CROSSWORD
 //string that holds the placed in letters
+let selectedGoal = -1
 let letters = "0, 0, a, 1, 0, b, 0, 1, c, 1, 1, d, 0, 2, e, 0, 5, f, 0, 9, g"
 let goal = ["bee", "cat", "dog"]
 let inputBox 
@@ -62,7 +63,7 @@ function draw()
     {
       fill(200);
     }
-    else
+    else if (clicked == true && selectedGoal == -1)
     {
       fill(150);
     }
@@ -71,6 +72,26 @@ function draw()
     rect(recX * boxSize, recY * boxSize, boxSize, boxSize);
   }
 
+  //draws the outline
+  outline()
+  workFiller();
+  puzzleKey();
+
+  textSize(12);
+  text(letters, width / 2, height - border / 2)
+
+  if (clicked && selectedGoal == -1)
+  {
+    if ((keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122))
+    {
+      addToGrid()
+    }
+  }
+}
+
+//produces the outline
+function outline()
+{
   //outlines the grids
   fill(0);
   for(x = 0; x < xGridAmount; x++)
@@ -79,7 +100,7 @@ function draw()
     rect(x * boxSize + border, 0 + border, 1, yGridAmount * boxSize);
 
     //detects which x grid the mouse is hovering over
-    if (Math.trunc(((mouseX - border) / boxSize)) == x && clicked == false)
+    if (Math.trunc(((mouseX - border) / boxSize)) == x && clicked == false && selectedGoal == -1)
     {
       recX = x + (border / boxSize);
     }
@@ -90,7 +111,7 @@ function draw()
       rect(0 + border, y * boxSize + border, xGridAmount * boxSize, 1);
 
       //detects which y grid the mouse is hovering over
-      if (Math.trunc((mouseY - border) / boxSize) == y && clicked == false)
+      if (Math.trunc((mouseY - border) / boxSize) == y && clicked == false && selectedGoal == -1)
       {
         recY = y + (border / boxSize);
       }
@@ -102,18 +123,9 @@ function draw()
     }
   }
 
-  workFiller();
-  puzzleKey();
-
-  textSize(12);
-  text(letters, width / 2, height - border / 2)
-
-  if (clicked)
+  if (clicked == false)
   {
-    if ((keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122))
-    {
-      addToGrid()
-    }
+    selectedGoal = -1
   }
 }
 
@@ -151,14 +163,16 @@ function puzzleKey()
 
   //draws currently assign goal
   fill(255);
-  textSize(32);
-  textAlign(CENTER, CENTER);  
+  textSize(20);
+  textAlign(LEFT, CENTER);  
   for(i = 0; i < goal.length; i++)
   {
-    text(i, width - border + 20, border + i * 40 + 20)
-    text(goal[i], width - border + 40 + 20, border + i * 40 + 20)
+    goalSelect(i)
+    text(i, width - border, border + i * 40 + 20)
+    text(goal[i], width - border + 20, border + i * 40 + 20)
+    fill(255)
   }
- 
+
   //draws the input and delete from goal inputs
   inputBox.position(width - border + 40 + 20, border + goal.length * 40 + 100);
   insertBut.position(width, border + (goal.length + 1) * 40 + 100);
@@ -169,12 +183,57 @@ function puzzleKey()
   {
     insertBut.mousePressed(addToGoal)
   }  
+
+  console.log(goal[selectedGoal])
+  if (selectedGoal >= 0 && selectedGoal <= goal.length - 1)
+  {
+    deleteBut.mousePressed(removeFromGoal)
+  }  
+}
+
+//select a goal with the mouse
+function goalSelect(i)
+{
+  if (mouseX >= (width - border + 20) && mouseY >= (border + i * 40 + 20 / 2) && mouseY <= (20 + (border + i * 40 + 20 / 2)))
+  {
+    if (clicked == false)
+    {
+      clicked = true;
+      selectedGoal = i
+    }
+    else
+    {
+      clicked = false;
+    }
+  }
+
+  if (selectedGoal == i)
+  {
+    fill(255, 255, 0);
+  }
 }
 
 //adds a new goal
 function addToGoal()
 {
   append(goal, inputBox.value())
+}
+
+//removes a selected goal
+function removeFromGoal()
+{
+  let newGoal = []
+
+  goal.forEach(sel => {
+    if (sel != goal[selectedGoal])
+    {
+      newGoal.push(sel)
+    }
+  });
+
+  newGoal.push(goal[selectedGoal])
+  newGoal.pop();
+  goal = newGoal;
 }
 
 //inserts the users letters
