@@ -3,8 +3,8 @@
 let boxSize = 50;
 
 //the length of the grid
-let xGridAmount = 10
-let yGridAmount = 10
+let xGridAmount = 10;
+let yGridAmount = 10;
 
 //the holds the cords for selected boxs
 let recX = 0;
@@ -19,21 +19,23 @@ let clicked = false;
 //CANVAS VARS
 //A allows the canvase to be referenced
 let canvas;
-let border = 100
+let border = 100;
 
 //gets sketch size
-let xSketchSize = (boxSize * xGridAmount) + border * 2
-let ySketchSize = (boxSize * yGridAmount) + border * 2
+let xSketchSize = (boxSize * xGridAmount) + border * 2;
+let ySketchSize = (boxSize * yGridAmount) + border * 2;
 
 
 //CROSSWORD
 //string that holds the placed in letters
-let selectedGoal = -1
-let letters = "0, 0, a, 1, 0, b, 0, 1, c, 1, 1, d, 0, 2, e, 0, 5, f, 0, 9, g"
-let goal = ["bee", "cat", "dog"]
-let inputBox 
-let deleteBut
-let insertBut
+let selectedGoal = -1;
+let dragDropDir = 0;
+let droppable = false;
+let letters = "0, 0, a, 1, 0, b, 0, 1, c, 1, 1, d, 0, 2, e, 0, 5, f, 0, 9, g";
+let goal = ["bee", "cat", "dog"];
+let inputBox;
+let deleteBut;
+let insertBut;
 
 //draws once at start
 function setup() 
@@ -52,39 +54,42 @@ function draw()
   //moves the text over to the left
   textAlign(LEFT);
 
+  //refreshs the background
+  background(220);
+
   //highlights a boxs if the mouse is over it or clicked
   if (mouseX >= (0 + border) && mouseX <= (width - border) && mouseY >= (0 + border) && mouseY <= (height - border))
   {
-    //refreshs the background
-    background(220);
-
     //checks if clicked of just hovering over
     if (clicked == false)
     {
-      fill(200);
+      fill(150);
     }
     else if (clicked == true && selectedGoal == -1)
     {
-      fill(150);
+      fill(50);
     }
 
     //draws the square to darken
     rect(recX * boxSize, recY * boxSize, boxSize, boxSize);
-  }
+  }  
 
   //draws the outline
   outline()
-  workFiller();
+  wordFiller();
   puzzleKey();
 
+  textAlign(CENTER)
   textSize(12);
   text(letters, width / 2, height - border / 2)
 
-  if (clicked && selectedGoal == -1)
+  if (clicked == true && selectedGoal == -1)
   {
-    if ((keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122))
+    if (keyIsPressed && ((keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122)))
     {
       addToGrid()
+      keyCode = null;
+      clicked = false;
     }
   }
 }
@@ -100,7 +105,7 @@ function outline()
     rect(x * boxSize + border, 0 + border, 1, yGridAmount * boxSize);
 
     //detects which x grid the mouse is hovering over
-    if (Math.trunc(((mouseX - border) / boxSize)) == x && clicked == false && selectedGoal == -1)
+    if (Math.trunc(((mouseX - border) / boxSize)) == x && ((clicked == false && selectedGoal == -1) || (clicked == true && selectedGoal != -1)))
     {
       recX = x + (border / boxSize);
     }
@@ -111,7 +116,7 @@ function outline()
       rect(0 + border, y * boxSize + border, xGridAmount * boxSize, 1);
 
       //detects which y grid the mouse is hovering over
-      if (Math.trunc((mouseY - border) / boxSize) == y && clicked == false && selectedGoal == -1)
+      if (Math.trunc((mouseY - border) / boxSize) == y  && ((clicked == false && selectedGoal == -1) || (clicked == true && selectedGoal != -1)))
       {
         recY = y + (border / boxSize);
       }
@@ -123,32 +128,40 @@ function outline()
     }
   }
 
-  if (clicked == false)
+  if (clicked == false && droppable == false)
   {
     selectedGoal = -1
   }
 }
 
-function addToGrid()
-{
-  console.log(String(recX - 2,),", ", String(recY - 2),", ", String.fromCharCode(keyCode))
-  clicked = false
+//allows the user to add a Letter to the grid
+function addToGrid(dragged)
+{  
+  if (dragged == undefined)
+  {
+    letters = `${letters}, ${String(recX - 2,)}, ${String(recY - 2,)}, ${String.fromCharCode(keyCode)}`
+    lettSorter(String.fromCharCode(keyCode))
+  }
+  else
+  {
+    letters = `${letters}, ${dragged}`
+    lettSorter(dragged)
+  }
+
+  keyCode = null;
 }
 
 //checks to see if the user has clicked
 function mousePressed()
 {
-  if (mouseX >= (0 + border) && mouseX <= (width - border) && mouseY >= (0 + border) && mouseY <= (height - border))
+  if (clicked == false)
   {
-    if (clicked == false)
-    {
-      clicked = true;
-    }
-    else
-    {
-      clicked = false;
-    }
+    clicked = true;
   }
+  else
+  {
+    clicked = false;
+  }  
 }
 
 //draws the border and the puzzle key
@@ -160,16 +173,31 @@ function puzzleKey()
   rect(0, 0, border, ySketchSize)
   rect(width - border, 0, border, ySketchSize)
   rect(0, height - border, xSketchSize, border)
-
+    
   //draws currently assign goal
   fill(255);
   textSize(20);
-  textAlign(LEFT, CENTER);  
+  textAlign(LEFT, CENTER);
+
   for(i = 0; i < goal.length; i++)
   {
-    goalSelect(i)
-    text(i, width - border, border + i * 40 + 20)
-    text(goal[i], width - border + 20, border + i * 40 + 20)
+    if (selectedGoal == -1)
+    {
+      goalSelect(i)
+    }
+    else if (i == selectedGoal && clicked == true)
+    {
+      fill(150, 150, 255)      
+      text(i, width - border, border + i * 40 + 20)
+      text(goal[i], width - border + 20, border + i * 40 + 20)
+    }
+
+    if (i != selectedGoal)
+    {    
+      text(i, width - border, border + i * 40 + 20)
+      text(goal[i], width - border + 20, border + i * 40 + 20)
+    }
+
     fill(255)
   }
 
@@ -184,11 +212,12 @@ function puzzleKey()
     insertBut.mousePressed(addToGoal)
   }  
 
-  console.log(goal[selectedGoal])
   if (selectedGoal >= 0 && selectedGoal <= goal.length - 1)
   {
     deleteBut.mousePressed(removeFromGoal)
   }  
+
+  dragDropWord()
 }
 
 //select a goal with the mouse
@@ -196,20 +225,12 @@ function goalSelect(i)
 {
   if (mouseX >= (width - border + 20) && mouseY >= (border + i * 40 + 20 / 2) && mouseY <= (20 + (border + i * 40 + 20 / 2)))
   {
-    if (clicked == false)
+    if (selectedGoal == -1 && clicked == true)
     {
-      clicked = true;
       selectedGoal = i
     }
-    else
-    {
-      clicked = false;
-    }
-  }
 
-  if (selectedGoal == i)
-  {
-    fill(255, 255, 0);
+    fill(0, 0, 255)
   }
 }
 
@@ -236,8 +257,294 @@ function removeFromGoal()
   goal = newGoal;
 }
 
+function dragDropWord()
+{
+  if (keyIsPressed && keyCode == 32)
+  {
+    if (dragDropDir <= 6)
+    {
+      dragDropDir = dragDropDir + 1
+    }
+    else
+    {
+      dragDropDir = 0
+    }
+
+    keyIsPressed = false
+  }
+
+  if (mouseX >= (0 + border) && mouseX <= (width - border) && mouseY >= (0 + border) && mouseY <= (height - border))
+  {
+    if (selectedGoal != -1)
+    {
+      let lett;
+
+      textSize(32);
+      textAlign(CENTER, CENTER);
+
+      if (dragDropDir == 0)
+      {
+        if (goal[selectedGoal].length + (recX - 3) >= xGridAmount)
+        {
+          fill(255, 0, 0)
+          droppable = false;
+        }
+        else
+        {
+          fill(0, 255, 0)
+          droppable = true;
+        }
+      }
+      else if (dragDropDir == 1)
+      {
+        if (goal[selectedGoal].length + (recX - 3) >= xGridAmount || goal[selectedGoal].length + (recY - 3) >= xGridAmount)
+        {
+          fill(255, 0, 0)
+          droppable = false;
+        }
+        else
+        {
+          fill(0, 255, 0)
+          droppable = true;
+        }
+      }
+      else if (dragDropDir == 2)
+      {
+        if (goal[selectedGoal].length + (recY - 3) >= xGridAmount)
+        {
+          fill(255, 0, 0)
+          droppable = false;
+        }
+        else
+        {
+          fill(0, 255, 0)
+          droppable = true;
+        }
+      }
+      else if (dragDropDir == 3)
+      {
+        if (((goal[selectedGoal].length - 1) - (recX - 2)) * -1 <= -1 || goal[selectedGoal].length + (recY - 3) >= xGridAmount)
+        {
+          fill(255, 0, 0)
+          droppable = false;
+        }
+        else
+        {
+          fill(0, 255, 0)
+          droppable = true;
+        }
+      }
+      else if (dragDropDir == 4)
+      {
+        if (((goal[selectedGoal].length - 1) - (recX - 2)) * -1 <= -1)
+        {
+          fill(255, 0, 0)
+          droppable = false;
+        }
+        else
+        {
+          fill(0, 255, 0)
+          droppable = true;
+        }
+      }
+      else if (dragDropDir == 5)
+      {
+        if (((goal[selectedGoal].length - 1) - (recX - 2)) * -1 <= -1 || ((goal[selectedGoal].length - 1) - (recY - 2)) * -1 <= -1)
+        {
+          fill(255, 0, 0)
+          droppable = false;
+        }
+        else
+        {
+          fill(0, 255, 0)
+          droppable = true;
+        }
+      }
+      else if (dragDropDir == 6)
+      {
+        if (((goal[selectedGoal].length - 1) - (recY - 2)) * -1 <= -1)
+        {
+          fill(255, 0, 0)
+          droppable = false;
+        }
+        else
+        {
+          fill(0, 255, 0)
+          droppable = true;
+        }
+      }
+      else if (dragDropDir == 7)
+      {
+        if (goal[selectedGoal].length + (recX - 3) >= xGridAmount || ((goal[selectedGoal].length - 1) - (recY - 2)) * -1 <= -1)
+        {
+          fill(255, 0, 0)
+          droppable = false;
+        }
+        else
+        {
+          fill(0, 255, 0)
+          droppable = true;
+        }
+      }
+
+      for (let i = 0; i < goal[selectedGoal].length; i++) 
+      {
+        lett = goal[selectedGoal].charAt(i);
+
+        if (dragDropDir == 0)
+        {
+          text(lett, 
+          Math.floor((recX - 2) + i) * (boxSize) + (boxSize / 2) + border, 
+          Math.floor(recY - 2) * (boxSize) + (boxSize / 2) + border)
+
+          if (droppable == true && clicked == false)
+          {
+            addToGrid(String(((recX - 2) + i) + ', ' + ((recY - 2))  + ', ' + lett))
+    
+            if (i == goal[selectedGoal].length - 1)
+            {
+              droppable = false;
+              selectedGoal = -1;
+              break;
+            }
+          }
+        }
+        else if (dragDropDir == 1)
+        {
+          text(lett, 
+          Math.floor((recX - 2) + i) * (boxSize) + (boxSize / 2) + border, 
+          Math.floor((recY - 2) + i) * (boxSize) + (boxSize / 2) + border)
+
+          if (droppable == true && clicked == false)
+          {
+            addToGrid(String(((recX - 2) + i) + ', ' + ((recY - 2) + i)  + ', ' + lett))
+    
+            if (i == goal[selectedGoal].length - 1)
+            {
+              droppable = false;
+              selectedGoal = -1;
+              break;
+            }
+          }
+        }
+        else if (dragDropDir == 2)
+        {
+          text(lett, 
+          Math.floor((recX - 2)) * (boxSize) + (boxSize / 2) + border, 
+          Math.floor((recY - 2) + i) * (boxSize) + (boxSize / 2) + border)
+
+          if (droppable == true && clicked == false)
+          {
+            addToGrid(String(((recX - 2)) + ', ' + ((recY - 2) + i)  + ', ' + lett))
+    
+            if (i == goal[selectedGoal].length - 1)
+            {
+              droppable = false;
+              selectedGoal = -1;
+              break;
+            }
+          }
+        }
+        else if (dragDropDir == 3)
+        {
+          text(lett, 
+          Math.floor((recX - 2) - i) * (boxSize) + (boxSize / 2) + border, 
+          Math.floor((recY - 2) + i) * (boxSize) + (boxSize / 2) + border)
+
+          if (droppable == true && clicked == false)
+          {
+            addToGrid(String(((recX - 2) - i) + ', ' + ((recY - 2) + i)  + ', ' + lett))
+    
+            if (i == goal[selectedGoal].length - 1)
+            {
+              droppable = false;
+              selectedGoal = -1;
+              break;
+            }
+          }
+
+        }
+        else if (dragDropDir == 4)
+        {
+          text(lett, 
+          Math.floor((recX - 2) - i) * (boxSize) + (boxSize / 2) + border, 
+          Math.floor((recY - 2)) * (boxSize) + (boxSize / 2) + border)
+
+          if (droppable == true && clicked == false)
+          {
+            addToGrid(String(((recX - 2) - i) + ', ' + ((recY - 2))  + ', ' + lett))
+    
+            if (i == goal[selectedGoal].length - 1)
+            {
+              droppable = false;
+              selectedGoal = -1;
+              break;
+            }
+          }
+        }
+        else if (dragDropDir == 5)
+        {
+          text(lett, 
+          Math.floor((recX - 2) - i) * (boxSize) + (boxSize / 2) + border, 
+          Math.floor((recY - 2) - i) * (boxSize) + (boxSize / 2) + border)
+          
+          if (droppable == true && clicked == false)
+          {
+            addToGrid(String(((recX - 2) - i) + ', ' + ((recY - 2) - i)  + ', ' + lett))
+    
+            if (i == goal[selectedGoal].length - 1)
+            {
+              droppable = false;
+              selectedGoal = -1;
+              break;
+            }
+          }
+        }
+        else if (dragDropDir == 6)
+        {
+          text(lett, 
+          Math.floor((recX - 2)) * (boxSize) + (boxSize / 2) + border, 
+          Math.floor((recY - 2) - i) * (boxSize) + (boxSize / 2) + border)
+
+          if (droppable == true && clicked == false)
+          {
+            addToGrid(String(((recX - 2)) + ', ' + ((recY - 2) - i)  + ', ' + lett))
+    
+            if (i == goal[selectedGoal].length - 1)
+            {
+              droppable = false;
+              selectedGoal = -1;
+              break;
+            }
+          }
+        }
+        else if (dragDropDir == 7)
+        {
+          text(lett, 
+          Math.floor((recX - 2) + i) * (boxSize) + (boxSize / 2) + border, 
+          Math.floor((recY - 2) - i) * (boxSize) + (boxSize / 2) + border)
+
+          if (droppable == true && clicked == false)
+          {
+            addToGrid(String(((recX - 2) + i) + ', ' + ((recY - 2) - i)  + ', ' + lett))
+  
+            if (i == goal[selectedGoal].length - 1)
+            {
+              droppable = false;
+              selectedGoal = -1;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  fill(255)
+}
+
 //inserts the users letters
-function workFiller()
+function wordFiller()
 {  
   //goes through the storage string to grab the letters and their cords
   for(i = 0; i < countOccurrences(letters, ', ') / 3; i++)
@@ -249,6 +556,90 @@ function workFiller()
     Math.floor(letters.split(', ')[0 + z]) * (boxSize) + (boxSize / 2) + border, 
     Math.floor(letters.split(', ')[1 + z]) * (boxSize) + (boxSize / 2) + border)
   }
+}
+
+//sorts the letters on the letters string
+function lettSorter(newby)
+{
+  let lett = [];
+
+  //goes through all letters removing those on the same grid box
+  for(i = 0; i < countOccurrences(letters, ', ') / 3; i++)
+  {
+    let z = i * 3
+
+    if (newby.length == 1)
+    {
+      if (letters.split(', ')[0 + z] == recX - 2 && 
+      letters.split(', ')[1 + z] == recY - 2 && 
+      letters.split(', ')[2 + z].toUpperCase() != String(newby).toUpperCase())
+      {
+
+      }
+      else
+      {
+        let t = letters.split(', ')[0 + z]
+        t = t + ', '
+        t = t + letters.split(', ')[1 + z]
+        t = t + ', '
+        t = t + letters.split(', ')[2 + z]
+        t = t + ', '
+        lett.push(t) 
+        console.log(t)   
+      }   
+    } 
+    else
+    {
+      if (letters.split(', ')[0 + z] == newby.split(', ')[0] && 
+      letters.split(', ')[1 + z] == newby.split(', ')[1] && 
+      letters.split(', ')[2 + z].toUpperCase() != String(newby.split(', ')[2]).toUpperCase())
+      {
+
+      }
+      else
+      {
+        let t = letters.split(', ')[0 + z]
+        t = t + ', '
+        t = t + letters.split(', ')[1 + z]
+        t = t + ', '
+        t = t + letters.split(', ')[2 + z]
+        t = t + ', '
+        lett.push(t) 
+        console.log(t)   
+      } 
+    }
+  }
+
+  //sorts letters
+  lett.sort()
+  
+  //removes the ', ' of the final letter in letters
+  let finLet = lett[lett.length - 1].split(', ')[0]
+  finLet = finLet + ', '
+  finLet = finLet + lett[lett.length - 1].split(', ')[1]
+  finLet = finLet + ', '
+  finLet = finLet + lett[lett.length - 1].split(', ')[2]
+  lett[lett.length - 1] = finLet
+
+  let ley = null
+  
+  //puts the new letter sorted and filtered in to the letter string
+  lett.forEach(le => 
+  {
+    if (lett[0] != le)
+    {
+      ley = ley + le
+    }
+    else
+    {
+      ley = le
+    }
+  });
+  
+  lett = null
+  
+  letters = ley
+  letters = letters.toUpperCase()
 }
 
 function countOccurrences(string, subString) {
