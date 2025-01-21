@@ -759,7 +759,7 @@ function checkAllGrid()
       
       if (x == letters.split(', ')[0 + ((x * yGridAmount) * 3)] && y == letters.split(', ')[1 + ((y + (x * yGridAmount)) * 3)])
       {
-        if (filling != 2 || filling != 3)
+        if (filling != 2 && filling != 3)
         {
           //console.log(letters.split(', ')[0 + ((x * xGridAmount) * 3)] + ', ' + letters.split(', ')[1 + (y * 3)] + ', ' + letters.charAt(6 + (9 * (y + (x * yGridAmount)))))
         }
