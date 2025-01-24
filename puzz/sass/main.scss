@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+@import "../node_modules/bootstrap/scss/functions";
+
+$enable-rounded: true;
+$enable-shadows: true;
+$enable-gradient: true;
+
+$success: rgb(172, 0, 143);
+$primary: rgb(0, 0, 0);
+
+$font-family-base: "Roboto Mono";
+
+$spacer: 1rem;
+$spacers: 
+(
+  0: 0,
+  1: $spacer * .25,
+  2: $spacer * .5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+);
+
+$border-radius: 2.5rem;
+$border-radius-sm: 1rem;
+$border-radius-lg: 2.5rem;
+$border-radius-xl: 5rem;
+$border-radius-2xl: 10rem;
+$border-radius-pill: 50rem;
+
+@import "../node_modules/bootstrap/scss/variables.scss";
+@import "../node_modules/bootstrap/scss/mixins.scss";
+
+$custom-color:
+(
+    "contrast": rgb(255, 81, 0),
+    "highLight": rgb(255, 200, 200),
+);
+
+$theme-colors: map-merge($theme-colors, $custom-color);
+$theme-colors: map-remove($theme-colors, "danger", "warning", "success", "info");
+
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
