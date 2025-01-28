@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+
+import App from './App';
 import RegistorForm from './pages/Registor';
 import LoginForm from './pages/Login';
-import { createBrowserRouter, RouterProvider, Router } from 'react-router-dom';
+import HomePage from './pages/Home';
 
 const router = createBrowserRouter([
   {
@@ -18,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: "login",
     element: <LoginForm/>
+  },
+  {
+    path: "home",
+    element: <HomePage/>
   },
 ])
 

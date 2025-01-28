@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useState, useCallback } from 'react';
 
-import { IResponseType } from '@/types';
+import { IResponseType } from '../types';
 
 export default function usePost(){
     const [data, setData] = useState(null);

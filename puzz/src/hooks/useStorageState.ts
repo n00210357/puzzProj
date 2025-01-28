@@ -12,19 +12,13 @@ function useAsyncState<T>(
 }
 
 export async function setStorageItemAsync(key: string, value: string | null) {
-  try 
-  {
-    if (value === null) 
-    {
-      localStorage.removeItem(key);
-    } 
-    else 
-    {
-      localStorage.setItem(key, value);
-    }
-  } 
-  catch (e) 
-  {
+    try {
+      if (value === null) {
+        localStorage.removeItem(key);
+      } else {
+        localStorage.setItem(key, value);
+      }
+    } catch (e) {
       console.error('Local storage is unavailable:', e);
     }
 }
@@ -39,15 +33,15 @@ export function useStorageState(key: string): UseStateHook<string> {
   {
     try 
     {
-      if (typeof localStorage !== 'undefined') 
+        if (typeof localStorage !== 'undefined') 
+        {
+          setState(localStorage.getItem(key));
+        }
+      } 
+      catch (e) 
       {
-        setState(localStorage.getItem(key));
+        console.error('Local storage is unavailable:', e);
       }
-    } 
-    catch (e) 
-    {
-      console.error('Local storage is unavailable:', e);
-    }
   }, [key]);
 
   // Set

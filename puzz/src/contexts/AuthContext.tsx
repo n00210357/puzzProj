@@ -1,22 +1,29 @@
 import { createContext, useContext, PropsWithChildren } from 'react';
-import { useStorageState } from '@/hooks/useStorageState';
-import { IAuthContext } from '@/types';
-import { useRouter } from 'expo-router';
+import { IAuthContext } from '../types';
+import { useStorageState } from '../hooks/useStorageState.ts';
+import React from 'react';
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+} from "react-router-dom";
+import HomePage from '../pages/Home';
 
 const AuthContext = createContext<IAuthContext | null>(null);
-const router = useRouter();
 
 // this hook can be used to access the session info
-export function useSession() {
+export function useSess() {
+    
     const value = useContext(AuthContext);
 
-    if(process.env.NODE_ENV !== 'production'){
-        if(!value) {
-            throw new Error('useSession must be wrapped in a <SessionProvider>');
+    if(process.env.NODE_ENV !== 'production')
+    {
+        if(!value) 
+        {
+            throw new Error('useSess must be wrapped in a <SessionProvider>');
         }    
     }
-
-    return value as IAuthContext;
+    return value as IAuthContext
 }
 
 export function SessionProvider(props: PropsWithChildren){
@@ -42,6 +49,14 @@ export function SessionProvider(props: PropsWithChildren){
 
 async function toHome(setSession: (value: string | null) => void, token: string)
 {
-    setSession(token)
-    router.push('../(auth)/(tabs)/home');
+    setSession(token);
+    
+    <Router>
+        <Routes>
+                <Route
+                    path="home"
+                    element={<HomePage/>}
+                />
+        </Routes>
+    </Router>
 }

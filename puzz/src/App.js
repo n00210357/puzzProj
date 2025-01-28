@@ -19,7 +19,7 @@ function App() {
     <div className="container align-items-center text-center">
       
       <button className="mx-3 my-2">
-        <a href="">
+        <a href="../home">
           <h3 className="but">
             Already LOGGED IN
           </h3>

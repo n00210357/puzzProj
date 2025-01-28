@@ -1,6 +1,6 @@
 import { useState } from "react";
+import { SessionProvider, useSess } from '../contexts/AuthContext.tsx';
 import axios from 'axios';
-//import { useSession } from '../contexts/AuthContext';
 
 //the registor form
 
@@ -17,7 +17,10 @@ function RegistorForm()
     })
 
     const [error, setError] = useState("");
-    //const { signIn } = useSession();
+
+    //const { signIn } = useSess();
+    //console.log("eee")
+    //console.log(useSess())
 
     const handleChange = (e) =>//: any) => 
     {
@@ -40,7 +43,7 @@ function RegistorForm()
         })
         .then(response =>
         {
-            //autoLogin(response)
+            autoLogin(response)
         })
         .catch(e =>
         {
@@ -48,7 +51,6 @@ function RegistorForm()
         })
     }
 
-    /*
     async function autoLogin(resp)//: any)
     {
         axios.post('https://puz-sable.vercel.app/api/users/login', 
@@ -57,11 +59,12 @@ function RegistorForm()
             password: form.password
         })
 
-        signIn(resp.data.token);
+            
+        //signIn(resp.data.token);
     }
-    */
     
     return(
+        <SessionProvider>
         <div className="align-items-center text-center my-3">
             <h6 className="fw-bold">rank</h6>
             <input type="text" className="max-logo" placeholder="Rank" value={form.rank} onChange={handleChange} id='rank'/>
@@ -88,7 +91,7 @@ function RegistorForm()
             <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={handlePress}>
                 <h3 className="but">
                     Register
-               </h3>
+                </h3>
             </button>
 
             <div>
@@ -101,6 +104,7 @@ function RegistorForm()
                 </button>
             </div>
         </div>
+        </SessionProvider>
     )
 }
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
-//import { useSession } from '@/contexts/AuthContext';
+import { useSess } from '../contexts/AuthContext.tsx';
 
 export default function LoginForm()
 {
@@ -11,7 +11,7 @@ export default function LoginForm()
     })
 
     const [error, setError] = useState("");
-    //const { signIn } = useSession();
+    //const { signIn } = useSess();
 
     const handleChange = (e) =>//: any) =>
     {
