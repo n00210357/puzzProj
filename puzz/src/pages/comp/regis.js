@@ -18,7 +18,7 @@ function Registor()
     })
 
     const [error, setError] = useState("");
-    const {signIn} = useContext(UserContext);
+    const {signIn, _id} = useContext(UserContext);
 
     const handleChange = (e) =>//: any) => 
     {
@@ -58,7 +58,7 @@ function Registor()
         })
         .then(response =>
         {
-            signIn(response.data.token);
+            signIn(response.data);
         })
     }
     

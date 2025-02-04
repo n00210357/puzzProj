@@ -1,20 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import UserContext from "./userContext.js";
 import { useStorageState } from '../hooks/useStorageState.ts';
 
 const UserContextProvider = ({children}) => {
-    const [[isLoading, session], setSession] = useStorageState('session');
+    const [[isLoading, session ], setSession] = useStorageState('session');
+    const [[ isIdLoad, id ], setId] = useStorageState('id');
+
 
     return(
         <UserContext.Provider value={{
-            signIn: (token) => {
-                toHome(setSession, token)
+            signIn: (data) => {
+                toHome(setSession, setId, data)
             },
             signOut: () => {
                 setSession(null);
             },
             session,
-            isLoading
+            isLoading,
+            isIdLoad,
+            id
             }}>
             {children}
         </UserContext.Provider>
@@ -23,8 +27,9 @@ const UserContextProvider = ({children}) => {
 
 export default UserContextProvider;
 
-async function toHome(setSession: (value: string | null) => void, token: string)
+async function toHome(setSession: (value: string | null) => void, setId: (value: string | null) => void, tokId: object)
 {
-    setSession(token)
+    setId(tokId._id)
+    setSession(tokId.token)
     window.location.href = '/home';
 }

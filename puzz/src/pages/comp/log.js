@@ -12,7 +12,7 @@ export default function LoginForm()
     })
 
     const [error, setError] = useState("");
-    const {signIn} = useContext(UserContext);
+    const {signIn, id} = useContext(UserContext);
 
     const handleChange = (e) =>//: any) =>
     {
@@ -25,14 +25,15 @@ export default function LoginForm()
 
     const handlePress = () =>
     {
-        axios.post('https://ca-1-js.vercel.app/api/workers/login', 
+        axios.post('https://puz-sable.vercel.app/api/users/login', 
         {
             email: form.email,
             password: form.password
         })
         .then(response =>
         {
-            signIn(response.data.token);
+            //id = response.data._id
+            signIn(response.data);
         })
         .catch(e =>
         {

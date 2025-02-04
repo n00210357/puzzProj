@@ -15,6 +15,13 @@ export interface IAuthContext
     signOut: () => void;
     session?: string | null;
     isLoading: boolean;
+    isIdLoad: boolean;
+    id?: string | null;
+}
+
+export interface tokId {
+    _id: string;
+    token: string;
 }
 
 export interface UserTypeID extends UserType {

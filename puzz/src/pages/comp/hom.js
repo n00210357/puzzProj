@@ -4,7 +4,8 @@ import UserContextProvider from "../../contexts/userContextProvider.tsx";
 
 export default function HomPage()
 {
-    const { signOut } = useContext(UserContext);
+    const { signOut, id } = useContext(UserContext);
+    console.log(id)
 
     const handlePress = () =>
     {  
