@@ -110,6 +110,13 @@ a:link{
   max-height: 200px;
 }
 
+.min-logo{
+  min-width: 25px;
+  min-height: 25px;
+  max-width: 50px;
+  max-height: 50px;
+}
+
 .button
 {
   min-width: 1000px;
@@ -124,8 +131,6 @@ hr {
 }
 
 h6, .h6, h5, .h5, h4, .h4, h3, .h3, h2, .h2, h1, .h1 {
-  margin-top: 0;
-  margin-bottom: 0.5rem;
   font-weight: 500;
   line-height: 1.2;
 }
@@ -394,12 +399,6 @@ select:disabled {
   display: none !important;
 }
 
-button,
-[type=button],
-[type=reset],
-[type=submit] {
-  -webkit-appearance: button;
-}
 button:not(:disabled),
 [type=button]:not(:disabled),
 [type=reset]:not(:disabled),
@@ -456,7 +455,6 @@ legend + * {
 
 [type=search] {
   outline-offset: -2px;
-  -webkit-appearance: textfield;
 }
 
 /* rtl:raw:
@@ -477,12 +475,10 @@ legend + * {
 
 ::-webkit-file-upload-button {
   font: inherit;
-  -webkit-appearance: button;
 }
 
 ::file-selector-button {
   font: inherit;
-  -webkit-appearance: button;
 }
 
 output {
@@ -2304,7 +2300,6 @@ textarea.form-control-lg {
      -moz-appearance: none;
           appearance: none;
   -webkit-print-color-adjust: exact;
-     color-adjust: exact;
           print-color-adjust: exact;
 }
 .form-check-input[type=checkbox] {

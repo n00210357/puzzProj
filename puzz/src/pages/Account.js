@@ -1,12 +1,12 @@
 import SessionProvider from '../contexts/userContextProvider.tsx'
-import HomPage from './comp/hom.js'
+import AccoPage from './comp/acco.js'
 import Bottom from './comp/footerComp.js'
 
-export default function HomePage()
+export default function AccountPage()
 {
     return(
         <SessionProvider>
-            <HomPage/>
+            <AccoPage/>
             <Bottom/>
         </SessionProvider>
     )
