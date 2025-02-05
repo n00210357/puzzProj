@@ -18,7 +18,7 @@ function Registor()
     })
 
     const [error, setError] = useState("");
-    const {signIn, _id} = useContext(UserContext);
+    const {signIn} = useContext(UserContext);
 
     const handleChange = (e) =>//: any) => 
     {

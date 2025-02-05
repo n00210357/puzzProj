@@ -6,7 +6,7 @@ interface MyProps {
 }
 
 //the user item
-export default function MineralItem({user}: MyProps){
+export default function UserItem({user}: MyProps){
     return (
         <UserContextProvider>
             <div>

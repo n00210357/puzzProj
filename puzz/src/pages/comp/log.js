@@ -12,7 +12,7 @@ export default function LoginForm()
     })
 
     const [error, setError] = useState("");
-    const {signIn, id} = useContext(UserContext);
+    const {signIn} = useContext(UserContext);
 
     const handleChange = (e) =>//: any) =>
     {
