@@ -1,15 +1,14 @@
 import SessionProvider from '../contexts/userContextProvider.tsx'
 import Top from './comp/headerComp.js'
-import HomPage from './layouts/hom.js'
+import FavPage from './layouts/fav.js'
 import Bottom from './comp/footerComp.js'
 
-
-export default function HomePage()
+export default function FavouritePage()
 {
     return(
         <SessionProvider>
             <Top/>
-            <HomPage/>
+            <FavPage/>
             <Bottom/>
         </SessionProvider>
     )

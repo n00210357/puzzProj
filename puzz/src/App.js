@@ -1,7 +1,7 @@
 "use client";
 
 import SessionProvider from './contexts/userContextProvider.tsx'
-import StartForm from './pages/comp/start.js';
+import StartForm from './pages/layouts/start.js';
 import React from "react"
 import './css/main.css';
 

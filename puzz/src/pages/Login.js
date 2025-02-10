@@ -1,5 +1,5 @@
 import React from 'react'
-import Login from './comp/log.js'
+import Login from './layouts/log.js'
 import UserContextProvider from '../contexts/userContextProvider.tsx';
 
 function RegistorForm() {

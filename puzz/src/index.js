@@ -7,7 +7,12 @@ import App from './App';
 import RegistorForm from './pages/Registor';
 import LoginForm from './pages/Login';
 import HomePage from './pages/Home';
+import SearchPage from './pages/Search';
+import CreatePage from './pages/Create';
+import FavouritePage from './pages/Favourite';
+import DataPage from './pages/Data';
 import AccountPage from './pages/Account';
+import AccountEdit from './pages/edits/editAccount';
 
 const router = createBrowserRouter([
   {
@@ -27,8 +32,28 @@ const router = createBrowserRouter([
     element: <HomePage/>
   },
   {
+    path: "create",
+    element: <CreatePage/>
+  },
+  {
+    path: "search",
+    element: <SearchPage/>
+  },
+  {
+    path: "favourite",
+    element: <FavouritePage/>
+  },
+  {
+    path: "data",
+    element: <DataPage/>
+  },
+  {
     path: "account",
     element: <AccountPage/>
+  },
+  {
+    path: "accoEdit",
+    element: <AccountEdit/>
   },
 ])
 

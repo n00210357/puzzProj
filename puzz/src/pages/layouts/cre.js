@@ -1,3 +1,10 @@
+import UserContextProvider from "../../contexts/userContextProvider.tsx";
+import Sketch from "react-p5";
+
+let puzzType = 0
+let setup
+let draw
+
 //GRID VARS
 //grid box size
 let boxSize = 50;
@@ -9,7 +16,11 @@ let yGridAmount = 10;
 //the holds the cords for selected boxs
 let recX = 0;
 let recY = 0;
-
+let filling = 0;
+let droppable = false;
+let letters = "0, 0, A"//, 0, 1, C, 0, 2, E, 0, 5, F, 0, 9, G";
+let goal = ["BEE", "CAT", "DOG"];
+let goCheck = []
 
 //MOUSE VARS
 //stores if user clicked
@@ -26,151 +37,35 @@ let xSketchSize = (boxSize * xGridAmount) + border * 2;
 let ySketchSize = (boxSize * yGridAmount) + border * 2;
 
 
-//CROSSWORD
 //string that holds the placed in letters
 const regex = /[^A-Za-z0-9]/;
 let selectedGoal = -1;
-let dragDropDir = 0;
-let filling = 0;
-let droppable = false;
-let letters = "0, 0, A, 0, 1, C, 0, 2, E, 0, 5, F, 0, 9, G";
-let goal = ["BEE", "CAT", "DOG"];
-let goCheck = []
 
-//inputs an buttons
-let inputBox;
-let inputError;
-let insertBut;
-let deleteBut;
-let fillBut;
-let finshBut;
-
-//draws once at start
-function setup() 
+export default function CrePage()
 {
-  //draws sketch
-  canvas = createCanvas(xSketchSize, ySketchSize);
-  canvas.position(100, 100);
-  inputBox = createInput('');
-  insertBut = createButton('insert into goal')
-  deleteBut = createButton('delete')
-  fillBut = createButton('fill grid gaps')
-  finshBut = createButton('finshed puzzle')
-}
-
-//draws every frame
-function draw() 
-{
-  //moves the text over to the left
-  textAlign(LEFT);
-
-  //refreshs the background
-  background(220);
-
-  //highlights a boxs if the mouse is over it or clicked
-  if (mouseX >= (0 + border) && mouseX <= (width - border) && mouseY >= (0 + border) && mouseY <= (height - border) || (clicked == true && selectedGoal == -1))
-  {
-    //checks if clicked of just hovering over
-    if (clicked == false)
+    if (puzzType === 0)
     {
-      fill(150);
+        wordsearch()
     }
-    else if (clicked == true && selectedGoal == -1)
+    else
     {
-      fill(50);
+        setup = (p5, canvasParentRef) => {}
+        draw = (p5) => {}
     }
 
-    //draws the square to darken
-    rect(recX * boxSize, recY * boxSize, boxSize, boxSize);
-  }  
+    //the create page
+    return(
+        <UserContextProvider>
 
-  //draws the outline
-  outline()
-  wordFiller();
-  puzzleKey();
-
-  //fills the grid
-  fill(255)
-  textAlign(CENTER)
-  textSize(12);
-  text(letters, 1, height - border / 2, 700)
-
-  //allows the user to add to the grid
-  if (clicked == true && selectedGoal == -1 && (keyIsPressed && ((keyCode >= 65 && keyCode <= 90) || (keyCode >= 97 && keyCode <= 122))))
-  {
-    addToGrid()
-    keyCode = null;
-    clicked = false;    
-  }
-}
-
-//produces the outline
-function outline()
-{
-  //outlines the grids
-  fill(0);
-  for(x = 0; x < xGridAmount; x++)
-  {
-    //draws the xAxis outlines
-    rect(x * boxSize + border, 0 + border, 1, yGridAmount * boxSize);
-
-    //detects which x grid the mouse is hovering over
-    if (Math.trunc(((mouseX - border) / boxSize)) == x && ((clicked == false && selectedGoal == -1) || (clicked == true && selectedGoal != -1)))
-    {
-      recX = x + (border / boxSize);
-    }
-
-    for(y = 0; y < yGridAmount; y++)
-    {
-      //draws the yAxis outlines
-      rect(0 + border, y * boxSize + border, xGridAmount * boxSize, 1);
-
-      //detects which y grid the mouse is hovering over
-      if (Math.trunc((mouseY - border) / boxSize) == y  && ((clicked == false && selectedGoal == -1) || (clicked == true && selectedGoal != -1)))
-      {
-        recY = y + (border / boxSize);
-      }
-
-      //draws the grid number in to their grid
-      fill(0);
-      textSize(8);
-      text(x + " " + y, x * boxSize + 6 + border, y * boxSize + 9 + border)
-    }
-  }
-
-  //refreshs selected goal
-  if (clicked == false && droppable == false)
-  {
-    selectedGoal = -1
-  }
-
-  //when space bar click it checks the grid
-  if (selectedGoal == -1 && keyIsPressed && keyCode == 32)
-  {
-    checkAllGrid()
-  }
-}
-
-//allows the user to add a Letter to the grid
-function addToGrid(dragged)
-{  
-  //checks if user is draggin a word form goal or just adding a single letter
-  if (dragged == undefined)
-  {
-    letters = `${letters}, ${String(recX - 2,)}, ${String(recY - 2,)}, ${String.fromCharCode(keyCode)}`
-    lettSorter(String.fromCharCode(keyCode))
-  }
-  else
-  {
-    letters = `${letters}, ${dragged}`
-    lettSorter(dragged)
-  }
-
-  keyCode = null;
+            <div className="align-items-center text-center my-3">
+                <Sketch setup={setup} draw={draw} />
+            </div>
+        </UserContextProvider>
+    )
 }
 
 //checks to see if the user has clicked
-function mousePressed()
+function mousePressed(p5)
 {
   if (clicked == false)
   {
@@ -180,111 +75,275 @@ function mousePressed()
   {
     clicked = false;
   }  
+
+  p5.mouseButton = null
+}
+
+
+function wordsearch()
+{
+    //WORDSEARCH
+    let dragDropDir = 0;
+
+    //inputs an buttons
+    let inputBox;
+    let inputError;
+    let insertBut;
+    let deleteBut;
+    let fillBut;
+    let finshBut;
+    
+    //draws once at start
+    setup = (p5) => {
+        //draws sketch
+        canvas = p5.createCanvas(xSketchSize, ySketchSize);
+        canvas.position(100, 100);
+        inputBox = p5.createInput('');
+        insertBut = p5.createButton('insert into goal')
+        deleteBut = p5.createButton('delete')
+        fillBut = p5.createButton('fill grid gaps')
+        finshBut = p5.createButton('finshed puzzle')
+    }
+
+    draw = (p5) => {
+        if (p5.mouseButton === "left")
+        {
+            mousePressed(p5)
+        }
+
+        //moves the text over to the left
+        p5.textAlign(p5.LEFT);
+
+        //refreshs the background
+        p5.background(220);
+
+        //highlights a boxs if the mouse is over it or clicked
+        if (p5.mouseX >= (0 + border) && p5.mouseX <= (p5.width - border) && p5.mouseY >= (0 + border) && p5.mouseY <= (p5.height - border) || (clicked == true && selectedGoal == -1))
+        {
+            //checks if clicked of just hovering over
+            if (clicked == false)
+            {
+                p5.fill(150);
+            }
+            else if (clicked == true && selectedGoal == -1)
+            {
+                p5.fill(50);
+            }
+
+            //draws the square to darken
+            p5.rect(recX * boxSize, recY * boxSize, boxSize, boxSize);
+        }  
+
+        //draws the outline
+        outline(p5)
+        wordFiller(p5);
+        puzzleKey(p5, inputBox, inputError, insertBut, deleteBut, fillBut, finshBut, dragDropDir);
+
+        //fills the grid
+        p5.fill(255)
+        p5.textAlign(p5.CENTER)
+        p5.textSize(12);
+        p5.text(letters, 1, p5.height - border / 2, 700)
+
+        //allows the user to add to the grid
+        if (clicked == true && selectedGoal == -1 && (p5.keyIsPressed && ((p5.keyCode >= 65 && p5.keyCode <= 90) || (p5.keyCode >= 97 && p5.keyCode <= 122))))
+        {
+            addToGrid(null, p5)
+            p5.keyCode = null;
+            clicked = false;    
+        }
+    }
+}
+
+//produces the outline
+function outline(p5)
+{
+  //outlines the grids
+  p5.fill(0);
+  for(let x = 0; x < xGridAmount; x++)
+  {
+    //draws the xAxis outlines
+    p5.rect(x * boxSize + border, 0 + border, 1, yGridAmount * boxSize);
+
+    //detects which x grid the mouse is hovering over
+    if (Math.trunc(((p5.mouseX - border) / boxSize)) === x && ((clicked === false && selectedGoal === -1) || (clicked === true && selectedGoal !== -1)))
+    {
+        recX = x + (border / boxSize);
+    }
+
+    for(let y = 0; y < yGridAmount; y++)
+    {
+      //draws the yAxis outlines
+      p5.rect(0 + border, y * boxSize + border, xGridAmount * boxSize, 1);
+
+      //detects which y grid the mouse is hovering over
+      if (Math.trunc((p5.mouseY - border) / boxSize) == y  && ((clicked == false && selectedGoal == -1) || (clicked == true && selectedGoal != -1)))
+      {
+        recY = y + (border / boxSize);
+      }
+
+      //draws the grid number in to their grid
+      p5.fill(0);
+      p5.textSize(8);
+      p5.text(x + " " + y, x * boxSize + 6 + border, y * boxSize + 9 + border)
+    }
+  }
+
+  //refreshs selected goal
+  if (p5.clicked == false && droppable == false)
+  {
+    p5.selectedGoal = -1
+  }
+
+  //when space bar click it checks the grid
+  if (selectedGoal == -1 && p5.keyIsPressed && p5.keyCode == 32)
+  {
+    checkAllGrid(p5)
+  }
+}
+
+//allows the user to add a Letter to the grid
+function addToGrid(dragged, p5)
+{  
+  //checks if user is draggin a word form goal or just adding a single letter
+  if (dragged == undefined)
+  {
+    letters = `${letters}, ${String(recX - 2,)}, ${String(recY - 2,)}, ${String.fromCharCode(p5.keyCode)}`
+    lettSorter(String.fromCharCode(p5.keyCode))
+  }
+  else
+  {
+    letters = `${letters}, ${dragged}`
+    lettSorter(dragged)
+  }
+
+  p5.keyCode = null;
 }
 
 //draws the border and the puzzle key
-function puzzleKey()
+function puzzleKey(p5, inputBox, inputError, insertBut, deleteBut, fillBut, finshBut, dragDropDir)
 {
   //creates borders
-  fill(0)
-  rect(0, 0, xSketchSize, border)
-  rect(0, 0, border, ySketchSize)
-  rect(width - border, 0, border, ySketchSize)
-  rect(0, height - border, xSketchSize, border)
+  p5.fill(0)
+  p5.rect(0, 0, xSketchSize, border)
+  p5.rect(0, 0, border, ySketchSize)
+  p5.rect(p5.width - border, 0, border, ySketchSize)
+  p5.rect(0, p5.height - border, xSketchSize, border)
     
   //draws currently assign goal
-  fill(255);
-  textSize(20);
-  textAlign(LEFT, CENTER);
+  p5.fill(255);
+  p5.textSize(20);
+  p5.textAlign(p5.LEFT, p5.CENTER);
 
   //draws all the words in the goal
-  for(i = 0; i < goal.length; i++)
+  for(let i = 0; i < goal.length; i++)
   {
     //checks if a goal has been selected
     if (selectedGoal == -1)
     {
-      goalSelect(i)
+      goalSelect(i, p5)
     }
     else if (i == selectedGoal && clicked == true)
     {
-      fill(150, 150, 255)      
-      text(i, width - border, border + i * 40 + 20)
-      text(goal[i], width - border + 20, border + i * 40 + 20)
+        p5.fill(150, 150, 255)      
+        p5.text(i, p5.width - border, border + i * 40 + 20)
+        p5.text(goal[i], p5.width - border + 20, border + i * 40 + 20)
     }
 
     if (i != selectedGoal)
     {    
-      text(i, width - border, border + i * 40 + 20)
-      text(goal[i], width - border + 20, border + i * 40 + 20)
+        p5.text(i, p5.width - border, border + i * 40 + 20)
+        p5.text(goal[i], p5.width - border + 20, border + i * 40 + 20)
     }
 
-    fill(255)
+    p5.fill(255)
   }
 
   //draws the input and delete from goal inputs
-  inputBox.position(width - border + 40 + 20, border + goal.length * 40 + 100);
-  fill(255, 0, 0);
-  textSize(9);
-  text(inputError, width - border, border + (goal.length + 1) * 40 + 30);
+  inputBox.position(p5.width - border + 40 + 20, border + goal.length * 40 + 100);
+  p5.fill(255, 0, 0);
+  p5.textSize(9);
+  p5.text(inputError, p5.width - border, border + (goal.length + 1) * 40 + 30);
 
   //gets the buttons position
-  insertBut.position(width, border + (goal.length + 1) * 40 + 100);
-  deleteBut.position(width, border + (goal.length + 2) * 40 + 100);
-  fillBut.position(width, border + (goal.length + 3) * 40 + 100);
-  finshBut.position((width / 2) + border / 2, (border / 2) + 100);
+  insertBut.position(p5.width, border + (goal.length + 1) * 40 + 100);
+  deleteBut.position(p5.width, border + (goal.length + 2) * 40 + 100);
+  fillBut.position(p5.width, border + (goal.length + 3) * 40 + 100);
+  finshBut.position((p5.width / 2) + border / 2, (border / 2) + 100);
 
   //inserts if text box not empty
   if (inputBox.value() != "" && inputBox.value() != null)
   {
     //when pressed will attempt to insert the input boxs value into the goal 
-    insertBut.mousePressed(addToGoal)
+    insertBut.mousePressed(goalAdder)
   }  
+
+  function goalAdder()
+  {
+    addToGoal(p5 ,inputBox.value(), inputError)
+  }
 
   //when button pressed it will delete the selected goal
   if (selectedGoal >= 0 && selectedGoal <= goal.length - 1)
   {
-    deleteBut.mousePressed(removeFromGoal)
+    deleteBut.mousePressed(removal)
   }  
 
+  function removal()
+  {
+    removeFromGoal(p5)
+  }
+
   //allows the fill and finsh buttons to be pressed
-  fillBut.mousePressed(fillGrid)
-  finshBut.mousePressed(finalCheck)
+  fillBut.mousePressed(gridFiller)
+
+  function gridFiller()
+  {
+    fillGrid(p5)
+  }
+  
+  finshBut.mousePressed(lastCheck)
+
+  function lastCheck()
+  {
+    finalCheck(p5)
+  }
 
   //if a goal is selected the user will be able to drag a word from to goal to the grid
   if (selectedGoal != -1)
   {
-    dragDropWord()
+    dragDropWord(p5, dragDropDir)
   }
 }
 
 //select a goal with the mouse
-function goalSelect(i)
+function goalSelect(i, p5)
 {
   //allows the user to select a goal
-  if (mouseX >= (width - border + 20) && mouseY >= (border + i * 40 + 20 / 2) && mouseY <= (20 + (border + i * 40 + 20 / 2)))
+  if (p5.mouseX >= (p5.width - border + 20) && p5.mouseY >= (border + i * 40 + 20 / 2) && p5.mouseY <= (20 + (border + i * 40 + 20 / 2)))
   {
     if (selectedGoal == -1 && clicked == true)
     {
       selectedGoal = i
     }
 
-    fill(0, 0, 255)
+    p5.fill(0, 0, 255)
   }
 }
 
 //adds a new goal
-function addToGoal()
+function addToGoal(p5, inputValue, inputError)
 {
   //checks that the new goal is allowed
-  let inp = regex.test(inputBox.value())
+  let inp = regex.test(inputValue)
 
   //removes spacing
-  const s = inputBox.value().split(" ").join("")
+  const s = inputValue.split(" ").join("")
 
   //if new goal is good it is added to the goal
   if (inp == false)
   {
-    append(goal, s.toUpperCase())
+    p5.append(goal, s.toUpperCase())
     inputError = " ";
   }
   else
@@ -294,7 +353,7 @@ function addToGoal()
 }
 
 //removes a selected goal
-function removeFromGoal()
+function removeFromGoal(p5)
 {
   let newGoal = []
 
@@ -314,10 +373,10 @@ function removeFromGoal()
 }
 
 //allows users to drag words from goal into the crossword grid
-function dragDropWord()
+function dragDropWord(p5, dragDropDir)
 {
   //rotates the placing of the words letters with space bar
-  if (keyIsPressed && keyCode == 32 && selectedGoal != -1)
+  if (p5.keyIsPressed && p5.keyCode == 32 && selectedGoal != -1)
   {
     if (dragDropDir <= 6)
     {
@@ -328,16 +387,17 @@ function dragDropWord()
       dragDropDir = 0
     }
 
-    keyIsPressed = false
+    p5.keyIsPressed = false
   }
 
   //checks if mouse is on grid
-  if (mouseX >= (0 + border) && mouseX <= (width - border) && mouseY >= (0 + border) && mouseY <= (height - border) && selectedGoal != -1)
+  if (p5.mouseX >= (0 + border) && p5.mouseX <= (p5.width - border) && p5.mouseY >= (0 + border) && p5.mouseY <= (p5.height - border) && selectedGoal != -1)
   {    
+    p5.fill(255)
     let lett;
 
-    textSize(32);
-    textAlign(CENTER, CENTER);
+    p5.textSize(32);
+    p5.textAlign(p5.CENTER, p5.CENTER);
 
     //desides the angle of the word EAST
     if (dragDropDir == 0)
@@ -345,12 +405,12 @@ function dragDropWord()
       //checks if the whole word is on the grid
       if (goal[selectedGoal].length + (recX - 3) >= xGridAmount)
       {
-        fill(255, 0, 0)
+        p5.fill(255, 0, 0)
         droppable = false;
       }
       else
       {
-        fill(0, 255, 0)
+        p5.fill(0, 255, 0)
         droppable = true;
       }
     }//desides the angle of the word SOUTH EAST
@@ -359,12 +419,12 @@ function dragDropWord()
       //checks if the whole word is on the grid
       if (goal[selectedGoal].length + (recX - 3) >= xGridAmount || goal[selectedGoal].length + (recY - 3) >= yGridAmount)
       {
-        fill(255, 0, 0)
+        p5.fill(255, 0, 0)
         droppable = false;
       }
       else
       {
-        fill(0, 255, 0)
+        p5.fill(0, 255, 0)
         droppable = true;
       }
     }//desides the angle of the word SOUTH
@@ -373,12 +433,12 @@ function dragDropWord()
       //checks if the whole word is on the grid
       if (goal[selectedGoal].length + (recY - 3) >= yGridAmount)
       {
-        fill(255, 0, 0)
+        p5.fill(255, 0, 0)
         droppable = false;
       }
       else
       {
-        fill(0, 255, 0)
+        p5.fill(0, 255, 0)
         droppable = true;
       }
     }//desides the angle of the word SOUTH WEST
@@ -387,12 +447,12 @@ function dragDropWord()
       //checks if the whole word is on the grid
       if (((goal[selectedGoal].length - 1) - (recX - 2)) * -1 <= -1 || goal[selectedGoal].length + (recY - 3) >= yGridAmount)
       {
-        fill(255, 0, 0)
+        p5.fill(255, 0, 0)
         droppable = false;
       }
       else
       {
-        fill(0, 255, 0)
+        p5.fill(0, 255, 0)
         droppable = true;
       }
     }//desides the angle of the word WEST
@@ -401,12 +461,12 @@ function dragDropWord()
       //checks if the whole word is on the grid
       if (((goal[selectedGoal].length - 1) - (recX - 2)) * -1 <= -1)
       {
-        fill(255, 0, 0)
+        p5.fill(255, 0, 0)
         droppable = false;
       }
       else
       {
-        fill(0, 255, 0)
+        p5.fill(0, 255, 0)
         droppable = true;
       }
     }//desides the angle of the word NORTH WEST
@@ -415,12 +475,12 @@ function dragDropWord()
       //checks if the whole word is on the grid
       if (((goal[selectedGoal].length - 1) - (recX - 2)) * -1 <= -1 || ((goal[selectedGoal].length - 1) - (recY - 2)) * -1 <= -1)
       {
-        fill(255, 0, 0)
+        p5.fill(255, 0, 0)
         droppable = false;
       }
       else
       {
-        fill(0, 255, 0)
+        p5.fill(0, 255, 0)
         droppable = true;
       }
     }//desides the angle of the word NORTH
@@ -429,12 +489,12 @@ function dragDropWord()
       //checks if the whole word is on the grid
       if (((goal[selectedGoal].length - 1) - (recY - 2)) * -1 <= -1)
       {
-        fill(255, 0, 0)
+        p5.fill(255, 0, 0)
         droppable = false;
       }
       else
       {
-        fill(0, 255, 0)
+        p5.fill(0, 255, 0)
         droppable = true;
       }
     } //desides the angle of the word NORTH EAST
@@ -443,12 +503,12 @@ function dragDropWord()
       //checks if the whole word is on the grid
       if (goal[selectedGoal].length + (recX - 3) >= xGridAmount || ((goal[selectedGoal].length - 1) - (recY - 2)) * -1 <= -1)
       {
-        fill(255, 0, 0)
+        p5.fill(255, 0, 0)
         droppable = false;
       }
       else
       {
-        fill(0, 255, 0)
+        p5.fill(0, 255, 0)
         droppable = true;
       }
     }
@@ -461,14 +521,14 @@ function dragDropWord()
       //desides the angle of the word EAST
       if (dragDropDir == 0)
       {
-        text(lett, 
+        p5.text(lett, 
         Math.floor((recX - 2) + i) * (boxSize) + (boxSize / 2) + border, 
         Math.floor(recY - 2) * (boxSize) + (boxSize / 2) + border)
 
         //adds the letter to the grid
         if (droppable == true && clicked == false)
         {
-          addToGrid(String(((recX - 2) + i) + ', ' + ((recY - 2))  + ', ' + lett))
+          addToGrid(String(((recX - 2) + i) + ', ' + ((recY - 2))  + ', ' + lett), p5)
     
           if (i == goal[selectedGoal].length - 1)
           {
@@ -480,14 +540,14 @@ function dragDropWord()
       }//desides the angle of the word SOUTH EAST
       else if (dragDropDir == 1)
       {
-        text(lett, 
+        p5.text(lett, 
         Math.floor((recX - 2) + i) * (boxSize) + (boxSize / 2) + border, 
         Math.floor((recY - 2) + i) * (boxSize) + (boxSize / 2) + border)
 
         //adds the letter to the grid
         if (droppable == true && clicked == false)
         {
-          addToGrid(String(((recX - 2) + i) + ', ' + ((recY - 2) + i)  + ', ' + lett))
+          addToGrid(String(((recX - 2) + i) + ', ' + ((recY - 2) + i)  + ', ' + lett), p5)
     
           if (i == goal[selectedGoal].length - 1)
           {
@@ -499,14 +559,14 @@ function dragDropWord()
       }//desides the angle of the word SOUTH
       else if (dragDropDir == 2)
       {
-        text(lett, 
+        p5.text(lett, 
         Math.floor((recX - 2)) * (boxSize) + (boxSize / 2) + border, 
         Math.floor((recY - 2) + i) * (boxSize) + (boxSize / 2) + border)
 
         //adds the letter to the grid
         if (droppable == true && clicked == false)
         {
-          addToGrid(String(((recX - 2)) + ', ' + ((recY - 2) + i)  + ', ' + lett))
+          addToGrid(String(((recX - 2)) + ', ' + ((recY - 2) + i)  + ', ' + lett), p5)
     
           if (i == goal[selectedGoal].length - 1)
           {
@@ -518,14 +578,14 @@ function dragDropWord()
       }//desides the angle of the word SOUTH WEST
       else if (dragDropDir == 3)
       {
-        text(lett, 
+        p5.text(lett, 
         Math.floor((recX - 2) - i) * (boxSize) + (boxSize / 2) + border, 
         Math.floor((recY - 2) + i) * (boxSize) + (boxSize / 2) + border)
 
         //adds the letter to the grid
         if (droppable == true && clicked == false)
         {
-          addToGrid(String(((recX - 2) - i) + ', ' + ((recY - 2) + i)  + ', ' + lett))
+          addToGrid(String(((recX - 2) - i) + ', ' + ((recY - 2) + i)  + ', ' + lett), p5)
     
           if (i == goal[selectedGoal].length - 1)
           {
@@ -537,14 +597,14 @@ function dragDropWord()
       }//desides the angle of the word WEST
       else if (dragDropDir == 4)
       {
-        text(lett, 
+        p5.text(lett, 
         Math.floor((recX - 2) - i) * (boxSize) + (boxSize / 2) + border, 
         Math.floor((recY - 2)) * (boxSize) + (boxSize / 2) + border)
 
         //adds the letter to the grid
         if (droppable == true && clicked == false)
         {
-          addToGrid(String(((recX - 2) - i) + ', ' + ((recY - 2))  + ', ' + lett))
+          addToGrid(String(((recX - 2) - i) + ', ' + ((recY - 2))  + ', ' + lett), p5)
     
           if (i == goal[selectedGoal].length - 1)
           {
@@ -556,14 +616,14 @@ function dragDropWord()
       }//desides the angle of the word NORTH WEST
       else if (dragDropDir == 5)
       {
-        text(lett, 
+        p5.text(lett, 
         Math.floor((recX - 2) - i) * (boxSize) + (boxSize / 2) + border, 
         Math.floor((recY - 2) - i) * (boxSize) + (boxSize / 2) + border)
 
         //adds the letter to the grid
         if (droppable == true && clicked == false)
         {
-          addToGrid(String(((recX - 2) - i) + ', ' + ((recY - 2) - i)  + ', ' + lett))
+          addToGrid(String(((recX - 2) - i) + ', ' + ((recY - 2) - i)  + ', ' + lett), p5)
   
           if (i == goal[selectedGoal].length - 1)
           {
@@ -575,14 +635,14 @@ function dragDropWord()
       }//desides the angle of the word NORTH
       else if (dragDropDir == 6)
       {
-        text(lett, 
+        p5.text(lett, 
         Math.floor((recX - 2)) * (boxSize) + (boxSize / 2) + border, 
         Math.floor((recY - 2) - i) * (boxSize) + (boxSize / 2) + border)
 
         //adds the letter to the grid
         if (droppable == true && clicked == false)
         {
-          addToGrid(String(((recX - 2)) + ', ' + ((recY - 2) - i)  + ', ' + lett))
+          addToGrid(String(((recX - 2)) + ', ' + ((recY - 2) - i)  + ', ' + lett), p5)
     
           if (i == goal[selectedGoal].length - 1)
           {
@@ -594,14 +654,14 @@ function dragDropWord()
       }//desides the angle of the word NORTH EAST
       else if (dragDropDir == 7)
       {
-        text(lett, 
+        p5.text(lett, 
         Math.floor((recX - 2) + i) * (boxSize) + (boxSize / 2) + border, 
         Math.floor((recY - 2) - i) * (boxSize) + (boxSize / 2) + border)
 
         //adds the letter to the grid
         if (droppable == true && clicked == false)
         {
-          addToGrid(String(((recX - 2) + i) + ', ' + ((recY - 2) - i)  + ', ' + lett))
+          addToGrid(String(((recX - 2) + i) + ', ' + ((recY - 2) - i)  + ', ' + lett), p5)
   
           if (i == goal[selectedGoal].length - 1)
           {
@@ -614,19 +674,19 @@ function dragDropWord()
     }
   }
 
-  fill(255)
+  p5.fill(255)
 }
 
 //inserts the users letters
-function wordFiller()
+function wordFiller(p5)
 {  
   //goes through the storage string to grab the letters and their cords
-  for(i = 0; i < countOccurrences(letters, ', ') / 3; i++)
+  for(let i = 0; i < countOccurrences(letters, ', ') / 3; i++)
   {
     let z = i * 3
-    textSize(32);
-    textAlign(CENTER, CENTER);
-    text(letters.split(', ')[2 + z].toUpperCase(), 
+    p5.textSize(32);
+    p5.textAlign(p5.CENTER, p5.CENTER);
+    p5.text(letters.split(', ')[2 + z].toUpperCase(), 
     Math.floor(letters.split(', ')[0 + z]) * (boxSize) + (boxSize / 2) + border, 
     Math.floor(letters.split(', ')[1 + z]) * (boxSize) + (boxSize / 2) + border)
   }
@@ -638,7 +698,7 @@ function lettSorter(newby)
   let lett = [];
 
   //goes through all letters removing those on the same grid box
-  for(i = 0; i < countOccurrences(letters, ', ') / 3; i++)
+  for(let i = 0; i < countOccurrences(letters, ', ') / 3; i++)
   {
     let z = i * 3
 
@@ -720,31 +780,32 @@ function lettSorter(newby)
 }
 
 //counts the amount of symbols
-function countOccurrences(string, subString) {
-  // Escape special characters in the subString to avoid regex interpretation
-  const escapedSubString = subString.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  // Create a regular expression with the escaped subString and the global flag
-  const regex = new RegExp(escapedSubString, 'g');
-  // Use match() to find all occurrences of the subString in the string
-  const matches = string.match(regex);
-  // Return the number of matches found
-  return matches ? matches.length : 0;
+function countOccurrences(string, subString) 
+{
+    // Escape special characters in the subString to avoid regex interpretation
+    const escapedSubString = subString.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    // Create a regular expression with the escaped subString and the global flag
+    const regex = new RegExp(escapedSubString, 'g');
+    // Use match() to find all occurrences of the subString in the string
+    const matches = string.match(regex);
+    // Return the number of matches found
+    return matches ? matches.length : 0;
 }
 
 //fills empty spaces
-function fillGrid() 
+function fillGrid(p5) 
 {
   filling = 1;
-  checkAllGrid()  
+  checkAllGrid(p5)  
 }
 
 //checks the whole grid
-function checkAllGrid()
+function checkAllGrid(p5)
 {
   let breaker = false;
 
   //checks the x axis
-  for(x = 0; x < xGridAmount; x++)
+  for(let x = 0; x < xGridAmount; x++)
   {
     //stops x when called
     if (breaker == true)
@@ -753,17 +814,13 @@ function checkAllGrid()
     }
 
     //checks the y axis
-    for(y = 0; y < yGridAmount; y++)
+    for(let y = 0; y < yGridAmount; y++)
     {      
       //console.log(letters.split(', ')[0 + ((x * yGridAmount) * 3)] + ', ' + letters.split(', ')[1 + ((y + (x * yGridAmount)) * 3)])
       
-      if (x == letters.split(', ')[0 + ((x * yGridAmount) * 3)] && y == letters.split(', ')[1 + ((y + (x * yGridAmount)) * 3)])
+      if (x == letters.split(', ')[0 + ((x * yGridAmount) * 3)] && y == letters.split(', ')[1 + ((y + (x * yGridAmount)) * 3)] && x == letters.split(', ')[0 + ((y + (x * yGridAmount)) * 3)])
       {
-        if (filling != 2 && filling != 3)
-        {
-          //console.log(letters.split(', ')[0 + ((x * xGridAmount) * 3)] + ', ' + letters.split(', ')[1 + (y * 3)] + ', ' + letters.charAt(6 + (9 * (y + (x * yGridAmount)))))
-        }
-        else
+        if (filling == 0 || filling == 1 || filling == 2)
         {
           for (let c = 0; c < goal.length; c++)
           {            
@@ -899,26 +956,27 @@ function checkAllGrid()
           breaker = true;
           break;
         }
-        else if (filling == 1 || filling == 3)
+        
+        if (filling == 1 || filling == 3)
         {
+          //console.log(x + " " + y)
           //adds random letters to the grid          
           var ran = (Math.floor(Math.random() * (91 - 65)) + 65);
-          addToGrid(String(x + ', ' + y  + ', ' + String.fromCharCode(ran).toUpperCase()))
+          addToGrid(String(x + ', ' + y  + ', ' + String.fromCharCode(ran).toUpperCase()), p5)
         }
         else
         {
           //asks the user if they want the random gaps to be automatically filled
-          if (confirm(x + ' ' + y + ' ' + " are empty grid boxes do you want to randomly fill all the empty ones")) 
+          if (window.confirm(x + ' ' + y + ' ' + " are empty grid boxes do you want to randomly fill all the empty ones")) 
           {
             var ran = (Math.floor(Math.random() * (91 - 65)) + 65);
-            addToGrid(String(x + ', ' + y  + ', ' + String.fromCharCode(ran).toUpperCase()))
+            addToGrid(String(x + ', ' + y  + ', ' + String.fromCharCode(ran).toUpperCase()), p5)
             filling = 3
-
-            txt = "You pressed OK!";
+            window.txt = "You pressed OK!";
           } 
           else 
           {
-            txt = "You pressed Cancel!";
+            window.txt = "You pressed Cancel!";
             breaker = true;
             break;
           }
@@ -941,13 +999,13 @@ function checkAllGrid()
       else if (i == goCheck.length - 1 && goCheck[i] == true)
       {
         //ask the user if they are finshed
-        if (confirm("All goals are included do you want to upload")) 
+        if (window.confirm("All goals are included do you want to upload")) 
         {
-          txt = "You pressed OK!";
+          window.txt = "You pressed OK!";
         } 
         else 
         {
-          txt = "You pressed Cancel!";
+          window.txt = "You pressed Cancel!";
         }
       }
     }
@@ -959,7 +1017,7 @@ function checkAllGrid()
 }
 
 //does the final check of the crossword
-function finalCheck()
+function finalCheck(p5)
 {
   filling = 2;
 
@@ -969,5 +1027,5 @@ function finalCheck()
     goCheck.push(false);
   });
 
-  checkAllGrid();
+  checkAllGrid(p5);
 }

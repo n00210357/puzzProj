@@ -1,15 +1,14 @@
 import SessionProvider from '../contexts/userContextProvider.tsx'
 import Top from './comp/headerComp.js'
-import HomPage from './layouts/hom.js'
+import SeaPage from './layouts/sea.js'
 import Bottom from './comp/footerComp.js'
 
-
-export default function HomePage()
+export default function SearchPage()
 {
     return(
         <SessionProvider>
             <Top/>
-            <HomPage/>
+            <SeaPage/>
             <Bottom/>
         </SessionProvider>
     )

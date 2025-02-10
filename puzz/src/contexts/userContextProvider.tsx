@@ -14,6 +14,7 @@ const UserContextProvider = ({children}) => {
             },
             signOut: () => {
                 setSession(null);
+                window.location.href = '/';
             },
             session,
             isLoading,

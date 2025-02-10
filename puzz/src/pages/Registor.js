@@ -1,5 +1,5 @@
 import React from 'react'
-import Registor from './comp/regis.js'
+import Registor from './layouts/regis.js'
 import UserContextProvider from '../contexts/userContextProvider.tsx';
 
 function RegistorForm() {

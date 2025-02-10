@@ -203,6 +203,7 @@ address {
 ol,
 ul {
   padding-left: 2rem;
+  list-style-type: none;
 }
 
 ol,
@@ -682,10 +683,6 @@ progress {
   .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
     max-width: 1320px;
   }
-}
-
-.but{
-  min-width: 300px;
 }
 
 .row {
@@ -4237,6 +4234,7 @@ textarea.form-control-lg {
 
 .card-title {
   margin-bottom: var(--bs-card-title-spacer-y);
+  margin-top: var(--bs-card-title-spacer-y);
 }
 
 .card-subtitle {

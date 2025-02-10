@@ -1,15 +1,15 @@
 import SessionProvider from '../contexts/userContextProvider.tsx'
 import Top from './comp/headerComp.js'
-import HomPage from './layouts/hom.js'
+
 import Bottom from './comp/footerComp.js'
 
 
-export default function HomePage()
+export default function DataPage()
 {
     return(
         <SessionProvider>
             <Top/>
-            <HomPage/>
+
             <Bottom/>
         </SessionProvider>
     )
