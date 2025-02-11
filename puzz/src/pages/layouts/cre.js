@@ -1,3 +1,4 @@
+import { useState } from "react";
 import UserContextProvider from "../../contexts/userContextProvider.tsx";
 import Sketch from "react-p5";
 
@@ -19,6 +20,8 @@ let recY = 0;
 let filling = 0;
 let droppable = false;
 let letters = "0, 0, A"//, 0, 1, C, 0, 2, E, 0, 5, F, 0, 9, G";
+let inputError = "";
+let addingToGoal
 let goal = ["BEE", "CAT", "DOG"];
 let goCheck = []
 
@@ -29,7 +32,6 @@ let clicked = false;
 
 //CANVAS VARS
 //A allows the canvase to be referenced
-let canvas;
 let border = 100;
 
 //gets sketch size
@@ -43,24 +45,93 @@ let selectedGoal = -1;
 
 export default function CrePage()
 {
-    if (puzzType === 0)
+  const [form, setForm] = useState({
+    addGoal: "",
+  });
+
+  addingToGoal = form.addGoal
+
+  if (puzzType === 0)
+  {
+    wordsearch()
+  }
+  else
+  {
+    setup = null
+    draw = null
+  }
+
+  function goalAdder()
+  {
+    //inserts if text box not empty
+    if (form.addGoal != "" && form.addGoal != null)
     {
-        wordsearch()
-    }
-    else
+      //when pressed will attempt to insert the input boxs value into the goal 
+      addToGoal(setup.p5, form.addGoal)
+    }  
+  }
+
+  //when button pressed it will delete the selected goal
+  function removal()
+  {
+    if (selectedGoal >= 0 && selectedGoal <= goal.length - 1)
     {
-        setup = (p5, canvasParentRef) => {}
-        draw = (p5) => {}
-    }
+      removeFromGoal(setup.p5)
+    } 
+  } 
+
+  //allows the fill button to be pressed
+  function gridFiller()
+  {
+    fillGrid(setup.p5)
+  }
+    
+  //allows the finsh button to be pressed
+  function lastCheck()
+  {
+    finalCheck(setup.p5)
+  }
+
+  const handleChange = (e) => {
+    setForm(prevState => ({
+        ...prevState,
+        [e.target.id]: e.target.value
+    }));
+  }
 
     //the create page
     return(
-        <UserContextProvider>
+      <UserContextProvider>
+        <div className="align-items-center text-center my-3">
+          <Sketch setup={setup} draw={draw} />
 
-            <div className="align-items-center text-center my-3">
-                <Sketch setup={setup} draw={draw} />
-            </div>
-        </UserContextProvider>
+            <button id="clickMe" className="mx-3 my-2" value="INSERT" type="button" onClick={goalAdder}>
+                <h3>
+                  insert into goal
+                </h3>
+            </button>
+
+            <input type="text" className="max-logo" placeholder="addGoal" value={form.addGoal} onChange={handleChange} id='addGoal'></input>
+
+            <button id="clickMe" className="mx-3 my-2" value="INSERT" type="button" onClick={""}>
+                <h3>
+                  delete
+                </h3>
+            </button>
+
+            <button id="clickMe" className="mx-3 my-2" value="INSERT" type="button" onClick={goalAdder}>
+                <h3>
+                  fill grid gaps
+                </h3>
+            </button>
+
+            <button id="clickMe" className="mx-3 my-2" value="INSERT" type="button" onClick={goalAdder}>
+                <h3>
+                  finshed puzzle
+                </h3>
+            </button>
+        </div>
+      </UserContextProvider>
     )
 }
 
@@ -86,23 +157,13 @@ function wordsearch()
     let dragDropDir = 0;
 
     //inputs an buttons
-    let inputBox;
-    let inputError;
-    let insertBut;
-    let deleteBut;
     let fillBut;
     let finshBut;
     
     //draws once at start
-    setup = (p5) => {
+    setup = (p5, canvasParentRef) => {
         //draws sketch
-        canvas = p5.createCanvas(xSketchSize, ySketchSize);
-        canvas.position(100, 100);
-        inputBox = p5.createInput('');
-        insertBut = p5.createButton('insert into goal')
-        deleteBut = p5.createButton('delete')
-        fillBut = p5.createButton('fill grid gaps')
-        finshBut = p5.createButton('finshed puzzle')
+        p5.createCanvas(xSketchSize, ySketchSize).parent(canvasParentRef)
     }
 
     draw = (p5) => {
@@ -137,7 +198,7 @@ function wordsearch()
         //draws the outline
         outline(p5)
         wordFiller(p5);
-        puzzleKey(p5, inputBox, inputError, insertBut, deleteBut, fillBut, finshBut, dragDropDir);
+        puzzleKey(p5, dragDropDir);
 
         //fills the grid
         p5.fill(255)
@@ -221,7 +282,7 @@ function addToGrid(dragged, p5)
 }
 
 //draws the border and the puzzle key
-function puzzleKey(p5, inputBox, inputError, insertBut, deleteBut, fillBut, finshBut, dragDropDir)
+function puzzleKey(p5, dragDropDir)
 {
   //creates borders
   p5.fill(0)
@@ -260,54 +321,9 @@ function puzzleKey(p5, inputBox, inputError, insertBut, deleteBut, fillBut, fins
   }
 
   //draws the input and delete from goal inputs
-  inputBox.position(p5.width - border + 40 + 20, border + goal.length * 40 + 100);
   p5.fill(255, 0, 0);
   p5.textSize(9);
   p5.text(inputError, p5.width - border, border + (goal.length + 1) * 40 + 30);
-
-  //gets the buttons position
-  insertBut.position(p5.width, border + (goal.length + 1) * 40 + 100);
-  deleteBut.position(p5.width, border + (goal.length + 2) * 40 + 100);
-  fillBut.position(p5.width, border + (goal.length + 3) * 40 + 100);
-  finshBut.position((p5.width / 2) + border / 2, (border / 2) + 100);
-
-  //inserts if text box not empty
-  if (inputBox.value() != "" && inputBox.value() != null)
-  {
-    //when pressed will attempt to insert the input boxs value into the goal 
-    insertBut.mousePressed(goalAdder)
-  }  
-
-  function goalAdder()
-  {
-    addToGoal(p5 ,inputBox.value(), inputError)
-  }
-
-  //when button pressed it will delete the selected goal
-  if (selectedGoal >= 0 && selectedGoal <= goal.length - 1)
-  {
-    deleteBut.mousePressed(removal)
-  }  
-
-  function removal()
-  {
-    removeFromGoal(p5)
-  }
-
-  //allows the fill and finsh buttons to be pressed
-  fillBut.mousePressed(gridFiller)
-
-  function gridFiller()
-  {
-    fillGrid(p5)
-  }
-  
-  finshBut.mousePressed(lastCheck)
-
-  function lastCheck()
-  {
-    finalCheck(p5)
-  }
 
   //if a goal is selected the user will be able to drag a word from to goal to the grid
   if (selectedGoal != -1)
@@ -332,13 +348,13 @@ function goalSelect(i, p5)
 }
 
 //adds a new goal
-function addToGoal(p5, inputValue, inputError)
+function addToGoal(p5)
 {
   //checks that the new goal is allowed
-  let inp = regex.test(inputValue)
+  let inp = regex.test(addingToGoal)
 
   //removes spacing
-  const s = inputValue.split(" ").join("")
+  const s = addingToGoal.split(" ").join("")
 
   //if new goal is good it is added to the goal
   if (inp == false)

@@ -9,6 +9,7 @@ export default function CreatePage()
         <SessionProvider>
             <Top/>
             <CrePage/>
+            <Bottom/>
         </SessionProvider>
     )
 }
