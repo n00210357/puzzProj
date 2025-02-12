@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import UserContextProvider from "../../contexts/userContextProvider.tsx";
+import Dropdown from 'react-bootstrap/Dropdown';
 import Sketch from "react-p5";
 
-let puzzType = 0
-let setup
-let draw
+let puzzType = 1
+let start
+let update
 
 //GRID VARS
 //grid box size
@@ -22,7 +23,6 @@ let dragDropDir = 0;
 let droppable = false;
 let letters = "0, 0, A"//, 0, 1, C, 0, 2, E, 0, 5, F, 0, 9, G";
 let inputError = "";
-let addingToGoal
 let goal = ["BEE", "CAT", "DOG"];
 let goCheck = []
 
@@ -46,24 +46,30 @@ let selectedGoal = -1;
 
 export default function CrePage()
 {
-  const [form, setForm] = useState({
+  let [form, setForm] = useState({
+    puzType: 0,
+    xGrid: 0,
+    yGrid: 0,
     addGoal: "",
   });
 
-  addingToGoal = form.addGoal
-
-  if (puzzType === 0)
+  if (puzzType === 1)
   {
     wordsearch()
   }
   else
   {
-    setup = null
-    draw = null
+    start = null
+    update = null
   }
 
   function goalAdder()
   {
+    if (selectedGoal != -1)
+    {
+      clicked = true
+    }
+
     //inserts if text box not empty
     if (form.addGoal !== "" && form.addGoal != null)
     {
@@ -75,6 +81,11 @@ export default function CrePage()
   //when button pressed it will delete the selected goal
   function removal()
   {
+    if (selectedGoal != -1)
+    {
+      clicked = true
+    }
+
     if (selectedGoal >= 0 && selectedGoal <= goal.length - 1)
     {
       removeFromGoal(pros)
@@ -84,6 +95,11 @@ export default function CrePage()
   //allows the fill button to be pressed
   function gridFiller()
   {
+    if (selectedGoal != -1)
+    {
+      clicked = true
+    }
+
     filling = 1;
     checkAllGrid(pros)  
   }
@@ -91,7 +107,25 @@ export default function CrePage()
   //allows the finsh button to be pressed
   function lastCheck()
   {
+    if (selectedGoal != -1)
+    {
+      clicked = true
+    }
+
     finalCheck(pros)
+  }
+
+  function labelPuzzleType()
+  {
+    console.log(form.puzType)
+    if (form.puzType == 0)
+    {
+      return(<p className="align-items-center text-center m-0">Choose a puzzle</p>)
+    }
+    else if (form.puzType == 1)
+    {
+      return(<p className="align-items-center text-center m-0">Wordsearch</p>)
+    }
   }
 
   const handleChange = (e) => {
@@ -101,33 +135,97 @@ export default function CrePage()
     }));
   }
 
-    //the create page
-    if (puzzType === 0)
+  useEffect(() => {
+    const mp5 = <Sketch setup={start} draw={update}/>
+    return mp5.remove;
+  }, []);
+
+  if (puzzType === 0)
+  {
     return(
       <UserContextProvider>
         <div className="align-items-center text-center my-3 row">
-          <div className="col-2 align-items-center text-center">
-            <input type="text" className="max-logo" placeholder="addGoal" value={form.addGoal} onChange={handleChange} id='addGoal'></input>
+          <h2>Select the puzzles details</h2>   
+          <div className="row"> 
+            <div className="col-4"></div>
 
-            <button id="clickMe" className="mx-3 my-2" value="INSERT" type="button" onClick={goalAdder}>
+            <div className="col-4">
+            
+            <label className="my-3">
+              {labelPuzzleType()}
+              
+              <select id="puzSel">
+                <option value={0}>Not selected</option>
+                <option value={1}>Wordsearch</option>
+              </select>
+            </label>
+
+              <p>The amount of boxes on the X axis</p>
+              <div>
+                <input type="text" className="max-logo" placeholder="xGrid" value={form.xGrid} onChange={handleChange} id='xGrid'                  
+                  onKeyPress={(event) => {
+                    if (!/[0-9]/.test(event.key)) 
+                    {
+                      event.preventDefault();
+                    }}
+                  }>
+                </input>
+              </div>
+
+              <p>The amount of boxes on the Y axis</p>
+              <div>
+                <input type="text" className="max-logo" placeholder="yGrid" value={form.yGrid} onChange={handleChange} id='yGrid'                  
+                  onKeyPress={(event) => {
+                    if (!/[0-9]/.test(event.key)) 
+                    {
+                      event.preventDefault();
+                    }}
+                  }>
+                </input>
+              </div>
+
+              <button id="clickMe" className="mx-3 my-2" value="INSERT" type="button">
+                <h6>
+                  START
+                </h6>
+              </button>
+            </div>
+
+            <div className="col-4"></div>
+          </div>
+        </div>
+      </UserContextProvider>
+    );
+  }
+
+    //the word search page
+    if (puzzType === 1)
+    {
+    return(
+      <UserContextProvider>
+        <div className="align-items-center text-center my-3 row">
+          <div className="col-2 align-items-center text-center ">
+            <input type="text" className="max-logo position-relative top-50 start-50" placeholder="addGoal" value={form.addGoal} onChange={handleChange} id='addGoal'></input>
+
+            <button id="clickMe" className="mx-3 my-2 position-relative top-50 start-50" value="INSERT" type="button" onClick={goalAdder}>
               <h6>
                 insert into goal
               </h6>
             </button>
 
-            <button id="clickMe" className="mx-3 my-2" value="INSERT" type="button" onClick={removal}>
+            <button id="clickMe" className="mx-3 my-2 position-relative top-50 start-50" value="INSERT" type="button" onClick={removal}>
               <h6>
                 delete from goal
               </h6>
             </button>
 
-            <button id="clickMe" className="mx-3 my-2" value="INSERT" type="button" onClick={gridFiller}>
+            <button id="clickMe" className="mx-3 my-2 position-relative top-50 start-50" value="INSERT" type="button" onClick={gridFiller}>
               <h6>
                 fill grid gaps
               </h6>
             </button>
 
-            <button id="clickMe" className="mx-3 my-2" value="INSERT" type="button" onClick={lastCheck}>
+            <button id="clickMe" className="mx-3 my-2 position-relative top-50 start-50" value="INSERT" type="button" onClick={lastCheck}>
               <h6>
                 finshed puzzle
               </h6>
@@ -135,7 +233,7 @@ export default function CrePage()
           </div>
 
           <div className="col-8">
-          <Sketch setup={setup} draw={draw} />
+            <Sketch setup={start} draw={update}/>
           </div>
 
           <div className="col-2">
@@ -144,7 +242,7 @@ export default function CrePage()
         </div>
       </UserContextProvider>
     )
-}
+}}
 
 //checks to see if the user has clicked
 function mousePressed(p5)
@@ -164,61 +262,68 @@ function mousePressed(p5)
 
 function wordsearch()
 {    
-    //draws once at start
-    setup = (p5, canvasParentRef) => {
-        //draws sketch
-        p5.createCanvas(xSketchSize, ySketchSize).parent(canvasParentRef)
-        pros = p5
+  //draws once at start
+  start = (p5, canvasParentRef) => {
+    //draws sketch
+    p5.createCanvas(xSketchSize, ySketchSize).parent(canvasParentRef)
+    pros = p5
+  }
+
+  update = (p5) => {
+    if (p5.mouseButton === "left")
+    {
+      mousePressed(p5)
     }
 
-    draw = (p5) => {
-        if (p5.mouseButton === "left")
-        {
-            mousePressed(p5)
-        }
+    //moves the text over to the left
+    p5.textAlign(p5.LEFT);
 
-        //moves the text over to the left
-        p5.textAlign(p5.LEFT);
+    //refreshs the background
+    p5.background(220);
 
-        //refreshs the background
-        p5.background(220);
+    //highlights a boxs if the mouse is over it or clicked
+    if (p5.mouseX >= (0 + border) && p5.mouseX <= (p5.width - border) && p5.mouseY >= (0 + border) && p5.mouseY <= (p5.height - border) || (clicked === true && selectedGoal === -1))
+    {
+      //checks if clicked of just hovering over
+      if (clicked === false)
+      {
+        p5.fill(150);
+      }
+      else if (clicked === true && selectedGoal === -1)
+      {
+        p5.fill(50);
+      }
 
-        //highlights a boxs if the mouse is over it or clicked
-        if (p5.mouseX >= (0 + border) && p5.mouseX <= (p5.width - border) && p5.mouseY >= (0 + border) && p5.mouseY <= (p5.height - border) || (clicked === true && selectedGoal === -1))
-        {
-            //checks if clicked of just hovering over
-            if (clicked === false)
-            {
-                p5.fill(150);
-            }
-            else if (clicked === true && selectedGoal === -1)
-            {
-                p5.fill(50);
-            }
-
-            //draws the square to darken
-            p5.rect(recX * boxSize, recY * boxSize, boxSize, boxSize);
-        }  
-
-        //draws the outline
-        outline(p5)
-        wordFiller(p5);
-        puzzleKey(p5);
-
-        //fills the grid
-        p5.fill(255)
-        p5.textAlign(p5.CENTER)
-        p5.textSize(12);
-        p5.text(letters, 1, p5.height - border / 2, 700)
-
-        //allows the user to add to the grid
-        if (clicked === true && selectedGoal === -1 && (p5.keyIsPressed && ((p5.keyCode >= 65 && p5.keyCode <= 90) || (p5.keyCode >= 97 && p5.keyCode <= 122))))
-        {
-            addToGrid(null, p5)
-            p5.keyCode = null;
-            clicked = false;    
-        }
+      //draws the square to darken
+      p5.rect(recX * boxSize, recY * boxSize, boxSize, boxSize);
+    }  
+    else if(selectedGoal !== -1 && ((p5.mouseX >= p5.width || p5.mouseX >= 0) || (p5.mouseY >= p5.width || p5.mouseY >= 0)))
+    {
+      if (clicked == false)
+      {
+        selectedGoal = -1;
+      }
     }
+
+    //draws the outline
+    outline(p5)
+    wordFiller(p5);
+    puzzleKey(p5);
+
+    //fills the grid
+    p5.fill(255)
+    p5.textAlign(p5.CENTER)
+    p5.textSize(12);
+    p5.text(letters, 1, p5.height - border / 2, 700)
+
+    //allows the user to add to the grid
+    if (clicked === true && selectedGoal === -1 && (p5.keyIsPressed && ((p5.keyCode >= 65 && p5.keyCode <= 90) || (p5.keyCode >= 97 && p5.keyCode <= 122))))
+    {
+      addToGrid(null, p5)
+      p5.keyCode = null;
+      clicked = false;    
+    }
+  }
 }
 
 //produces the outline
@@ -283,7 +388,7 @@ function addToGrid(dragged, p5)
     lettSorter(dragged)
   }
 
-  p5.keyCode = null;
+  pros.keyCode = null;
 }
 
 //draws the border and the puzzle key
@@ -311,15 +416,15 @@ function puzzleKey(p5)
     }
     else if (i === selectedGoal && clicked === true)
     {
-        p5.fill(150, 150, 255)      
-        p5.text(i, p5.width - border, border + i * 40 + 20)
-        p5.text(goal[i], p5.width - border + 20, border + i * 40 + 20)
+      p5.fill(150, 150, 255)      
+      p5.text(i, 4, border + i * 40 + 20)
+      p5.text(goal[i], 16, border + i * 40 + 20)
     }
-
+    
     if (i !== selectedGoal)
     {    
-        p5.text(i, p5.width - border, border + i * 40 + 20)
-        p5.text(goal[i], p5.width - border + 20, border + i * 40 + 20)
+      p5.text(i, 4, border + i * 40 + 20)
+      p5.text(goal[i], 16, border + i * 40 + 20)
     }
 
     p5.fill(255)
@@ -341,7 +446,7 @@ function puzzleKey(p5)
 function goalSelect(i, p5)
 {
   //allows the user to select a goal
-  if (p5.mouseX >= (p5.width - border + 20) && p5.mouseY >= (border + i * 40 + 20 / 2) && p5.mouseY <= (20 + (border + i * 40 + 20 / 2)))
+  if (p5.mouseX >= (16) && p5.mouseY >= (border + i * 40 + 20 / 2) && p5.mouseY <= (20 + (border + i * 40 + 20 / 2)))
   {
     if (selectedGoal === -1 && clicked === true)
     {
@@ -353,13 +458,13 @@ function goalSelect(i, p5)
 }
 
 //adds a new goal
-function addToGoal(p5)
+function addToGoal(p5, neGo)
 {
   //checks that the new goal is allowed
-  let inp = regex.test(addingToGoal)
+  let inp = regex.test(neGo)
 
   //removes spacing
-  const s = addingToGoal.split(" ").join("")
+  const s = neGo.split(" ").join("")
 
   //if new goal is good it is added to the goal
   if (inp === false)
@@ -835,26 +940,27 @@ function checkAllGrid(p5)
     for(let y = 0; y < yGridAmount; y++)
     {      
       //console.log(letters.split(', ')[0 + ((x * yGridAmount) * 3)] + ', ' + letters.split(', ')[1 + ((y + (x * yGridAmount)) * 3)])
-      
-      if (x === letters.split(', ')[0 + ((x * yGridAmount) * 3)] && y === letters.split(', ')[1 + ((y + (x * yGridAmount)) * 3)] && x === letters.split(', ')[0 + ((y + (x * yGridAmount)) * 3)])
+
+      if (x == letters.split(', ')[0 + ((x * yGridAmount) * 3)] && y == letters.split(', ')[1 + ((y + (x * yGridAmount)) * 3)] && x == letters.split(', ')[0 + ((y + (x * yGridAmount)) * 3)])
       {
-        if (filling === 0 || filling === 1 || filling === 2)
+        console.log("eee")
+        if (filling == 0 || filling == 1 || filling == 2)
         {
           for (let c = 0; c < goal.length; c++)
           {            
-            if (goCheck[c] === false)
+            if (goCheck[c] == false)
             {
               //a direction checks from all potential angles
               let dirCheck = [false, false, false, false, false, false, false, false]
 
-              if (goal[c].charAt(0) === letters.charAt(6 + (9 * (y + (x * yGridAmount)))))
+              if (goal[c].charAt(0) == letters.charAt(6 + (9 * (y + (x * yGridAmount)))))
               { 
                 for (let i = 1; i < goal[c].length; i++) 
                 {
                   //checks if goal exist EAST wards
-                  if (dirCheck[0] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * (y + ((x + i) * yGridAmount)))))
+                  if (dirCheck[0] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * (y + ((x + i) * yGridAmount)))))
                   {
-                    if (i === goal[c].length - 1)
+                    if (i == goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -865,9 +971,9 @@ function checkAllGrid(p5)
                   }   
                   
                   //checks if goal exist SOUTH EAST wards
-                  if (dirCheck[1] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y + i) + ((x + i) * yGridAmount)))))
+                  if (dirCheck[1] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y + i) + ((x + i) * yGridAmount)))))
                   {
-                    if (i === goal[c].length - 1)
+                    if (i == goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -878,9 +984,9 @@ function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist SOUTH wards
-                  if (dirCheck[2] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y + i) + (x * yGridAmount)))))
+                  if (dirCheck[2] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y + i) + (x * yGridAmount)))))
                   {
-                    if (i === goal[c].length - 1)
+                    if (i == goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -891,9 +997,9 @@ function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist SOUTH WEST wards
-                  if (dirCheck[3] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y + i) + ((x - i) * yGridAmount)))))
+                  if (dirCheck[3] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y + i) + ((x - i) * yGridAmount)))))
                   {
-                    if (i === goal[c].length - 1)
+                    if (i == goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -904,9 +1010,9 @@ function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist WEST wards
-                  if (dirCheck[4] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * (y + ((x - i) * yGridAmount)))))
+                  if (dirCheck[4] == false && goal[c].charAt(i) === letters.charAt(6 + (9 * (y + ((x - i) * yGridAmount)))))
                   {
-                    if (i === goal[c].length - 1)
+                    if (i == goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -917,9 +1023,9 @@ function checkAllGrid(p5)
                   }   
 
                   //checks if goal exist NORTH WEST wards
-                  if (dirCheck[5] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y - i) + ((x - i) * yGridAmount)))))
+                  if (dirCheck[5] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y - i) + ((x - i) * yGridAmount)))))
                   {
-                    if (i === goal[c].length - 1)
+                    if (i == goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -930,9 +1036,9 @@ function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist NORTH wards
-                  if (dirCheck[6] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y - i) + ((x) * yGridAmount)))))
+                  if (dirCheck[6] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y - i) + ((x) * yGridAmount)))))
                   {
-                    if (i === goal[c].length - 1)
+                    if (i == goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -943,9 +1049,9 @@ function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist NORTH EAST wards
-                  if (dirCheck[7] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y - i) + ((x + i) * yGridAmount)))))
+                  if (dirCheck[7] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y - i) + ((x + i) * yGridAmount)))))
                   {
-                    if (i === goal[c].length - 1)
+                    if (i == goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -955,7 +1061,7 @@ function checkAllGrid(p5)
                     dirCheck[7] = true
                   }  
                   
-                  if (goCheck[c] === true)
+                  if (goCheck[c] == true)
                   {
                     break;
                   }
@@ -978,7 +1084,6 @@ function checkAllGrid(p5)
         var ran;
         if (filling === 1 || filling === 3)
         {
-          //console.log(x + " " + y)
           //adds random letters to the grid     
 
           if (countOccurrences(letters, String(x+', '+y+', ')) === 0)
@@ -989,6 +1094,7 @@ function checkAllGrid(p5)
         }
         else
         {
+          console.log(x)
           //asks the user if they want the random gaps to be automatically filled
           if (window.confirm(x + ' ' + y + ' are empty grid boxes do you want to randomly fill all the empty ones')) 
           {
