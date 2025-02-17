@@ -33,6 +33,7 @@ export default function usePost(){
                 onSuccess(response.data);
              })
              .catch(e => {
+               console.log(url)
                 setError(e.response.data.message);
              })
              .finally(() => {

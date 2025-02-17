@@ -5,7 +5,7 @@ import { useStorageState } from '../hooks/useStorageState.ts';
 const UserContextProvider = ({children}) => {
     const [[isLoading, session ], setSession] = useStorageState('session');
     const [[ isIdLoad, id ], setId] = useStorageState('id');
-
+    const [[ isPuzzLoad, puzzCode ], setPuzzCode] = useStorageState('puzz');
 
     return(
         <UserContext.Provider value={{
@@ -16,10 +16,18 @@ const UserContextProvider = ({children}) => {
                 setSession(null);
                 window.location.href = '/';
             },
+            rememberedPuz: (data) => {
+                setPuzzCode(data)
+            },
+            forgetPuz: () => {
+                setPuzzCode(null)
+            },
             session,
             isLoading,
             isIdLoad,
-            id
+            id,
+            isPuzzLoad,
+            puzzCode
             }}>
             {children}
         </UserContext.Provider>
