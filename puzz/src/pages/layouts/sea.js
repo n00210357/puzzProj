@@ -18,7 +18,7 @@ export default function SeaPage() {
 
   if (!puzzles[0])
   {
-    return <h1>Error</h1>
+    return <h1 className='align-items-center text-center'>Loading...</h1>
   }
 
   return (

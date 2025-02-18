@@ -4,7 +4,7 @@ import PuzPage from './layouts/puz.js'
 import Bottom from './comp/footerComp.js'
 
 
-export default function puzzlePage()
+export default function PuzzlePage()
 {
     return(
         <SessionProvider>

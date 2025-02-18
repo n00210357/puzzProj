@@ -13,14 +13,16 @@ export default function PuzzleItem(puzzle){
     {
         image = img
     }
-
+    let url = String("puzz/"+`${puzzle._id}`)
     return (
         <UserContextProvider>            
-            <div className="card-body align-items-center text-center">
-                <img src={image} alt="profile"/>
-                <h5 className="card-title">{puzzle.name}</h5>
-                <p className="card-text">{puzzle.puzzleCode}</p>
-            </div>
+            <a className="card-body align-items-center text-center" href={url}>
+                <div>
+                    <img src={image} alt="profile"/>
+                    <h5 className="card-title">{puzzle.name}</h5>
+                    <p className="card-text">{puzzle.puzzleCode}</p>
+                </div>
+            </a>
         </UserContextProvider>
     );
 }

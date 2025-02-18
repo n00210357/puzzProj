@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
-import { createBrowserRouter, RouterProvider, useParams } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import App from './App';
 import RegistorForm from './pages/Registor';
@@ -14,7 +14,7 @@ import DataPage from './pages/Data';
 import AccountPage from './pages/Account';
 import AccountEdit from './pages/edits/editAccount';
 import CreateFinalize from './pages/CreateFinal';
-import puzzlePage from './pages/Puzzle';
+import PuzzlePage from './pages/Puzzle';
 
 const router = createBrowserRouter([
   {
@@ -62,8 +62,8 @@ const router = createBrowserRouter([
     element: <CreateFinalize/>
   },
   {
-    path: ":puzzId",
-    element: <puzzlePage/>
+    path: "puzz/:id",
+    element: <PuzzlePage/>
   },
 ])
 

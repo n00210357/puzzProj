@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import UserContextProvider from "../../contexts/userContextProvider.tsx";
 import Sketch from "react-p5";
-import { useParams } from "react-router-dom";
-
+import axios from 'axios';
 import { Outline, wordFiller, countOccurrences } from "../comPuz/puzLook.js";
 import { mouseClicked, mouseReleased } from "../comPuz/mousCont.js";
 
@@ -51,12 +50,24 @@ let ySketchSize
 let pros
 let selectedGoal = -1;
 
-const starter = "1@ 03@ 03@ BEE# CAT# DOG# 0, 0, B, 0, 1, C, 0, 2, D, 1, 0, E, 1, 1, A, 1, 2, O, 2, 0, E, 2, 1, T, 2, 2, G"
+let starter = ""
 
 export default function PuzPage()
 {
-  const params = useParams()
-  const puzzId = params.puzz_id
+  const [puzzles, setPuzzles] = useState([]);
+  var id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+
+  useEffect(() => {
+    axios.get(`https://puz-sable.vercel.app/api/puzzles/${id}`)
+         .then(response => {
+          setPuzzles(response.data);
+          starter = response.data.puzzleCode;
+         })
+         .catch(e => {
+          console.log(e);
+         });
+
+  }, [id]);
 
   const [form, setForm] = useState({
     xGrid: 0,
@@ -76,11 +87,29 @@ export default function PuzPage()
     update = null
   }
 
-  function decode()
+  useEffect(() => {
+    const mp5 = <Sketch setup={start} draw={update}/>
+    return mp5.remove;
+  }, []);
+
+  if (!puzzles)
+  {
+    return(
+      <UserContextProvider>
+        <div className="align-items-center text-center">
+          <h1>LOADING...</h1>
+        </div>
+      </UserContextProvider>
+    )
+  }
+
+  if (starter !== "" && letters === "")
   {
     setPuzzType(Number(starter.split('@ ')[0]))
+
     setForm(form.xGrid = Number(starter.split('@ ')[1]))
     setForm(form.yGrid = Number(starter.split('@ ')[2]))
+
     const star = starter.split('@ ')[3]
 
     for(let i = 0; i < countOccurrences(star, '# '); i++)
@@ -93,16 +122,13 @@ export default function PuzPage()
     yGridAmount = form.yGrid
     xSketchSize = (boxSize * xGridAmount) + border * 2;
     ySketchSize = (boxSize * yGridAmount) + border * 2;
-  }
 
-  useEffect(() => {
-    const mp5 = <Sketch setup={start} draw={update}/>
-    return mp5.remove;
-  }, []);
+    console.log(puzzType)
+    console.log(xGridAmount)
+    console.log(yGridAmount)
+    console.log(xSketchSize)
+    console.log(ySketchSize)
 
-  if (puzzType === 0)
-  {
-    decode()
     return(
       <UserContextProvider>
         <div className="align-items-center text-center">
@@ -111,7 +137,7 @@ export default function PuzPage()
       </UserContextProvider>
     )
   }
-  
+
   if (puzzType === 1)
   {
   //the home page
