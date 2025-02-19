@@ -27,7 +27,7 @@ let droppable = false;
 let hovingOverButton = false;
 let letters = "0, 0, A"//, 0, 1, C, 0, 2, E, 0, 5, F, 0, 9, G";
 let inputError = "";
-let goal = ["BEE", "CAT", "DOG"];
+let goal = [];
 let goCheck = []
 
 //MOUSE VARS
@@ -73,6 +73,12 @@ export default function CrePage()
   {
     window.setInterval(rememberWork, 10000);
     wordsearch()
+  }
+  else if (puzzCode !== null)
+  {
+    start = null
+    update = null
+    //recoverWork()
   }
   else
   {
@@ -154,6 +160,34 @@ export default function CrePage()
     }
   }
 
+  function recoverWork()
+  {
+    if (Number(puzzCode.split('@ ')[0]) === 1)
+    {
+      setPuzzType(Number(puzzCode.split('@ ')[0]))
+
+      setForm(form.xGrid = Number(puzzCode.split('@ ')[1]))
+      setForm(form.yGrid = Number(puzzCode.split('@ ')[2]))
+      
+      const star = puzzCode.split('@ ')[3]
+
+      for(let i = 0; i < countOccurrences(star, '# '); i++)
+      {
+        goal.push(star.split('# ')[i])
+      }
+
+      letters = star.split('# ')[countOccurrences(star, '# ')]
+      xGridAmount = form.xGrid
+      yGridAmount = form.yGrid
+      xSketchSize = (boxSize * xGridAmount) + border * 2;
+      ySketchSize = (boxSize * yGridAmount) + border * 2;
+    }
+    else
+    {
+      rememberedPuz(null)
+    }
+  }
+
   function labelPuzzleType()
   {
     if (puzVal === 0)
@@ -186,6 +220,8 @@ export default function CrePage()
 
   function wrongPuz()
   {
+    xSketchSize = undefined
+    rememberedPuz(null)
     setPuzzType(0)
   }
 

@@ -123,12 +123,6 @@ export default function PuzPage()
     xSketchSize = (boxSize * xGridAmount) + border * 2;
     ySketchSize = (boxSize * yGridAmount) + border * 2;
 
-    console.log(puzzType)
-    console.log(xGridAmount)
-    console.log(yGridAmount)
-    console.log(xSketchSize)
-    console.log(ySketchSize)
-
     return(
       <UserContextProvider>
         <div className="align-items-center text-center">

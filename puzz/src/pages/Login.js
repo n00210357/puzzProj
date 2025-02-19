@@ -2,7 +2,7 @@ import React from 'react'
 import Login from './layouts/log.js'
 import UserContextProvider from '../contexts/userContextProvider.tsx';
 
-function RegistorForm() {
+function LoginForm() {
   return (
     <UserContextProvider>
         <Login/>
@@ -10,4 +10,4 @@ function RegistorForm() {
   );
 }
 
-export default RegistorForm;
+export default LoginForm;
