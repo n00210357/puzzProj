@@ -6,7 +6,7 @@ import UserContext from "../../contexts/userContext.js";
 import CommentItem from "../comp/commComp.js";
 import { useState, useEffect, useContext } from "react";
 import { Outline, wordFiller, countOccurrences } from "../comPuz/puzLook.js";
-import { mouseClicked, mouseReleased } from "../comPuz/mousCont.js";
+import { mouseClicked} from "../comPuz/mousCont.js";
 
 let start
 let update
@@ -183,6 +183,12 @@ export default function PuzPage()
       <UserContextProvider>
         <div className="align-items-center text-center">
           <h1>LOADING...</h1>
+          
+          <ul className='align-items-center text-center'>
+            {
+              comments.map((comment, index) => <li className='align-items-center text-center' key={index}>{CommentItem(comment)}</li>)
+            }
+          </ul>
         </div>
       </UserContextProvider>
     )

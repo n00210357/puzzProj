@@ -932,11 +932,12 @@ async function lettSorter(newby)
     //checks if newby is just a letter or is from the user dragging in the word
     if (newby.length === 1)
     {
-      for (let x = 1; x < countOccurrences(letters,String(recX - (border / boxSize)) + ", " + String(recY - (border / boxSize)) + ", " + newby); x++)
+      for (let x = 0; x < countOccurrences(letters,String(recX - (border / boxSize)) + ", " + String(recY - (border / boxSize)) + ", " + newby); x++)
       {
-
-        //letters = letters.split(letters,String(recX - (border / boxSize)) + ", " + String(recY - (border / boxSize)) + ", " + newby)[x].join('');
-        console.log(x)
+        if (x >= 1)
+        {
+          letters = letters.split(String(recX - (border / boxSize)) + ", " + String(recY - (border / boxSize)) + ", " + newby + ", ").join('');
+        }
       }
 
       //checks for letter on the same space as the new one
@@ -960,6 +961,14 @@ async function lettSorter(newby)
     } 
     else
     {
+      for (let x = 0; x < countOccurrences(letters, newby); x++)
+      {
+        if (x >= 1)
+        {
+          letters = letters.split(newby + ", ").join('');
+        }
+      }
+
       //checks for letter on the same space as the new one
       if (letters.split(', ')[0 + z] === newby.split(', ')[0] && 
       letters.split(', ')[1 + z] === newby.split(', ')[1] && 
