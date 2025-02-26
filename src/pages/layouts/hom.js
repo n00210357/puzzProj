@@ -21,7 +21,7 @@ export default function HomPage()
                 </div>
 
                 <div className="col-3">
-                    <h3>Bugs</h3>
+
                 </div>
             </div>
         </UserContextProvider>

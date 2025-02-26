@@ -3,7 +3,7 @@ import UserContextProvider from "../../contexts/userContextProvider.tsx";
 import Sketch from "react-p5";
 import axios from 'axios';
 import UserContext from "../../contexts/userContext.js";
-import CommentItem from "../comp/commComp.js";
+import { CallCommItem, CommentItem} from "../comp/commComp.js"
 import { useState, useEffect, useContext } from "react";
 import { Outline, wordFiller, countOccurrences } from "../comPuz/puzLook.js";
 import { mouseClicked} from "../comPuz/mousCont.js";
@@ -66,11 +66,13 @@ export default function PuzPage()
   
   const {id, session} = useContext(UserContext);
   const [puzzles, setPuzzles] = useState([]);  
-  const [comments, setComments] = useState([]);
   const [puzzType, setPuzzType] = useState(0);
   const [newComm, setNewComm] = useState(String)
   const [error, setError] = useState("");
   var _id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+
+  var comments = CallCommItem(_id)[0]
+  var replies = CallCommItem(_id)[1]
 
   //gets the puzzle data
   useEffect(() => {
@@ -126,22 +128,6 @@ export default function PuzPage()
 
   //grabs all this puzzles comments
   useEffect(() => {
-    axios.get('https://puz-sable.vercel.app/api/comments')
-    .then(response => {
-      let da = []
-      response.data.forEach(d => {
-        
-        if (d.puzzle_id === _id)    
-        {
-          da.push(d)
-        }    
-      });
-      setComments(da);
-    })
-    .catch(e => {
-     console.log(e);
-    });
-
     const mp5 = <Sketch setup={start} draw={update}/>
     return mp5.remove;
   });
@@ -183,12 +169,6 @@ export default function PuzPage()
       <UserContextProvider>
         <div className="align-items-center text-center">
           <h1>LOADING...</h1>
-          
-          <ul className='align-items-center text-center'>
-            {
-              comments.map((comment, index) => <li className='align-items-center text-center' key={index}>{CommentItem(comment)}</li>)
-            }
-          </ul>
         </div>
       </UserContextProvider>
     )
