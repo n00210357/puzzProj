@@ -71,9 +71,10 @@ export default function PuzPage()
   const [error, setError] = useState("");
   var _id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
 
-  var comments = CallCommItem(_id)[0]
-  var replies = CallCommItem(_id)[1]
-
+  //var comments = CallCommItem(_id)[0]
+  //var replies = CallCommItem(_id)[1]
+  var comments = null;
+  
   //gets the puzzle data
   useEffect(() => {
     axios.get(`https://puz-sable.vercel.app/api/puzzles/${_id}`)

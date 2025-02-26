@@ -1,6 +1,5 @@
 //imports
 import UserContextProvider from "../../contexts/userContextProvider.tsx";
-import img from '../../hooks/placeholder.png'
 
 //the reply item
 export default function ReplyItem(reply){

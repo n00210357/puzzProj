@@ -1,6 +1,6 @@
 //imports
 import UserContextProvider from "../../contexts/userContextProvider.tsx";
-import img from '../../hooks/placeholder.png'
+import img from '../../hooks/puzzlePlaceholder.png'
 
 //the puzzle item
 export default function PuzzleItem(puzzle){

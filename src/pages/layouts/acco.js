@@ -2,7 +2,7 @@
 import UserContextProvider from "../../contexts/userContextProvider.tsx";
 import axios from 'axios';
 import UserContext  from "../../contexts/userContext.js";
-import img from '../../hooks/placeholder.png'
+import img from '../../hooks/userPlaceholder.png';
 import { useEffect, useState, useContext } from 'react';
 
 //account pages function
@@ -61,12 +61,15 @@ export default function AccoPage() {
 
   if (user.image_path)
   {
-      image = user.image_path;
+    image = user.image_path;
   }
   else
   {
     image = img
   }
+
+
+  console.log(user.image_path)
 
   //displays the users account
   return (

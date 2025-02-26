@@ -1,6 +1,6 @@
 //imports
 import UserContextProvider from "../../contexts/userContextProvider.tsx";
-import img from '../../hooks/placeholder.png'
+import img from '../../hooks/userPlaceholder.png'
 
 //the user item
 export default function UserItem(user){

@@ -35,25 +35,38 @@ export default function AccoEdit() {
     
     //sets up form data
     const [form, setForm] = useState({
+        image_path: null,
         username: "",
         email: "",
         about: "",
     });
 
     //assigns form data with user data
-    if (user && (form.username === "" || form.username == null || form.username === undefined))
+    if (user)
     {
-        form.username = user.username
-    }
+        if (user.image_path == null)
+        {
+            form.image_path = null
+        }
+        else
+        {
+            form.image_path = user.image_path
+        }
 
-    if (user && (form.email === "" || form.email == null || form.email === undefined))
-    {
-        form.email = user.email
-    }
+        if (form.username === "" || form.username == null || form.username === undefined)
+        {
+            form.username = user.username
+        }
 
-    if (user && (form.about === "" || form.about == null || form.about === undefined))
-    {
-        form.about = user.about
+        if (form.email === "" || form.email == null || form.email === undefined)
+        {
+            form.email = user.email
+        }
+
+        if (form.about === "" || form.about == null || form.about === undefined)
+        {
+            form.about = user.about
+        }
     }
 
     //sets up editing functions
@@ -72,6 +85,15 @@ export default function AccoEdit() {
 
         if (user != null)
         {
+            if (user.image_path == null)
+            {
+                form.image_path = null
+            }
+            else
+            {
+                form.image_path = user.image_path
+            }
+
             if (form.username == null || form.username === '')
             {
                 form.username = user.username
@@ -124,6 +146,8 @@ export default function AccoEdit() {
             <h6 className="fw-bold">About</h6>
             <input type="text" className="max-logo" placeholder="About" value={form.about} onChange={handleChange} id='about'></input>
             <div className="mb-3">About</div>
+
+            <input type="file" className="max-logo" placeholder="Image path" onChange={handleChange} id='image_path'/>
 
             <h6 className="fw-bold">{error}</h6>
 

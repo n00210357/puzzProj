@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ReplyItem from "./replyComp.js";
 
+/*
 export function CallCommItem(_id)
 {
     //sets up variables
@@ -51,7 +52,7 @@ export function CallCommItem(_id)
 
     const coRe = [comments, replies]
     return (coRe)       
-}
+}*/
 
 //the comment item
 export function CommentItem(comment){
