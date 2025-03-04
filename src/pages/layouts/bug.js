@@ -4,7 +4,7 @@ import BugItem from '../comp/bugComp.js';
 import { useEffect, useState } from 'react';
 
 //shows all the accounts pages
-export default function AccoPage() {
+export default function BugReport() {
   //sets up variables
   const [bugs, setBugs] = useState([]);
 
@@ -23,7 +23,17 @@ export default function AccoPage() {
   //checks for the bugs
   if (!bugs[0])
   {
-    return <h1>Error</h1>
+    return ( 
+      <div className="align-items-center text-center">
+        <button id="clickMe" className="mx-3 my-2" value="INSERT" type="button" onClick={console.log("clicked")}>
+          <h6>
+            REPORT BUG
+          </h6>
+        </button>
+
+        <h1>Loading...</h1>
+      </div>
+    );
   }
 
   //displays the bugs
@@ -31,7 +41,7 @@ export default function AccoPage() {
     <div>
       <ul className='row align-items-center text-center'>
       {
-        bugs.map((bug, index) => <li className='col-4 align-items-center text-center' key={index}>{UserItem(bug)}</li>)
+        bugs.map((bug, index) => <li className='col-4 align-items-center text-center' key={index}>{BugItem(bug)}</li>)
       }
     </ul>
     </div>

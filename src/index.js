@@ -17,68 +17,51 @@ import AccountPage from './pages/Account';
 import AccountEdit from './pages/edits/editAccount';
 import CreateFinalize from './pages/CreateFinal';
 import PuzzlePage from './pages/Puzzle';
+import YourPuzzlePage from './pages/YourPuzzles';
+import EditPuzzlePage from './pages/EditPuzzle';
 
 const router = createBrowserRouter([
   //start page
-  {
-    path: "/",
-    element: <App/>,
-  },
+  {    path: "/",    element: <App/>,  },
+  
   //registor page
-  {
-    path: "register",
-    element: <RegistorForm/>
-  },
+  {    path: "register",    element: <RegistorForm/>  },
+
   //login page
-  {
-    path: "login",
-    element: <LoginForm/>
-  },
+  {    path: "login",    element: <LoginForm/>  },
+
   //home page
-  {
-    path: "home",
-    element: <HomePage/>
-  },
+  {    path: "home",    element: <HomePage/>  },
+
   //create page
-  {
-    path: "create",
-    element: <CreatePage/>
-  },
+  {    path: "create",    element: <CreatePage/>  },
+
   //search page
-  {
-    path: "search",
-    element: <SearchPage/>
-  },
+  {    path: "search",    element: <SearchPage/>  },
+
   //favourite page
-  {
-    path: "favourite",
-    element: <FavouritePage/>
-  },
+  {    path: "favourite",    element: <FavouritePage/>  },
+
   //bug page
-  {
-    path: "bug",
-    element: <BugPage/>
-  },
+  {    path: "bug",    element: <BugPage/>  },
+
   //account oage
-  {
-    path: "account",
-    element: <AccountPage/>
-  },
+  {    path: "account",    element: <AccountPage/>  },
+
   //account edit page
-  {
-    path: "accoEdit",
-    element: <AccountEdit/>
-  },
+  {    path: "accoEdit",    element: <AccountEdit/>  },
+
   //create finalize page
-  {
-    path: "creFin",
-    element: <CreateFinalize/>
-  },
+  {    path: "creFin",    element: <CreateFinalize/>  },
+
   //puzzle page
-  {
-    path: "puzz/:id",
-    element: <PuzzlePage/>
-  },
+  {    path: "puzz/:id",    element: <PuzzlePage/>  },
+
+  //your puzzles page
+  {    path: "yourPuzzles",    element: <YourPuzzlePage/>  },
+
+  //your puzzles page
+    {    path: "editPuzz/:id",    element: <EditPuzzlePage/>  },
 ])
 
 //root creator

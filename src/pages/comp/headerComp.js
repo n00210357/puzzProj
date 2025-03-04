@@ -36,7 +36,13 @@ export default function Top()
             </div>
 
             <div className="col-6">
-
+                <button id="clickMe" className="mx-3 my-2" value="your puzzles" type="button">
+                    <a href="/yourPuzzles">
+                        <h4>
+                            YOUR PUZZLES
+                        </h4>
+                    </a>
+                </button>
             </div>
 
             <div className="col-3">

@@ -3,7 +3,7 @@ import UserContextProvider from "../../contexts/userContextProvider.tsx";
 import Sketch from "react-p5";
 import axios from 'axios';
 import UserContext from "../../contexts/userContext.js";
-import { CallCommItem, CommentItem} from "../comp/commComp.js"
+import { CommentItem} from "../comp/commComp.js"
 import { useState, useEffect, useContext } from "react";
 import { Outline, wordFiller, countOccurrences } from "../comPuz/puzLook.js";
 import { mouseClicked} from "../comPuz/mousCont.js";
@@ -65,18 +65,41 @@ export default function PuzPage()
   });
   
   const {id, session} = useContext(UserContext);
-  const [puzzles, setPuzzles] = useState([]);  
+  const [puzzles, setPuzzles] = useState([]); 
+  const [comm, setComm] = useState([]) 
   const [puzzType, setPuzzType] = useState(0);
   const [newComm, setNewComm] = useState(String)
   const [error, setError] = useState("");
   var _id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
-
-  //var comments = CallCommItem(_id)[0]
-  //var replies = CallCommItem(_id)[1]
-  var comments = null;
   
   //gets the puzzle data
   useEffect(() => {
+    axios.get('https://puz-sable.vercel.app/api/comments')
+    .then(response => {
+      let com = []
+
+      response.data.forEach(dat => {
+        if (dat.puzzle_id == _id)
+        {
+          com.push(dat)
+        }
+      });
+
+      response.data.forEach(dat => {
+        com.forEach(rep => {
+          if (dat.puzzle_id == rep._id)
+          {
+            com.push(dat)
+          }
+        });  
+      });
+
+      setComm(com);      
+    })
+    .catch(e => {
+      console.log(e);
+    });
+
     axios.get(`https://puz-sable.vercel.app/api/puzzles/${_id}`)
          .then(response => {
           setPuzzles(response.data);
@@ -212,7 +235,7 @@ export default function PuzPage()
 
             <ul className='align-items-center text-center'>
             {
-              //comments.map((comment, index) => <li className='align-items-center text-center' key={index}>{CommentItem(comment)}</li>)
+              comm.map((comment, index) => <li className='align-items-center text-center' key={index}>{CommentItem(comment)}</li>)
             }
             </ul>
           </div>
@@ -248,19 +271,6 @@ function wordsearch()
       boxed = clic[2]
       secCli = clic[3]
     }
-    
-    /*
-    if (clicked === true && p5.mouseButton == null)
-    {
-      window.addEventListener("mouseup", function(e)
-      {
-        let rele = mouseReleased(pros, clicked, border, newLine)
-        pros = rele[0]
-        clicked = rele[1]
-        border = rele[2]
-        newLine = rele[3]
-      }, false);
-    }*/
 
     //moves the text over to the left
     p5.textAlign(p5.LEFT);

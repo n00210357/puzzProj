@@ -2,15 +2,15 @@
 import SessionProvider from '../contexts/userContextProvider.tsx'
 import Top from './comp/headerComp.js'
 import Bottom from './comp/footerComp.js'
-import BugReport from './layouts/bug.js'
+import PuzEditPage from './layouts/puzEdit.js'
 
-//the bugs page
-export default function BugPage()
+//the puzzle page
+export default function EditPuzzlePage()
 {
     return(
         <SessionProvider>
             <Top/>
-            <BugReport/>
+            <PuzEditPage/>
             <Bottom/>
         </SessionProvider>
     )

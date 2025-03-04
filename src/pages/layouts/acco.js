@@ -98,8 +98,7 @@ export default function AccoPage() {
                     DELETE
                 </h3>
             </button>
-
-            </div>
+          </div>
         </UserContextProvider>
       }
       </div>

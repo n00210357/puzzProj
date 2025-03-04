@@ -5,7 +5,7 @@ import UserContext from '../../contexts/userContext.js';
 import { useEffect, useState, useContext } from 'react';
 
 //the search page
-export default function SeaPage() {
+export default function UrPuzzPage() {
   //sets up variables
   const [puzzles, setPuzzles] = useState([]);
   const { session, id } = useContext(UserContext);
@@ -14,7 +14,17 @@ export default function SeaPage() {
   useEffect(() => {
     axios.get('https://puz-sable.vercel.app/api/puzzles')
       .then(response => {
-        setPuzzles(response.data);
+        let puz = []
+
+        response.data.forEach(dat => {
+            console.log("")
+          if (dat.user_id == id)
+          {
+            puz.push(dat)
+          }
+        });
+
+        setPuzzles(puz)
       })
       .catch(e => {
         console.log(e);

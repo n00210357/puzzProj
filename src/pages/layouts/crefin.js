@@ -46,7 +46,7 @@ export default function CreFinPage() {
                 Authorization: `Bearer ${session}`
             }
         }, (data) => {
-            //window.location.href = '/search';
+            window.location.href = '/search';
         });
     }
 
