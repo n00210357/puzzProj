@@ -13,18 +13,21 @@ export default function AccoPage() {
   
   //grabs user from database
   useEffect(() => {
-    axios.get(`https://puz-sable.vercel.app/api/users/${id}`,
+    if (id !== null)
     {
-      headers: {
-        Authorization: `Bearer ${session}`
-      }
-    })
-    .then(response => {
-      setUser(response.data);
-    })
-    .catch(e => {
-      console.log(e);
-    });
+      axios.get(`https://puz-sable.vercel.app/api/users/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session}`
+        }
+      })
+      .then(response => {
+        setUser(response.data);
+      })
+      .catch(e => {
+        console.log(e);
+      });
+    }
   });
 
   //checks for user
@@ -59,7 +62,7 @@ export default function AccoPage() {
   //sets up image
   let image;
 
-  if (user.image_path)
+  if (user.image_path && user.image_path !== null && user.image_path !== undefined)
   {
     image = user.image_path;
   }
@@ -67,9 +70,6 @@ export default function AccoPage() {
   {
     image = img
   }
-
-
-  console.log(user.image_path)
 
   //displays the users account
   return (

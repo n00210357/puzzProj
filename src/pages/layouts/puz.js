@@ -212,7 +212,7 @@ export default function PuzPage()
 
             <ul className='align-items-center text-center'>
             {
-              comments.map((comment, index) => <li className='align-items-center text-center' key={index}>{CommentItem(comment)}</li>)
+              //comments.map((comment, index) => <li className='align-items-center text-center' key={index}>{CommentItem(comment)}</li>)
             }
             </ul>
           </div>

@@ -1,6 +1,7 @@
 //imports
 import UserContextProvider from "../../contexts/userContextProvider.tsx";
 import axios from 'axios';
+import useAPI from '../../hooks/useAPI.tsx'
 import UserContext  from "../../contexts/userContext.js";
 import { useState, useContext } from "react";
 
@@ -14,40 +15,44 @@ function Registor()
         email: "",
         password: "",
         about: "",
-        //image_path: string;
+        file: null
     })
 
-    const [error, setError] = useState("");
     const {signIn} = useContext(UserContext);
 
     //updates the forms variables
     const handleChange = (e) =>//: any) => 
     {
-        setForm(prevState => (
+        if (e.target.id !== "file")
         {
-            ...prevState,
-            [e.target.id]: e.target.value
-        }));
+            setForm(prevState => ({
+                ...prevState,
+                [e.target.id]: e.target.value
+            }));
+        }
+        else
+        {
+            setForm(prevState => ({
+                ...prevState,
+                [e.target.id]: e.target.files[0]
+            }));
+        }
     }
+     
+    //sets up editing functions
+    const { postRequest, loading, error } = useAPI();
 
     //creates the users new account
     const handlePress = () =>
-    {       
-        axios.post('https://puz-sable.vercel.app/api/users/register', 
-        {
-            username: form.username,
-            email: form.email,
-            password: form.password,
-            about: form.about,
-        })
-        .then(response =>
-        {
-            autoLogin(response)
-        })
-        .catch(e =>
-        {
-            setError(e.response.data.message.message);
-        })
+    {     
+        postRequest('https://puz-sable.vercel.app/api/users/register', form, {
+            headers: {
+                "Content_type":"Mulipart/form-data",
+            }
+        }, (resp) => {
+            console.log(resp)
+            autoLogin(resp)
+        });
     }
 
     //logs the new user in
@@ -63,11 +68,13 @@ function Registor()
             signIn(response.data);
         })
     }
-    
+
+    if (loading) return <h1>Loading</h1>
+
     //displays the register page
     return(
         <UserContextProvider>
-        <div className="align-items-center text-center my-3">
+        <form className="align-items-center text-center my-3" action="/upload" method="POST" encType="multipart/form">
             <h6 className="fw-bold">Username</h6>
             <input type="text" className="max-logo" placeholder="Username" value={form.username} onChange={handleChange} id='username'></input>
             <div className="mb-3">Your accounts username</div>
@@ -83,6 +90,10 @@ function Registor()
             <h6 className="fw-bold">About</h6>
             <input type="text" className="max-logo" placeholder="About" value={form.about} onChange={handleChange} id='about'></input>
             <div className="mb-3">About</div>
+
+            <h6 className="fw-bold">Image</h6>
+            <input type="file" className="max-logo" placeholder="Image path" onChange={handleChange} id='file' name='file'/>
+            <div className="mb-3">Optional image must be a jpg, jpeg, png or a gif</div>
 
             <h6 className="fw-bold">{error}</h6>
 
@@ -101,7 +112,7 @@ function Registor()
                     </a>
                 </button>
             </div>
-        </div>
+        </form>
         </UserContextProvider>
     )
 }

@@ -9,12 +9,28 @@ export default function usePost(){
     const [error, setError] = useState(null);
 
     const putRequest = useCallback((url: string, formData: object, headers: object, onSuccess: <T extends IResponseType>(data:T) => void) => {
-        setLoading(true);
+         setLoading(true);
 
-        axios.put(url, formData, headers)
+         let foDa = new FormData();
+
+         for (const [key, value] of Object.entries(formData)) 
+         {
+            if (key !== 'file')
+            {
+               foDa.append(key, value)
+               console.log(`${key}: ${value}`);
+            }
+            else
+            {
+               foDa.append('file', value)
+            }
+         }
+
+         axios.put(url, foDa, headers)
              .then(response => {
                 setData(response.data);
                 onSuccess(response.data);
+                console.log(response.data)
              })
              .catch(e => {
                 setError(e.response.data.message);
@@ -25,20 +41,37 @@ export default function usePost(){
     }, []);
 
     const postRequest = useCallback((url: string, formData: object, headers: object, onSuccess: <T extends IResponseType>(data:T) => void) => {
-        setLoading(true);
+      setLoading(true);
 
-        axios.post(url, formData, headers)
-             .then(response => {
-                setData(response.data);
-                onSuccess(response.data);
-             })
-             .catch(e => {
-               console.log(url)
-                setError(e.response.data.message);
-             })
-             .finally(() => {
-                setLoading(false);
-             });
+      let foDa = new FormData();
+
+      for (const [key, value] of Object.entries(formData)) 
+      {
+         if (key !== 'file')
+         {
+            foDa.append(key, value)
+            console.log(`${key}: ${value}`);
+         }
+         else
+         {
+            foDa.append('file', value)
+            console.log(value);
+         }
+      }
+
+      axios.post(url, foDa, headers)
+         .then(response => {
+            setData(response.data);
+            onSuccess(response.data);
+            console.log(response.data)
+         })
+         .catch(e => {
+            console.log(url)
+            setError(e.response.data.message);
+         })
+         .finally(() => {
+            setLoading(false);
+         });
     }, []);
 
 

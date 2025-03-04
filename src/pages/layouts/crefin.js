@@ -15,15 +15,25 @@ export default function CreFinPage() {
         user_id: id,
         name: "",
         puzzleCode: puzzCode,
-        //image_path: ""
+        file: null
     });
 
     //updates the forms variables
     const handleChange = (e) => {
-        setForm(prevState => ({
-            ...prevState,
-            [e.target.id]: e.target.value
-        }));
+        if (e.target.id !== "file")
+        {
+            setForm(prevState => ({
+                ...prevState,
+                [e.target.id]: e.target.value
+            }));
+        }
+        else
+        {
+            setForm(prevState => ({
+                ...prevState,
+                [e.target.id]: e.target.files[0]
+            }));
+        }
     }
 
     //submits the users puzzle to the database
@@ -32,10 +42,11 @@ export default function CreFinPage() {
 
         postRequest('https://puz-sable.vercel.app/api/puzzles', form, {
             headers: {
+                "Content_type":"Mulipart/form-data",
                 Authorization: `Bearer ${session}`
             }
         }, (data) => {
-            window.location.href = '/search';
+            //window.location.href = '/search';
         });
     }
 
@@ -51,11 +62,13 @@ export default function CreFinPage() {
     }
 
     if(loading === true) return <h1>Loading API...</h1>
-    
+
     //displays the finalize page
     return (
     <UserContextProvider>
-    <div className="align-items-center text-center my-3">
+    <form className="align-items-center text-center my-3" action="/upload" method="POST" encType="multipart/form">
+        <input type="file" className="max-logo" placeholder="Image path" onChange={handleChange} id='file'/> 
+
         <h6 className="fw-bold">Name</h6>
         <input type="text" className="max-logo" placeholder="Name" value={form.name} onChange={handleChange} id='name'></input>
         <div className="mb-3">Name</div>
@@ -78,7 +91,7 @@ export default function CreFinPage() {
                 </button>
             </div>
 
-    </div>
+    </form>
     </UserContextProvider>
     );
 }

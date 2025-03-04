@@ -4,17 +4,17 @@ import img from '../../hooks/userPlaceholder.png'
 
 //the user item
 export default function UserItem(user){
-    //sets up the image
-    let image;
+  //sets up image
+  let image;
 
-    if (user.image_path)
-    {
-        image = user.image_path;
-    }
-    else
-    {
-        image = img
-    }
+  if (user.image_path && user.image_path !== null && user.image_path !== undefined)
+  {
+    image = `http://api-image.s3.eu-west-1.amazonaws.com/${user.image_path}`;
+  }
+  else
+  {
+    image = img
+  }
 
     //displays your account
     return (

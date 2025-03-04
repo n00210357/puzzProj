@@ -4,17 +4,17 @@ import img from '../../hooks/puzzlePlaceholder.png'
 
 //the puzzle item
 export default function PuzzleItem(puzzle){
-    //sets up image
-    let image;
+  //sets up image
+  let image;
 
-    if (puzzle.image_path)
-    {
-        image = puzzle.image_path;
-    }
-    else
-    {
-        image = img
-    }
+  if (puzzle.image_path && puzzle.image_path !== null && puzzle.image_path !== undefined)
+  {
+    image = `http://api-image.s3.eu-west-1.amazonaws.com/${puzzle.image_path}`;
+  }
+  else
+  {
+    image = img
+  }
 
     //creates the url
     let url = `puzz/${puzzle._id}`

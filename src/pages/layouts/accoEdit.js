@@ -23,7 +23,6 @@ export default function AccoEdit() {
             }
             })
             .then(response => {
-                console.log(response.data);
                 setUser(response.data);
              })
              .catch(e => {
@@ -35,22 +34,18 @@ export default function AccoEdit() {
     
     //sets up form data
     const [form, setForm] = useState({
-        image_path: null,
         username: "",
         email: "",
         about: "",
+        file: null
     });
 
     //assigns form data with user data
     if (user)
     {
-        if (user.image_path == null)
+        if (!user.image_path || user.image_path == null || user.image_path === undefined)
         {
-            form.image_path = null
-        }
-        else
-        {
-            form.image_path = user.image_path
+            form.file = null
         }
 
         if (form.username === "" || form.username == null || form.username === undefined)
@@ -74,10 +69,20 @@ export default function AccoEdit() {
 
     //changes the form
     const handleChange = (e) => {
-        setForm(prevState => ({
-            ...prevState,
-            [e.target.id]: e.target.value
-        }));
+        if (e.target.id !== "file")
+        {
+            setForm(prevState => ({
+                ...prevState,
+                [e.target.id]: e.target.value
+            }));
+        }
+        else
+        {
+            setForm(prevState => ({
+                ...prevState,
+                [e.target.id]: e.target.files[0]
+            }));
+        }
     }
 
     //updates the users account
@@ -85,13 +90,9 @@ export default function AccoEdit() {
 
         if (user != null)
         {
-            if (user.image_path == null)
+            if (!user.image_path || user.image_path == null || user.image_path === undefined)
             {
-                form.image_path = null
-            }
-            else
-            {
-                form.image_path = user.image_path
+                form.file = null
             }
 
             if (form.username == null || form.username === '')
@@ -109,13 +110,14 @@ export default function AccoEdit() {
                 form.about = user.about
             }
         }
-    
+
         putRequest(`https://puz-sable.vercel.app/api/users/${id}`, form, {
             headers: {
+                "Content_type":"Mulipart/form-data",
                 Authorization: `Bearer ${session}`
             }
         }, (data) => {
-            window.location.href = '/account';
+           window.location.href = '/account';
         });
     }
 
@@ -134,7 +136,7 @@ export default function AccoEdit() {
 
     return(
         <UserContextProvider>
-        <div className="align-items-center text-center my-3">
+        <form className="align-items-center text-center my-3" action="/upload" method="PUT" encType="multipart/form">
             <h6 className="fw-bold">Username</h6>
             <input type="text" className="max-logo" placeholder="Username" value={form.username} onChange={handleChange} id='username'></input>
             <div className="mb-3">Your accounts username</div>
@@ -147,7 +149,7 @@ export default function AccoEdit() {
             <input type="text" className="max-logo" placeholder="About" value={form.about} onChange={handleChange} id='about'></input>
             <div className="mb-3">About</div>
 
-            <input type="file" className="max-logo" placeholder="Image path" onChange={handleChange} id='image_path'/>
+            <input type="file" className="max-logo" placeholder="Image path" onChange={handleChange} id='file' name='file'/>
 
             <h6 className="fw-bold">{error}</h6>
 
@@ -156,7 +158,7 @@ export default function AccoEdit() {
                     SUBMIT
                 </h3>
             </button>
-        </div>
+        </form>
         </UserContextProvider>
     )
 }
