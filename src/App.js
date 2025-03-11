@@ -9,6 +9,9 @@ import './css/main.css';
 
 //the app
 function App() {
+  //cors
+  const cors = require('cors');
+  cors();
 
   return (
     <SessionProvider>

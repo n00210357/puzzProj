@@ -12,7 +12,7 @@ export default function Bottom()
                 <button className="align-items-center text-center w-100 ms-1">
                     <a href="../home">
                         <h3>
-                            HOME
+                            Home
                         </h3>
                     </a>
                 </button>
@@ -22,7 +22,7 @@ export default function Bottom()
                 <button className="align-items-center text-center w-100 ms-1">
                     <a href="../create">
                         <h3>
-                            CREATE
+                            Create
                         </h3>
                     </a>
                 </button>
@@ -32,7 +32,7 @@ export default function Bottom()
                 <button className="align-items-center text-center w-100 ms-1">
                     <a href="../search">
                         <h3>
-                            SEARCH
+                            Search
                         </h3>
                     </a>
                 </button>
@@ -40,7 +40,7 @@ export default function Bottom()
 
             <div className="col-2 align-items-center text-center flex-fill">
                 <button className="align-items-center text-center w-100 ms-1">
-                    <a href="../favourite">
+                    <a href="../users">
                         <h3>
                             Users
                         </h3>
@@ -52,7 +52,7 @@ export default function Bottom()
                 <button className="align-items-center text-center w-100 ms-1">
                     <a href="../bug">
                         <h3>
-                            BUG
+                            Bug report
                         </h3>
                     </a>
                 </button>
@@ -62,7 +62,7 @@ export default function Bottom()
                 <button className="align-items-center text-center w-100 ms-1">
                     <a href="../account">
                         <h3>
-                            ACCOUNT
+                            Account
                         </h3>
                     </a>
                 </button>

@@ -117,6 +117,11 @@ a:link{
   max-height: 50px;
 }
 
+.min-logo-2{
+  min-width: 200px;
+  min-height: 200px;
+}
+
 .button
 {
   min-width: 1000px;
@@ -617,6 +622,54 @@ progress {
 .img-fluid {
   max-width: 100%;
   height: auto;
+}
+
+.popup{
+  background: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.popupComm{
+  background: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.popupEdit{
+  background: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.popupRep{
+  background: rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 
 .img-thumbnail {

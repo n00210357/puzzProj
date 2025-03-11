@@ -1,23 +1,37 @@
 //imports
 import UserContextProvider from "../../contexts/userContextProvider.tsx";
 import img from '../../hooks/puzzlePlaceholder.png'
-import UserContext from '../../contexts/userContext.js';
 import axios from 'axios';
-import {useContext } from 'react';
 
 //the puzzle item
-export default function PuzzleItem(puzzle, session, id){
+export default function PuzzleItem(puzzle, users, session, id){
   //sets up image
-  let image;
+  let image = null;
+  let user = null;
 
-  if (puzzle.image_path && puzzle.image_path !== null && puzzle.image_path !== undefined)
+  if (image === null)
   {
-    image = `http://api-image.s3.eu-west-1.amazonaws.com/${puzzle.image_path}`;
+    if (puzzle.image_path && puzzle.image_path !== null && puzzle.image_path !== undefined)
+    {
+      image = `http://api-image.s3.eu-west-1.amazonaws.com/${puzzle.image_path}`;
+    }
+    else
+    {
+      image = img
+    }
   }
-  else
+
+  if (user === null)
   {
-    image = img
-  }
+    for(let i = 0; i < users.length; i++)
+    {
+      if (puzzle.user_id === users[i]._id)
+      {
+        user = users[i];
+        break;
+      }
+    }
+  }  
 
     //creates the urls
     const url = `puzz/${puzzle._id}`
@@ -42,46 +56,49 @@ export default function PuzzleItem(puzzle, session, id){
     }
 
     //displays the puzzle
-    if (puzzle.user_id != id)
+    if (puzzle.user_id !== id && user != null)
     {
       return (
-        <UserContextProvider>            
-          <a className="card-body align-items-center text-center" href={url}>
-            <div>
-              <img src={image} alt="profile"/>
+        <UserContextProvider className="align-items-center text-center">  
+          <div className ="card border border-5 align-items-center text-center" style={{minwidth: '400px', minheight: '400px'}}>
+            <a className="card-body align-items-center text-center p-0" href={url}>
+              <img style={{maxwidth: '400px', maxheight: '400px', width:'100%', height: 'auto'}} src={image} alt="profile"/>
               <h5 className="card-title">{puzzle.name}</h5>
-              <p className="card-text">{puzzle.puzzleCode}</p>
-            </div>
-          </a>
+              <p className="card-text m-0">Made by {user.username}</p>
+              <p className="card-text m-0">Created at {puzzle.createdAt}</p>
+            </a>
+          </div>
         </UserContextProvider>
       );
     }
 
+    if (user != null)
     //displays the puzzle with the edit and delete buttons
     return (
-      <UserContextProvider>            
-        <a className="card-body align-items-center text-center" href={url}>
-          <div>
-            <img src={image} alt="profile"/>
+      <UserContextProvider className="align-items-center text-center">  
+        <div className ="card border border-5 align-items-center text-center" style={{minwidth: '400px', minheight: '400px'}}>
+          <a className="card-body align-items-center text-center p-0" href={url}>
+            <img style={{maxwidth: '400px', maxheight: '400px', width:'100%', height: 'auto'}} src={image} alt="profile"/>
             <h5 className="card-title">{puzzle.name}</h5>
-            <p className="card-text">{puzzle.puzzleCode}</p>
-          </div>
-        </a>
+            <p className="card-text m-0">Made by {user.username}</p>
+            <p className="card-text m-0">Created at {puzzle.createdAt}</p>
+          </a>
 
-        <div className="container align-items-center text-center my-2">
-          <button className="mx-3 my-2">
-            <a href={editUrl}>
+          <div className="container align-items-center text-center my-2">
+            <button className="mx-3 my-2">
+              <a href={editUrl}>
+                <h3 className="but">
+                  EDIT
+                </h3>
+              </a>
+            </button>
+
+            <button id="click" className="mx-3 my-2" value="check" type="button" onClick={warn}>
               <h3 className="but">
-                EDIT
+                DELETE
               </h3>
-            </a>
-          </button>
-
-          <button id="click" className="mx-3 my-2" value="check" type="button" onClick={warn}>
-            <h3 className="but">
-              DELETE
-            </h3>
-          </button>
+            </button>
+          </div>
         </div>
       </UserContextProvider>
     );

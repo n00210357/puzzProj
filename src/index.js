@@ -19,6 +19,8 @@ import CreateFinalize from './pages/CreateFinal';
 import PuzzlePage from './pages/Puzzle';
 import YourPuzzlePage from './pages/YourPuzzles';
 import EditPuzzlePage from './pages/EditPuzzle';
+import UsersPage from './pages/Users';
+import UserPage from './pages/User';
 
 const router = createBrowserRouter([
   //start page
@@ -39,8 +41,8 @@ const router = createBrowserRouter([
   //search page
   {    path: "search",    element: <SearchPage/>  },
 
-  //favourite page
-  {    path: "favourite",    element: <FavouritePage/>  },
+  //users page
+  {    path: "users",    element: <UsersPage/>  },
 
   //bug page
   {    path: "bug",    element: <BugPage/>  },
@@ -61,7 +63,10 @@ const router = createBrowserRouter([
   {    path: "yourPuzzles",    element: <YourPuzzlePage/>  },
 
   //your puzzles page
-    {    path: "editPuzz/:id",    element: <EditPuzzlePage/>  },
+  {    path: "editPuzz/:id",    element: <EditPuzzlePage/>  },
+
+  //user page
+  {    path: "use/:id",    element: <UserPage/>  },
 ])
 
 //root creator

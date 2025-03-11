@@ -29,7 +29,7 @@ export default function Top()
 
                     <li className="nav-item px-2">
                         <h4 className="fw-bold align-items-center text-center">
-                            NAME
+                            Name
                         </h4>  
                     </li>
                 </ul>
@@ -39,7 +39,7 @@ export default function Top()
                 <button id="clickMe" className="mx-3 my-2" value="your puzzles" type="button">
                     <a href="/yourPuzzles">
                         <h4>
-                            YOUR PUZZLES
+                            Your puzzles
                         </h4>
                     </a>
                 </button>
@@ -49,7 +49,7 @@ export default function Top()
                 <button id="clickMe" className="mx-3 my-2" value="LOGOUT" type="button" onClick={handlePress}>
                     <a href="/">
                         <h3>
-                            LOGOUT
+                            Logout
                         </h3>
                     </a>
                 </button>

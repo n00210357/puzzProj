@@ -16,14 +16,17 @@ export default function UserItem(user){
     image = img
   }
 
-    //displays your account
-    return (
-        <UserContextProvider>            
-            <div className="card-body align-items-center text-center">
-                <img src={image} alt="profile"/>
-                <h5 className="card-title">{user.username}</h5>
-                <p className="card-text">{user.email}</p>
-            </div>
-        </UserContextProvider>
-    );
+  //creates the urls
+  const url = `use/${user._id}`
+
+  //displays your account
+  return (
+    <UserContextProvider>            
+      <a className="card-body align-items-center text-center p-0" href={url}>
+        <img src={image} alt="profile"/>
+        <h5 className="card-title">{user.username}</h5>
+        <p className="card-text">{user.email}</p>
+      </a>
+      </UserContextProvider>
+  );
 }

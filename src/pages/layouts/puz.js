@@ -66,20 +66,23 @@ export default function PuzPage()
   
   const {id, session} = useContext(UserContext);
   const [puzzles, setPuzzles] = useState([]); 
-  const [comm, setComm] = useState([]) 
+  const [comm, setComm] = useState([]);
+  const [replies, setReplies] = useState([]);
   const [puzzType, setPuzzType] = useState(0);
-  const [newComm, setNewComm] = useState(String)
+  const [newComm, setNewComm] = useState(String);
   const [error, setError] = useState("");
-  var _id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+  const [users, setUser] = useState([]);
+  const _id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
   
   //gets the puzzle data
   useEffect(() => {
     axios.get('https://puz-sable.vercel.app/api/comments')
     .then(response => {
       let com = []
+      let reply = []
 
       response.data.forEach(dat => {
-        if (dat.puzzle_id == _id)
+        if (dat.puzzle_id === _id)
         {
           com.push(dat)
         }
@@ -87,14 +90,15 @@ export default function PuzPage()
 
       response.data.forEach(dat => {
         com.forEach(rep => {
-          if (dat.puzzle_id == rep._id)
+          if (dat.puzzle_id === rep._id)
           {
-            com.push(dat)
+            reply.push(dat)
           }
         });  
       });
 
       setComm(com);      
+      setReplies(reply);
     })
     .catch(e => {
       console.log(e);
@@ -110,6 +114,40 @@ export default function PuzPage()
          });
 
   }, [_id]);
+
+  //grabs all users that made the puzzles from the database
+  useEffect(() => {
+    axios.get('https://puz-sable.vercel.app/api/users')
+      .then(response => {
+        let use = []
+
+        response.data.forEach(dat => 
+        {
+          for(let i = 0; i < comm.length; i++)
+          {
+            if (dat._id === comm[i].user_id)
+            {
+              use.push(dat);
+              break;
+            }
+          };
+
+          for(let i = 0; i < replies.length; i++)
+            {
+              if (dat._id === replies[i].user_id)
+              {
+                use.push(dat);
+                break;
+              }
+            };
+        });
+
+        setUser(use)
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  });
 
   //runs the puzzles function
   if (puzzType === 1)
@@ -129,16 +167,18 @@ export default function PuzPage()
   }
 
   //creates a new comment
-  const handlePress = () =>
+  const makeComm = () =>
   {       
     axios.post('https://puz-sable.vercel.app/api/comments/', 
     {
       puzzle_id: _id,
       user_id: id,
-      text: newComm
+      text: document.getElementById("text comm").value,
+      file: document.getElementById("file comm").value,
     },
     {
       headers: {
+        "Content_type":"Mulipart/form-data",
         Authorization: `Bearer ${session}`
       }
     })
@@ -146,8 +186,8 @@ export default function PuzPage()
     {
       setError(e.response.data.message.message);
     })
-      
-    setNewComm("")
+
+    noPopup()
   }
 
   //grabs all this puzzles comments
@@ -155,6 +195,100 @@ export default function PuzPage()
     const mp5 = <Sketch setup={start} draw={update}/>
     return mp5.remove;
   });
+
+  function fillPopUpCom()
+  {
+    document.querySelector(".popupComm").style.display = "flex";
+  }
+
+  function fillPopUpEdit()
+  {
+    document.querySelector(".popupRep").style.display = "flex";
+  }
+
+  function fillPopUpRep()
+  {
+    document.querySelector(".popupRep").style.display = "flex";
+  }
+
+  function makeReply()
+  {
+    if (document.getElementById("text rep").value === null || document.getElementById("text rep").value === "") 
+    {
+      setError("no reply text empty")
+    } 
+    else
+    {
+      axios.post('https://puz-sable.vercel.app/api/comments/', 
+      {
+        puzzle_id: id,
+        user_id: id,
+        text: document.getElementById("text rep").value,
+        file: document.getElementById("file rep").value
+      },
+      {
+        headers: {
+          "Content_type":"Mulipart/form-data",
+          Authorization: `Bearer ${session}`
+        }
+      })
+      .catch(e =>
+      {
+        setError(e.response.data.message.message);
+      })
+    }
+
+    noPopup()
+  }
+
+  function editComm(comment)
+  {
+    let text = prompt("Editing your comment to:", comment.text);
+    let file = null;
+
+    <input type="file" className="max-logo" placeholder="Image path" value={file} id='file' name='file'/>
+
+    if (text === null || text === "") 
+    {
+      setError("no reply text empty")
+    } 
+    else 
+    {
+      axios.put(`https://puz-sable.vercel.app/api/comments/${comment._id}`, 
+      {
+        puzzle_id: comment.puzzle_id,
+        user_id: id,
+        text: document.getElementById("text edit").value,
+        file: document.getElementById("file edit").value,
+      },
+      {
+        headers: {
+          "Content_type":"Mulipart/form-data",
+          Authorization: `Bearer ${session}`
+        }
+      })
+      .catch(e =>
+      {
+        setError(e.response.data.message.message);
+      })
+    }
+  }
+
+  function noPopup()
+  {
+    document.querySelector(".popupComm").style.display = "none";
+    document.querySelector(".popupEdit").style.display = "none";
+    document.querySelector(".popupRep").style.display = "none";
+
+    document.getElementById("text comm").value = null;
+    document.getElementById("file comm").value = null;
+
+    document.getElementById("text edit").value = null;
+    document.getElementById("file edit").value = null;
+
+    document.getElementById("text rep").value = null;
+    document.getElementById("file rep").value = null;
+  }
 
   //checks if puzzles exist
   if (!puzzles)
@@ -212,8 +346,6 @@ export default function PuzPage()
 
           <div className="col-8">
             <Sketch setup={start} draw={update}/>
-
-
           </div>
 
           <div className="col-2">
@@ -223,24 +355,38 @@ export default function PuzPage()
           <div className="col-2"></div>
 
           <div className="col-8">
-            <div>
-              <p>Add a comment</p>
-              <h6 className="fw-bold">{error}</h6>
-              <input type="text" className="max-logo" placeholder="New comment" value={newComm} onChange={handleChange} id='newComm'></input>
-            </div>
-          
-            <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={handlePress}>
-              Submit comment
+            
+            <button id="clickMe" className="mx-3 my-2" value="makeComment" type="button" onClick={fillPopUpCom}>
+              Comment
             </button>
 
             <ul className='align-items-center text-center'>
             {
-              comm.map((comment, index) => <li className='align-items-center text-center' key={index}>{CommentItem(comment)}</li>)
+              comm.map((comment, index) => <li className='align-items-center text-center' key={index}>{CommentItem(comment, replies, users, id, fillPopUpRep, session, fillPopUpEdit, noPopup)}</li>)
             }
             </ul>
           </div>
 
           <div className="col-2"></div>
+        </div>
+      </div>
+
+      <div className="popupComm m-5">
+        <div className="popup-content">
+          <div>
+            <input type="text" className="max-logo m-3" placeholder="Text" id='text comm'></input>
+          </div>
+          <div>
+            <input type="file" className="max-logo" placeholder="Image path" id='file comm' name='file'/>
+          </div>
+
+          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
+              Cancel
+          </button>
+
+          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={makeComm}>
+              Confirm
+          </button>
         </div>
       </div>
     </UserContextProvider>
