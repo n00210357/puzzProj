@@ -23,7 +23,7 @@ export default function UsersLayout() {
   //checks for the users
   if (!users[0])
   {
-    return <h1>Error</h1>
+    return <h1>Loading</h1>
   }
 
   //displays the users

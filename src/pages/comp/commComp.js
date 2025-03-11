@@ -4,8 +4,8 @@ import img from '../../hooks/userPlaceholder.png'
 import axios from "axios";
 import { RepItem } from "./repComp.js";
 
-//the comment item
-export function CommentItem(comment, replies, users, id, makeReply, session, editComm, noPopup){
+//the comment item       
+export function CommentItem(comment, replies, users, id, fillPopUpRep, session, fillPopUpEdit, noPopup, makeReply){
     //sets up the image
     let image = null;
     let user = null;
@@ -64,12 +64,17 @@ export function CommentItem(comment, replies, users, id, makeReply, session, edi
 
     function runMake()
     {
+        fillPopUpRep()
+    }
+
+    function createRep()
+    {
         makeReply(comment._id)
     }
 
     function editor()
     {
-        editComm(comment)
+        fillPopUpEdit()
     }
 
     //deletes the users comment
@@ -119,7 +124,7 @@ export function CommentItem(comment, replies, users, id, makeReply, session, edi
 
                     <ul className='align-items-center text-center'>
                     {
-                        reps.map((rep, index) => <li className='align-items-center text-center' key={index}>{RepItem(rep, repUsers, id, session, editComm)}</li>)
+                        reps.map((rep, index) => <li className='align-items-center text-center' key={index}>{RepItem(rep, repUsers, id, session, fillPopUpEdit)}</li>)
                     }
                     </ul>
                 </div>
@@ -137,7 +142,7 @@ export function CommentItem(comment, replies, users, id, makeReply, session, edi
               Cancel
           </button>
 
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={editComm}>
+          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={fillPopUpEdit}>
               Confirm
           </button>
         </div>
@@ -156,7 +161,7 @@ export function CommentItem(comment, replies, users, id, makeReply, session, edi
               Cancel
           </button>
 
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={makeReply}>
+          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={createRep}>
               Confirm
           </button>
         </div>
@@ -183,12 +188,12 @@ export function CommentItem(comment, replies, users, id, makeReply, session, edi
 
                     <ul className='align-items-center text-center'>
                     {
-                        reps.map((rep, index) => <li className='align-items-center text-center' key={index}>{RepItem(rep, repUsers, id, session, editComm)}</li>)
+                        reps.map((rep, index) => <li className='align-items-center text-center' key={index}>{RepItem(rep, repUsers, id, session, fillPopUpEdit)}</li>)
                     }
                     </ul>
                 </div>
 
-                <div className="popupRep m-5">
+        <div className="popupRep m-5">
         <div className="popup-content">
           <div>
             <input type="text" className="max-logo m-3" placeholder="Text" id='text rep'></input>
@@ -201,7 +206,7 @@ export function CommentItem(comment, replies, users, id, makeReply, session, edi
               Cancel
           </button>
 
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={makeReply}>
+          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={createRep}>
               Confirm
           </button>
         </div>

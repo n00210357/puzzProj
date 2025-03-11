@@ -160,21 +160,16 @@ export default function PuzPage()
     update = null
   }
 
-  //changes comments text
-  const handleChange = (e) =>//: any) => 
-  {
-    setNewComm(e.target.value)
-  }
-
   //creates a new comment
   const makeComm = () =>
   {       
+    console.log(document.getElementById("file comm").files[0])
     axios.post('https://puz-sable.vercel.app/api/comments/', 
     {
       puzzle_id: _id,
       user_id: id,
       text: document.getElementById("text comm").value,
-      file: document.getElementById("file comm").value,
+      file: document.getElementById("file comm").files[0]
     },
     {
       headers: {
@@ -186,7 +181,7 @@ export default function PuzPage()
     {
       setError(e.response.data.message.message);
     })
-
+    console.log(document.getElementById("file comm").files[0])
     noPopup()
   }
 
@@ -211,7 +206,7 @@ export default function PuzPage()
     document.querySelector(".popupRep").style.display = "flex";
   }
 
-  function makeReply()
+  function makeReply(ID)
   {
     if (document.getElementById("text rep").value === null || document.getElementById("text rep").value === "") 
     {
@@ -221,10 +216,10 @@ export default function PuzPage()
     {
       axios.post('https://puz-sable.vercel.app/api/comments/', 
       {
-        puzzle_id: id,
+        puzzle_id: ID,
         user_id: id,
         text: document.getElementById("text rep").value,
-        file: document.getElementById("file rep").value
+        file: document.getElementById("file rep").files[0]
       },
       {
         headers: {
@@ -259,7 +254,7 @@ export default function PuzPage()
         puzzle_id: comment.puzzle_id,
         user_id: id,
         text: document.getElementById("text edit").value,
-        file: document.getElementById("file edit").value,
+        file: document.getElementById("file edit").files[0]
       },
       {
         headers: {
@@ -279,14 +274,14 @@ export default function PuzPage()
     document.querySelector(".popupComm").style.display = "none";
     document.querySelector(".popupEdit").style.display = "none";
     document.querySelector(".popupRep").style.display = "none";
-
-    document.getElementById("text comm").value = null;
+    
+    document.getElementById("text comm").value = "";
     document.getElementById("file comm").value = null;
 
-    document.getElementById("text edit").value = null;
+    document.getElementById("text edit").value = "";
     document.getElementById("file edit").value = null;
 
-    document.getElementById("text rep").value = null;
+    document.getElementById("text rep").value = "";
     document.getElementById("file rep").value = null;
   }
 
@@ -362,7 +357,7 @@ export default function PuzPage()
 
             <ul className='align-items-center text-center'>
             {
-              comm.map((comment, index) => <li className='align-items-center text-center' key={index}>{CommentItem(comment, replies, users, id, fillPopUpRep, session, fillPopUpEdit, noPopup)}</li>)
+              comm.map((comment, index) => <li className='align-items-center text-center' key={index}>{CommentItem(comment, replies, users, id, fillPopUpRep, session, fillPopUpEdit, noPopup, makeReply)}</li>)
             }
             </ul>
           </div>
@@ -377,7 +372,7 @@ export default function PuzPage()
             <input type="text" className="max-logo m-3" placeholder="Text" id='text comm'></input>
           </div>
           <div>
-            <input type="file" className="max-logo" placeholder="Image path" id='file comm' name='file'/>
+            <input type="file" className="max-logo" placeholder="Image path" id='file comm'/>
           </div>
 
           <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>

@@ -8,13 +8,14 @@ const UserContextProvider = ({children}) => {
     //sets store data
     const [[isLoading, session ], setSession] = useStorageState('session');
     const [[ isIdLoad, id ], setId] = useStorageState('id');
+    const [[ isEmailLoad, email ], setEmail] = useStorageState('email');
     const [[ isPuzzLoad, puzzCode ], setPuzzCode] = useStorageState('puzz');
 
     //returns the data and nessary functions
     return(
         <UserContext.Provider value={{
             signIn: (data) => {
-                toHome(setSession, setId, data)
+                toHome(setSession, setId, data, setEmail)
             },
             signOut: () => {
                 setSession(null);
@@ -30,6 +31,8 @@ const UserContextProvider = ({children}) => {
             isLoading,
             isIdLoad,
             id,
+            isEmailLoad,
+            email,
             isPuzzLoad,
             puzzCode
             }}>
@@ -39,9 +42,10 @@ const UserContextProvider = ({children}) => {
 }
 
 //signs the user in an brings them to the home page
-async function toHome(setSession: (value: string | null) => void, setId: (value: string | null) => void, tokId: { _id: string, token: string })
+async function toHome(setSession: (value: string | null) => void, setId: (value: string | null) => void, tokId: { _id: string, token: string, email }, setEmail: (value: string | null) => void)
 {
     setId(tokId._id)
+    setEmail(tokId.email)
     setSession(tokId.token)
     window.location.href = '/home';
 }

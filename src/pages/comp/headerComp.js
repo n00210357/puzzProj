@@ -7,13 +7,12 @@ import { useContext } from "react";
 export default function Top()
 {
     //sets up the abiliy to sign out
-    const {signOut} = useContext(UserContext);
+    const {email, signOut} = useContext(UserContext);
 
     const handlePress = () =>
     {  
         signOut();
     }
-
 
     //the header
     return(
@@ -29,7 +28,7 @@ export default function Top()
 
                     <li className="nav-item px-2">
                         <h4 className="fw-bold align-items-center text-center">
-                            Name
+                            Greetings {email}
                         </h4>  
                     </li>
                 </ul>
