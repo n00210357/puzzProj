@@ -29,7 +29,7 @@ export default function usePost(){
          axios.put(url, foDa, headers)
              .then(response => {
                 setData(response.data);
-                onSuccess(response.data);
+                //onSuccess(response.data);
                 console.log(response.data)
              })
              .catch(e => {
@@ -62,7 +62,7 @@ export default function usePost(){
       axios.post(url, foDa, headers)
          .then(response => {
             setData(response.data);
-            onSuccess(response.data);
+            //onSuccess(response.data);
             console.log(response.data)
          })
          .catch(e => {

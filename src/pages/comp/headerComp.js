@@ -35,10 +35,18 @@ export default function Top()
             </div>
 
             <div className="col-6">
-                <button id="clickMe" className="mx-3 my-2" value="your puzzles" type="button">
+                <button id="clickMe" className="mx-3" value="your puzzles" type="button">
                     <a href="/yourPuzzles">
                         <h4>
                             Your puzzles
+                        </h4>
+                    </a>
+                </button>
+
+                <button id="clickMe" className="mx-3" value="your puzzles" type="button">
+                    <a href="https://forms.office.com/Pages/ResponsePage.aspx?id=e5V92hEVQkqy9Xj4R_jIes5I7qOcfq1Ni9f-_MqUtaRUMlk4OFJEMFFOV1ZURE5QTExOV0YwODVFOS4u">
+                        <h4>
+                            User Testing survey
                         </h4>
                     </a>
                 </button>

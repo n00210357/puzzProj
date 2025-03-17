@@ -1,11 +1,10 @@
 //imports
 import UserContextProvider from "../../contexts/userContextProvider.tsx"
 import img from '../../hooks/userPlaceholder.png'
-import axios from "axios";
 import { RepItem } from "./repComp.js";
 
 //the comment item       
-export function CommentItem(comment, replies, users, id, fillPopUpRep, session, fillPopUpEdit, noPopup, makeReply){
+export function CommentItem(comment, replies, users, id, fillPopUpRep, fillPopUpEdit, destroy){
     //sets up the image
     let image = null;
     let user = null;
@@ -13,12 +12,19 @@ export function CommentItem(comment, replies, users, id, fillPopUpRep, session, 
     let reps = []
     let repUsers = [];
 
-    if (comment.image_path)
+    if (image === null)
     {
-        image = comment.image_path;
+        if (comment.image_path && comment.image_path !== null && comment.image_path !== undefined)
+        {
+          image = `http://api-image.s3.eu-west-1.amazonaws.com/${comment.image_path}`;
+        }
+        else
+        {
+          image = null
+        }
     }
 
-    if (user === null)
+    if (user === null && users === Array)
     {
         for(let i = 0; i < users.length; i++)
         {
@@ -29,23 +35,29 @@ export function CommentItem(comment, replies, users, id, fillPopUpRep, session, 
             }
         }
     }  
-
-    for(let i = 0; i < replies.length; i++)
+    else
     {
-
-        if (replies[i].puzzle_id === comment._id)
-        {
-            reps.push(replies[i])
-        }
+        user = users;
     }
 
-    for(let i = 0; i < reps.length; i++)
+    if (replies !== undefined)
     {
-        for(let x = 0; x < users.length; x++)
+        for(let i = 0; i < replies.length; i++)
         {
-            if (reps[i].user_id === users[x]._id)
+            if (replies[i].puzzle_id === comment._id)
             {
-                repUsers[i] = users[x]
+                reps.push(replies[i])
+            }
+        }
+
+       for(let i = 0; i < reps.length; i++)
+       {
+            for(let x = 0; x < users.length; x++)
+            {
+                if (reps[i].user_id === users[x]._id)
+                {
+                    repUsers[i] = users[x]
+                }
             }
         }
     }
@@ -54,7 +66,14 @@ export function CommentItem(comment, replies, users, id, fillPopUpRep, session, 
     {
         if (user.image_path && user.image_path !== null && user.image_path !== undefined)
         {
-          userImage = `http://api-image.s3.eu-west-1.amazonaws.com/${user.image_path}`;
+            if (user.image_path.charAt(0) === "h" && user.image_path.charAt(1) === "t" && user.image_path.charAt(2) === "t" && user.image_path.charAt(3) === "p")
+            {
+                userImage = user.image_path;
+            }
+            else
+            {
+                userImage = `http://api-image.s3.eu-west-1.amazonaws.com/${user.image_path}`;
+            }
         }
         else
         {
@@ -64,43 +83,67 @@ export function CommentItem(comment, replies, users, id, fillPopUpRep, session, 
 
     function runMake()
     {
-        fillPopUpRep()
+      fillPopUpRep(comment)
     }
 
-    function createRep()
+    function editorForm()
     {
-        makeReply(comment._id)
-    }
-
-    function editor()
-    {
-        fillPopUpEdit()
-    }
-
-    //deletes the users comment
-    function destroy()
-    {
-        reps.forEach(rep => {
-            axios.delete(`https://puz-sable.vercel.app/api/comments/${rep._id}`, {
-            headers: {
-                Authorization: `Bearer ${session}`
-            }})  
-        });
-
-        axios.delete(`https://puz-sable.vercel.app/api/comments/${comment._id}`, {
-        headers: {
-            Authorization: `Bearer ${session}`
-        }}) 
+      fillPopUpEdit(comment)
     }
     
     //warns user of deleting their comment
     function warn() 
     {
-        if (window.confirm("Are you sure you want to DELETE your comment")) 
-        {
-            destroy()
-        } 
-    }        
+      if (window.confirm("Are you sure you want to DELETE your comment")) 
+      {
+        destroy(comment, reps)
+      } 
+    }   
+
+    //displays the comment
+    if (user !== null && userImage !== null && user._id === id && users !== Array)
+    {
+        return (
+            <UserContextProvider>            
+                <div className="card-body align-items-center text-center border border-5 m-3">
+                    <div className="d-flex flex-row position-relative">
+                        <img className="mx-2 mt-2" style={{maxWidth: '50px', height: 'auto'}} src={userImage} alt="profile"/>
+                        <p className="mx-0 mt-2">{user.username}</p>
+        
+                        <div className="d-flex flex-row position-absolute end-0">
+                            <p className="mx-2 mt-2" onClick={editorForm}>Edit</p>
+                            <p className="mx-2 mt-2" onClick={warn}>Delete</p>
+                        </div>
+                    </div>
+        
+                    <img style={{maxwidth: '100px', maxheight: '100px', width:'100%', height: 'auto'}} src={image} alt=""/>
+                    <p className="card-text">{comment.text}</p>
+                </div>
+            </UserContextProvider>
+        );
+    }
+    else if (user !== null && userImage !== null && users !== Array)
+    {
+        return (
+            <UserContextProvider>            
+                <div className="card-body align-items-center text-center border border-5 m-3">
+                    <div className="d-flex flex-row position-relative">
+                        <img className="mx-2 mt-2" style={{maxWidth: '50px', height: 'auto'}} src={userImage} alt="profile"/>
+                        <p className="mx-0 mt-2">{user.username}</p>
+                    </div>
+    
+                    <img style={{maxwidth: '200px', maxheight: '200px', width:'100%', height: 'auto'}} src={image} alt=""/>
+                    <p className="card-text">{comment.text}</p>
+    
+                    <ul className='align-items-center text-center'>
+                    {
+                        reps.map((rep, index) => <li className='align-items-center text-center' key={index}>{RepItem(rep, repUsers, id, fillPopUpEdit, destroy)}</li>)
+                    }
+                    </ul>
+                </div>
+            </UserContextProvider>
+        );
+    }
 
     //displays the comment
     if (user !== null && userImage !== null && user._id === id)
@@ -114,58 +157,20 @@ export function CommentItem(comment, replies, users, id, fillPopUpRep, session, 
 
                         <div className="d-flex flex-row position-absolute end-0">
                             <p className="mx-2 mt-2" onClick={runMake}>Reply</p>
-                            <p className="mx-2 mt-2" onClick={editor}>Edit</p>
+                            <p className="mx-2 mt-2" onClick={editorForm}>Edit</p>
                             <p className="mx-2 mt-2" onClick={warn}>Delete</p>
                         </div>
                     </div>
 
-                    <p className="card-text m-0">{image}</p>
+                    <img style={{maxwidth: '200px', maxheight: '200px', width:'100%', height: 'auto'}} src={image} alt=""/>
                     <p className="card-text">{comment.text}</p>
 
                     <ul className='align-items-center text-center'>
                     {
-                        reps.map((rep, index) => <li className='align-items-center text-center' key={index}>{RepItem(rep, repUsers, id, session, fillPopUpEdit)}</li>)
+                        reps.map((rep, index) => <li className='align-items-center text-center' key={index}>{RepItem(rep, repUsers, id, fillPopUpEdit, destroy)}</li>)
                     }
                     </ul>
                 </div>
-
-                <div className="popupEdit m-5">
-        <div className="popup-content">
-          <div>
-            <input type="text" className="max-logo m-3" placeholder="Text" id='text edit'></input>
-          </div>
-          <div>
-            <input type="file" className="max-logo" placeholder="Image path" id='file edit' name='file'/>
-          </div>
-
-          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
-              Cancel
-          </button>
-
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={fillPopUpEdit}>
-              Confirm
-          </button>
-        </div>
-      </div>
-
-      <div className="popupRep m-5">
-        <div className="popup-content">
-          <div>
-            <input type="text" className="max-logo m-3" placeholder="Text" id='text rep'></input>
-          </div>
-          <div>
-            <input type="file" className="max-logo" placeholder="Image path" id='file rep' name='file'/>
-          </div>
-
-          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
-              Cancel
-          </button>
-
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={createRep}>
-              Confirm
-          </button>
-        </div>
-      </div>
             </UserContextProvider>
         );
     }
@@ -183,34 +188,15 @@ export function CommentItem(comment, replies, users, id, fillPopUpRep, session, 
                         </div>
                     </div>
 
-                    <p className="card-text m-0">{image}</p>
+                    <img style={{maxwidth: '200px', maxheight: '200px', width:'100%', height: 'auto'}} src={image} alt=""/>
                     <p className="card-text">{comment.text}</p>
 
                     <ul className='align-items-center text-center'>
                     {
-                        reps.map((rep, index) => <li className='align-items-center text-center' key={index}>{RepItem(rep, repUsers, id, session, fillPopUpEdit)}</li>)
+                        reps.map((rep, index) => <li className='align-items-center text-center' key={index}>{RepItem(rep, repUsers, id, fillPopUpEdit, destroy)}</li>)
                     }
                     </ul>
                 </div>
-
-        <div className="popupRep m-5">
-        <div className="popup-content">
-          <div>
-            <input type="text" className="max-logo m-3" placeholder="Text" id='text rep'></input>
-          </div>
-          <div>
-            <input type="file" className="max-logo" placeholder="Image path" id='file rep' name='file'/>
-          </div>
-
-          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
-              Cancel
-          </button>
-
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={createRep}>
-              Confirm
-          </button>
-        </div>
-      </div>
             </UserContextProvider>
         );
     }

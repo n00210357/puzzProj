@@ -5,6 +5,7 @@ export function Outline(p5, xGridAmount, yGridAmount, border, clicked, boxSize, 
 
   //outlines the grids
   p5.fill(0);
+  p5.stroke(0);
   for(let x = 0; x < xGridAmount; x++)
   {
     //draws the xAxis outlines

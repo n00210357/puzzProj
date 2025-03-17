@@ -625,10 +625,10 @@ progress {
 }
 
 .popup{
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.95);
   width: 100%;
   height: 50%;
-  position: absolute;
+  position: fixed;
   top: 0;
   display: none;
   justify-content: center;
@@ -637,10 +637,10 @@ progress {
 }
 
 .popupComm{
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.95);
   width: 95%;
   height: 50%;
-  position: absolute;
+  position: fixed;
   top: 0;
   display: none;
   justify-content: center;
@@ -649,10 +649,22 @@ progress {
 }
 
 .popupEdit{
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.95);
   width: 100%;
   height: 50%;
-  position: absolute;
+  position: fixed;
+  top: 0;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.popupEditRep{
+  background: rgba(255, 255, 255, 0.95);
+  width: 100%;
+  height: 50%;
+  position: fixed;
   top: 0;
   display: none;
   justify-content: center;
@@ -661,10 +673,10 @@ progress {
 }
 
 .popupRep{
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.95);
   width: 100%;
   height: 50%;
-  position: absolute;
+  position: fixed;
   top: 0;
   display: none;
   justify-content: center;
@@ -7066,6 +7078,7 @@ textarea.form-control-lg {
 
 .overflow-scroll {
   overflow: scroll !important;
+  height: 500px;
 }
 
 .d-inline {

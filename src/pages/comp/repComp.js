@@ -1,18 +1,24 @@
 //imports
 import UserContextProvider from "../../contexts/userContextProvider.tsx"
 import img from '../../hooks/userPlaceholder.png'
-import axios from "axios";
 
 //the reply item
-export function RepItem(rep, users, id, session, editComm, noPopup){
+export function RepItem(rep, users, id, fillPopUpEdit, destroy){
     //sets up the image
     let image = null;
     let user = null;
     let userImage = null;
 
-    if (rep.image_path)
+    if (image === null)
     {
-        image = rep.image_path;
+        if (rep.image_path && rep.image_path !== null && rep.image_path !== undefined)
+        {
+            image = `http://api-image.s3.eu-west-1.amazonaws.com/${rep.image_path}`;
+        }
+        else
+        {
+            image = null
+        }
     }
 
     if (user === null)
@@ -41,26 +47,17 @@ export function RepItem(rep, users, id, session, editComm, noPopup){
 
     function editor()
     {
-        editComm(rep)
-    }
-
-    //deletes the users reply
-    function destroy()
-    {
-        axios.delete(`https://puz-sable.vercel.app/api/comments/${rep._id}`, {
-        headers: {
-            Authorization: `Bearer ${session}`
-        }}) 
+      fillPopUpEdit(rep)
     }
 
     //warns user of deleting their reply
     function warn() 
     {
-      if (window.confirm("Are you sure you want to DELETE your reply")) 
+      if (window.confirm("Are you sure you want to DELETE your comment")) 
       {
-        destroy()
+        destroy(rep)
       } 
-    }
+    }   
 
     //displays the reply
     if (user !== null && userImage !== null && user._id === id)
@@ -78,28 +75,9 @@ export function RepItem(rep, users, id, session, editComm, noPopup){
                         </div>
                     </div>
 
-                    <p className="card-text m-0">{image}</p>
+                    <img style={{maxwidth: '200px', maxheight: '200px', width:'100%', height: 'auto'}} src={image} alt=""/>
                     <p className="card-text">{rep.text}</p>
                 </div>
-
-                <div className="popupEdit m-5">
-        <div className="popup-content">
-          <div>
-            <input type="text" className="max-logo m-3" placeholder="Text" id='text edit'></input>
-          </div>
-          <div>
-            <input type="file" className="max-logo" placeholder="Image path" id='file edit' name='file'/>
-          </div>
-
-          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
-              Cancel
-          </button>
-
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={editComm}>
-              Confirm
-          </button>
-        </div>
-      </div>
             </UserContextProvider>
         );
     }
@@ -113,7 +91,7 @@ export function RepItem(rep, users, id, session, editComm, noPopup){
                         <p className="mx-0 mt-2">{user.username}</p>
                     </div>
 
-                    <p className="card-text m-0">{image}</p>
+                    <img style={{maxwidth: '200px', maxheight: '200px', width:'100%', height: 'auto'}} src={image} alt=""/>
                     <p className="card-text">{rep.text}</p>
                 </div>
             </UserContextProvider>

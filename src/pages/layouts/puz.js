@@ -3,7 +3,8 @@ import UserContextProvider from "../../contexts/userContextProvider.tsx";
 import Sketch from "react-p5";
 import axios from 'axios';
 import UserContext from "../../contexts/userContext.js";
-import { CommentItem} from "../comp/commComp.js"
+import useAPI from '../../hooks/useAPI.tsx'
+import { CommentItem } from "../comp/commComp.js"
 import { useState, useEffect, useContext } from "react";
 import { Outline, wordFiller, countOccurrences } from "../comPuz/puzLook.js";
 import { mouseClicked} from "../comPuz/mousCont.js";
@@ -39,6 +40,7 @@ let completion = true;
 //stores if user clicked
 let clicked = false;
 let secCli = false;
+let pause = false;
 
 //CANVAS VARS
 //A allows the canvase to be referenced
@@ -54,9 +56,13 @@ let selectedGoal = -1;
 
 let starter = ""
 
+let comment;
+
 //the puzzle page
 export default function PuzPage()
 {
+  const { postRequest, putRequest } = useAPI();
+
   //sets up variables
   const [form, setForm] = useState({
     xGrid: 0,
@@ -64,13 +70,19 @@ export default function PuzPage()
     addGoal: "",
   });
   
+  const [newComm, setNewComm] = useState({
+    puzzle_id: "",
+    user_id: "",
+    text: "",
+    file: null
+  });
+
   const {id, session} = useContext(UserContext);
   const [puzzles, setPuzzles] = useState([]); 
   const [comm, setComm] = useState([]);
   const [replies, setReplies] = useState([]);
   const [puzzType, setPuzzType] = useState(0);
-  const [newComm, setNewComm] = useState(String);
-  const [error, setError] = useState("");
+  const [errors, setError] = useState("");
   const [users, setUser] = useState([]);
   const _id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
   
@@ -163,26 +175,22 @@ export default function PuzPage()
   //creates a new comment
   const makeComm = () =>
   {       
-    console.log(document.getElementById("file comm").files[0])
-    axios.post('https://puz-sable.vercel.app/api/comments/', 
-    {
-      puzzle_id: _id,
-      user_id: id,
-      text: document.getElementById("text comm").value,
-      file: document.getElementById("file comm").files[0]
-    },
-    {
+    newComm.puzzle_id = _id;
+    newComm.user_id = id;
+    newComm.text = document.getElementById("text comm").value;
+    newComm.file = document.getElementById("file comm").files[0];
+
+    postRequest('https://puz-sable.vercel.app/api/comments', newComm, {
       headers: {
-        "Content_type":"Mulipart/form-data",
-        Authorization: `Bearer ${session}`
+          "Content_type":"Mulipart/form-data",
+          Authorization: `Bearer ${session}`
       }
-    })
-    .catch(e =>
+    })  
+
+    setTimeout(function()
     {
-      setError(e.response.data.message.message);
-    })
-    console.log(document.getElementById("file comm").files[0])
-    noPopup()
+      noPopup();
+    }, 1000);   
   }
 
   //grabs all this puzzles comments
@@ -193,20 +201,70 @@ export default function PuzPage()
 
   function fillPopUpCom()
   {
+    pause = true;
+
+    if (document.querySelector(".popupEdit"))
+    {
+      document.querySelector(".popupEdit").style.display = "none";
+      document.getElementById("edit com text").value = "";
+      document.getElementById("edit com file").value = null;
+    }
+
+    if (document.querySelector(".popupRep"))
+    {
+      document.querySelector(".popupRep").style.display = "none";
+      document.getElementById("text rep").value = "";
+      document.getElementById("file rep").value = null;   
+    } 
+
     document.querySelector(".popupComm").style.display = "flex";
   }
 
-  function fillPopUpEdit()
+  function fillPopUpEdit(comme)
   {
+    pause = true;
+    comment = comme;
+
+    if (document.querySelector(".popupComm"))
+    {
+      document.querySelector(".popupComm").style.display = "none";
+      document.getElementById("text comm").value = "";
+      document.getElementById("file comm").value = null;
+    }
+
+    if (document.querySelector(".popupRep"))
+    {
+      document.querySelector(".popupRep").style.display = "none";
+      document.getElementById("text rep").value = "";
+      document.getElementById("file rep").value = null;
+    }
+
+    document.querySelector(".popupEdit").style.display = "flex";
+  }
+
+  function fillPopUpRep(commen)
+  {
+    pause = true;
+    comment = commen
+
+    if (document.querySelector(".popupComm"))
+    {
+      document.querySelector(".popupComm").style.display = "none";
+      document.getElementById("text comm").value = "";
+      document.getElementById("file comm").value = null;
+    }
+
+    if (document.querySelector(".popupEdit"))
+    {
+      document.querySelector(".popupEdit").style.display = "none";
+      document.getElementById("edit com text").value = "";
+      document.getElementById("edit com file").value = null;
+    }
+
     document.querySelector(".popupRep").style.display = "flex";
   }
 
-  function fillPopUpRep()
-  {
-    document.querySelector(".popupRep").style.display = "flex";
-  }
-
-  function makeReply(ID)
+  function makeReply()
   {
     if (document.getElementById("text rep").value === null || document.getElementById("text rep").value === "") 
     {
@@ -214,75 +272,170 @@ export default function PuzPage()
     } 
     else
     {
-      axios.post('https://puz-sable.vercel.app/api/comments/', 
-      {
-        puzzle_id: ID,
-        user_id: id,
-        text: document.getElementById("text rep").value,
-        file: document.getElementById("file rep").files[0]
-      },
-      {
+      newComm.puzzle_id = comment._id;
+      newComm.user_id = id;
+      newComm.text = document.getElementById("text rep").value;
+      newComm.file = document.getElementById("file rep").files[0];
+
+      postRequest('https://puz-sable.vercel.app/api/comments', newComm, {
         headers: {
-          "Content_type":"Mulipart/form-data",
-          Authorization: `Bearer ${session}`
+            "Content_type":"Mulipart/form-data",
+            Authorization: `Bearer ${session}`
         }
-      })
-      .catch(e =>
-      {
-        setError(e.response.data.message.message);
       })
     }
 
-    noPopup()
+    setTimeout(function()
+    {
+      noPopup();
+    }, 1000);   
   }
 
-  function editComm(comment)
+  function editComm(s)
   {
-    let text = prompt("Editing your comment to:", comment.text);
-    let file = null;
+    newComm.puzzle_id = s.puzzle_id;
+    newComm.user_id = s.user_id;
 
-    <input type="file" className="max-logo" placeholder="Image path" value={file} id='file' name='file'/>
+    if (document.getElementById("edit com text").value && document.getElementById("edit com text").value !== "" && document.getElementById("edit com text").value !== null && document.getElementById("edit com text").value !== undefined)
+    {
+      newComm.text = document.getElementById("edit com text").value;
+    }
+    else
+    {
+      newComm.text = s.text;
+    }
 
-    if (text === null || text === "") 
+    newComm.file = document.getElementById("edit com file").files[0];
+
+    if (newComm.text === null || newComm.text === "") 
     {
       setError("no reply text empty")
     } 
     else 
     {
-      axios.put(`https://puz-sable.vercel.app/api/comments/${comment._id}`, 
-      {
-        puzzle_id: comment.puzzle_id,
-        user_id: id,
-        text: document.getElementById("text edit").value,
-        file: document.getElementById("file edit").files[0]
-      },
-      {
+      putRequest(`https://puz-sable.vercel.app/api/comments/${s._id}`, newComm, {
         headers: {
           "Content_type":"Mulipart/form-data",
           Authorization: `Bearer ${session}`
         }
       })
-      .catch(e =>
-      {
-        setError(e.response.data.message.message);
-      })
     }
+
+    setComm([])
+    setReplies([])
+
+    setTimeout(function()
+    {
+      noPopup();
+    }, 1000); 
   }
 
   function noPopup()
   {
+    pause = false;
     document.querySelector(".popupComm").style.display = "none";
-    document.querySelector(".popupEdit").style.display = "none";
-    document.querySelector(".popupRep").style.display = "none";
-    
     document.getElementById("text comm").value = "";
     document.getElementById("file comm").value = null;
 
-    document.getElementById("text edit").value = "";
-    document.getElementById("file edit").value = null;
+    if (document.querySelector(".popupEdit"))
+    {
+      document.querySelector(".popupEdit").style.display = "none";
+      document.getElementById("edit com text").value = "";
+      document.getElementById("edit com file").value = null;
+    }
 
-    document.getElementById("text rep").value = "";
-    document.getElementById("file rep").value = null;
+    if (document.querySelector(".popupRep"))
+    {
+      document.querySelector(".popupRep").style.display = "none";
+      document.getElementById("text rep").value = "";
+      document.getElementById("file rep").value = null;
+    }
+
+    axios.get('https://puz-sable.vercel.app/api/comments')
+    .then(response => {
+      let com = []
+      let reply = []
+
+      response.data.forEach(dat => {
+        if (dat.puzzle_id === _id)
+        {
+          com.push(dat)
+        }
+      });
+
+      response.data.forEach(dat => {
+        com.forEach(rep => {
+          if (dat.puzzle_id === rep._id)
+          {
+            reply.push(dat)
+          }
+        });  
+      });
+
+      setComm(com);      
+      setReplies(reply);
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  }
+
+  function editor()
+  {
+    editComm(comment)
+  }
+
+  //deletes the users comment
+  function destroy(commm, reps)
+  {
+    comment = commm;
+
+    if (reps !== undefined)
+    {
+      reps.forEach(rep => {
+        axios.delete(`https://puz-sable.vercel.app/api/comments/${rep._id}`, {
+        headers: {
+          Authorization: `Bearer ${session}`
+        }})  
+      });
+    }
+ 
+    axios.delete(`https://puz-sable.vercel.app/api/comments/${comment._id}`, {
+      headers: {
+        Authorization: `Bearer ${session}`
+    }}) 
+      
+    setTimeout(function()
+    {  
+      let com = []
+      let reply = []
+
+      axios.get('https://puz-sable.vercel.app/api/comments')
+      .then(response => {    
+        response.data.forEach(dat => {
+          if (dat.puzzle_id === _id)
+          {
+            com.push(dat)
+          }
+        });
+    
+        response.data.forEach(dat => {
+          com.forEach(rep => {
+            if (dat.puzzle_id === rep._id)
+            {
+              reply.push(dat)
+            }
+          });  
+        });
+      })
+      .catch(e => {
+        console.log(e);
+      });
+
+
+      setComm(com);      
+      setReplies(reply);
+    }, 1500); 
   }
 
   //checks if puzzles exist
@@ -357,7 +510,7 @@ export default function PuzPage()
 
             <ul className='align-items-center text-center'>
             {
-              comm.map((comment, index) => <li className='align-items-center text-center' key={index}>{CommentItem(comment, replies, users, id, fillPopUpRep, session, fillPopUpEdit, noPopup, makeReply)}</li>)
+              comm.map((s, index) => <li className='align-items-center text-center' key={index}>{CommentItem(s, replies, users, id, fillPopUpRep, fillPopUpEdit, destroy)}</li>)
             }
             </ul>
           </div>
@@ -369,7 +522,7 @@ export default function PuzPage()
       <div className="popupComm m-5">
         <div className="popup-content">
           <div>
-            <input type="text" className="max-logo m-3" placeholder="Text" id='text comm'></input>
+            <input type="text" className="max-logo m-3" placeholder="Text" id='text comm'/>
           </div>
           <div>
             <input type="file" className="max-logo" placeholder="Image path" id='file comm'/>
@@ -380,6 +533,44 @@ export default function PuzPage()
           </button>
 
           <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={makeComm}>
+              Confirm
+          </button>
+        </div>
+      </div>
+
+      <div className="popupEdit m-5">
+        <div className="popup-content">
+          <div>
+            <input type="text" className="max-logo m-3" placeholder="Edit comment" id='edit com text'/>
+          </div>
+          <div>
+            <input type="file" className="max-logo" placeholder="Image path" id='edit com file' name='file'/>
+          </div>
+
+          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
+              Cancel
+          </button>
+
+          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={editor}>
+              Confirm
+          </button>
+        </div>
+      </div>
+
+      <div className="popupRep m-5">
+        <div className="popup-content">
+          <div>
+            <input type="text" className="max-logo m-3" placeholder="Reply text" id='text rep'></input>
+          </div>
+          <div>
+            <input type="file" className="max-logo" placeholder="Image path" id='file rep' name='file'/>
+          </div>
+
+          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
+              Cancel
+          </button>
+
+          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={makeReply}>
               Confirm
           </button>
         </div>
@@ -404,142 +595,145 @@ function wordsearch()
   }
   
   update = (p5) => {
-    if (p5.mouseButton === "left")
+    if (pause === false)
     {
-      let clic = mouseClicked(p5, clicked, boxed, secCli)
-      pros = clic[0]
-      clicked = clic[1]
-      boxed = clic[2]
-      secCli = clic[3]
-    }
+      if (p5.mouseButton === "left")
+      {
+        let clic = mouseClicked(p5, clicked, boxed, secCli)
+        pros = clic[0]
+        clicked = clic[1]
+        boxed = clic[2]
+        secCli = clic[3]
+      }
 
-    //moves the text over to the left
-    p5.textAlign(p5.LEFT);
-    p5.fill(0)
-
-    //refreshs the background
-    p5.background(220);
-    wordFiller(p5, letters, boxSize, border, countOccurrences)
-
-    //highlights a boxs if the mouse is over it or clicked
-    if ((p5.mouseX >= (0 + border) && p5.mouseX <= (p5.width - border) && p5.mouseY >= (0 + border) && p5.mouseY <= (p5.height - border)) || (clicked === true && selectedGoal === -1 && boxed === true))
-    {    
-      p5.fill(150);
-      //draws the square to darken
-      p5.rect(recX * boxSize, recY * boxSize, boxSize, boxSize);
-  
+      //moves the text over to the left
+      p5.textAlign(p5.LEFT);
       p5.fill(0)
-      p5.textSize(32);
-      p5.textAlign(p5.CENTER, p5.CENTER);
-      //console.log(letters.charAt(6 + (9 * ((recY - (border / boxSize)) + ((recX - (border / boxSize)) * ((yGridAmount - 1) * (yGridAmount - 1)))))))
 
-      p5.text(letters.charAt(6 + (9 * ((recY - (border / boxSize)) + ((recX - (border / boxSize)) * yGridAmount)))),
-      (recX - (border / boxSize)) * boxSize + border + (boxSize / 2), 
-      (recY - (border / boxSize)) * boxSize + border + (boxSize / 2))
-    
-      //checks if clicked of just hovering over
-      if (clicked === false)
-      {
+      //refreshs the background
+      p5.background(220);
+      wordFiller(p5, letters, boxSize, border, countOccurrences)
+
+      //highlights a boxs if the mouse is over it or clicked
+      if ((p5.mouseX >= (0 + border) && p5.mouseX <= (p5.width - border) && p5.mouseY >= (0 + border) && p5.mouseY <= (p5.height - border)) || (clicked === true && selectedGoal === -1 && boxed === true))
+      {    
         p5.fill(150);
-      }
-    }  
-
-    if (clicked === true && pros.mouseX >= (0 + border) && pros.mouseX <= (pros.width - border) && pros.mouseY >= (0 + border) && pros.mouseY <= (pros.height - border))
-    {
-      p5.stroke('black');
-      newLine = true;
-    }    
-    else if (clicked === true && newLine === true)
-    {
-      p5.stroke('red');
-    }
-
-    if (newLine === true)
-    {
-      searcher(p5)
-    }
-
-    if (clicked === true && pros.mouseX >= (0 + border) && pros.mouseX <= (pros.width - border) && pros.mouseY >= (0 + border) && pros.mouseY <= (pros.height - border))
-    {
-      p5.stroke('black');
-      newLine = true;
-    }    
-    else if (clicked === true && newLine === true)
-    {
-      p5.stroke('red');
-    }
+        //draws the square to darken
+        p5.rect(recX * boxSize, recY * boxSize, boxSize, boxSize);
   
-    if (secCli === true && clicked === true)
-    {
-      newLine = false;
-      clicked = false;
-      secCli = false;
-    }
+        p5.fill(0)
+        p5.textSize(32);
+        p5.textAlign(p5.CENTER, p5.CENTER);
+        //console.log(letters.charAt(6 + (9 * ((recY - (border / boxSize)) + ((recX - (border / boxSize)) * ((yGridAmount - 1) * (yGridAmount - 1)))))))
 
-    //draws the outline
-    let all = Outline(p5, xGridAmount, yGridAmount, border, clicked, boxSize, selectedGoal, recX, recY)
-  
-    p5 = all[0]
-    xGridAmount = all[1]
-    yGridAmount = all[2]
-    border = all[3]
-    clicked = all[4]
-    boxSize = all[5]
-    selectedGoal = all[6]
-    recX = all[7]
-    recY = all[8]
-
-    p5.fill(255)
-    p5.textSize(12)
-    p5.text(letters, 2, 650, 700)
-
-    //creates borders
-    p5.fill(0)
-    p5.rect(0, 0, xSketchSize, border)
-    p5.rect(0, 0, border, ySketchSize)
-    p5.rect(p5.width - border, 0, border, ySketchSize)
-    p5.rect(0, p5.height - border, xSketchSize, border)
-
-    //draws all the words in the goal
-    completion = true  
-
-    for(let i = 0; i < goal.length; i++)
-    {
-      p5.textSize(20);
-      p5.textAlign(p5.LEFT, p5.CENTER);
-      p5.fill(255);
-      p5.text(i + 1, 4, border + i * 40 + 20)
-      p5.text(goal[i], 16, border + i * 40 + 20)
-
-      if (goCheck[i] === true)
-      {
-        p5.fill(0);
-        p5.strokeWeight(5);
-        p5.line(0, border + i * 40 + 20, border, border + i * 40 + 20);
-      }
-      else
-      {
-        completion = false
-      }
-   
-      if (i === (goal.length - 1) && goCheck[i] === true && completion === true)
-      {
-        console.log("Victory")
-      }
+        p5.text(letters.charAt(6 + (9 * ((recY - (border / boxSize)) + ((recX - (border / boxSize)) * yGridAmount)))),
+        (recX - (border / boxSize)) * boxSize + border + (boxSize / 2), 
+        (recY - (border / boxSize)) * boxSize + border + (boxSize / 2))
     
+        //checks if clicked of just hovering over
+        if (clicked === false)
+        {
+          p5.fill(150);
+        }
+      }  
+
+      if (clicked === true && pros.mouseX >= (0 + border) && pros.mouseX <= (pros.width - border) && pros.mouseY >= (0 + border) && pros.mouseY <= (pros.height - border))
+      {
+        p5.stroke('black');
+        newLine = true;
+      }    
+      else if (clicked === true && newLine === true)
+      {
+        p5.stroke('red');
+      }
+
+      if (newLine === true)
+      {
+        searcher(p5)
+      }
+
+      if (clicked === true && pros.mouseX >= (0 + border) && pros.mouseX <= (pros.width - border) && pros.mouseY >= (0 + border) && pros.mouseY <= (pros.height - border))
+      {
+        p5.stroke('black');
+        newLine = true;
+      }     
+      else if (clicked === true && newLine === true)
+      {
+        p5.stroke('red');
+      }
+  
+      if (secCli === true && clicked === true)
+      {
+        newLine = false;
+        clicked = false;
+        secCli = false;
+      }
+
+      //draws the outline
+      let all = Outline(p5, xGridAmount, yGridAmount, border, clicked, boxSize, selectedGoal, recX, recY)
+  
+      p5 = all[0]
+      xGridAmount = all[1]
+      yGridAmount = all[2]
+      border = all[3]
+      clicked = all[4]
+      boxSize = all[5]
+      selectedGoal = all[6]
+      recX = all[7]
+      recY = all[8]
+
+      p5.fill(255)
+      p5.textSize(12)
+      p5.text(letters, 2, 650, 700)
+
+      //creates borders
+      p5.fill(0)
+      p5.rect(0, 0, xSketchSize, border)
+      p5.rect(0, 0, border, ySketchSize)
+      p5.rect(p5.width - border, 0, border, ySketchSize)
+      p5.rect(0, p5.height - border, xSketchSize, border)
+
+      //draws all the words in the goal
+      completion = true  
+
+      for(let i = 0; i < goal.length; i++)
+      {
+        p5.textSize(20);
+        p5.textAlign(p5.LEFT, p5.CENTER);
+        p5.fill(255);
+        p5.text(i + 1, 4, border + i * 40 + 20)
+        p5.text(goal[i], 16, border + i * 40 + 20)
+
+        if (goCheck[i] === true)
+        {
+          p5.fill(0);
+          p5.strokeWeight(5);
+          p5.line(0, border + i * 40 + 20, border, border + i * 40 + 20);
+        }
+        else
+        {
+          completion = false
+        }
+   
+        if (i === (goal.length - 1) && goCheck[i] === true && completion === true)
+        {
+          console.log("Victory")
+        }
+    
+        p5.strokeWeight(0.25);
+      }
+
+      p5.stroke('black');
+      p5.strokeWeight(5);
+
+      for(let i = 0; i <= lines.length / 4; i++)
+      {
+        p5.line((lines[i * 4] * boxSize) + border + (boxSize / 2), (lines[1 + (i * 4)] * boxSize) + border + (boxSize / 2), (lines[2 + (i * 4)] * boxSize) + border + (boxSize / 2), (lines[3 + (i * 4)] * boxSize) + border + (boxSize / 2));
+      }
+
+      p5.stroke(0);
       p5.strokeWeight(0.25);
     }
-
-    p5.stroke('black');
-    p5.strokeWeight(5);
-
-    for(let i = 0; i <= lines.length / 4; i++)
-    {
-      p5.line((lines[i * 4] * boxSize) + border + (boxSize / 2), (lines[1 + (i * 4)] * boxSize) + border + (boxSize / 2), (lines[2 + (i * 4)] * boxSize) + border + (boxSize / 2), (lines[3 + (i * 4)] * boxSize) + border + (boxSize / 2));
-    }
-
-    p5.stroke(0);
-    p5.strokeWeight(0.25);
   }
 }
 

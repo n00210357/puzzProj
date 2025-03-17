@@ -21,7 +21,7 @@ export default function PuzzleItem(puzzle, users, session, id){
     }
   }
 
-  if (user === null)
+  if (user === null && users === Array)
   {
     for(let i = 0; i < users.length; i++)
     {
@@ -31,7 +31,11 @@ export default function PuzzleItem(puzzle, users, session, id){
         break;
       }
     }
-  }  
+  } 
+  else
+  {
+    user = users
+  } 
 
     //creates the urls
     const url = `puzz/${puzzle._id}`
