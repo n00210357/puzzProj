@@ -42,7 +42,7 @@ export function useStorageState(key: string): UseStateHook<string> {
       {
         console.error('Local storage is unavailable:', e);
       }
-  }, [key]);
+  }, [key, setState]);
 
   // Set
   const setValue = useCallback(
@@ -50,7 +50,7 @@ export function useStorageState(key: string): UseStateHook<string> {
       setState(value);
       setStorageItemAsync(key, value);
     },
-    [key]
+    [key, setState]
   );
 
   return [state, setValue];
