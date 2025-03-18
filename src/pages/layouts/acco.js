@@ -10,7 +10,8 @@ export default function AccoPage() {
   //sets up variables
   const [user, setUser] = useState(null);
   const { session, id, signOut } = useContext(UserContext);
-  
+  const [comm, setComm] = useState([]);
+
   //grabs user from database
   useEffect(() => {
     if (id !== null)
@@ -62,7 +63,7 @@ export default function AccoPage() {
   //sets up image
   let image;
 
-  if (user.image_path && user.image_path !== null && user.image_path !== undefined)
+  if (user.image_path && user.image_path !== null && user.image_path !== undefined && user.image_path !== "http://api-image.s3.eu-west-1.amazonaws.com/undefined")
   {
     image = user.image_path;
   }
@@ -73,10 +74,11 @@ export default function AccoPage() {
 
   //displays the users account
   return (
-    <div>
+    <UserContextProvider>            
       <div className='row align-items-center text-center'>
-      {
-        <UserContextProvider>            
+      <div className="col-4"></div>
+
+        <div className="col-4">
           <div className="card-body align-items-center text-center">
             <img src={image} alt="profile"/>
             <h5 className="card-title">{user.username}</h5>
@@ -99,9 +101,17 @@ export default function AccoPage() {
                 </h3>
             </button>
           </div>
-        </UserContextProvider>
-      }
+        </div>
+
+        <div className="col-4 overflow-scroll">
+          <h4>{user.username} & your messages </h4>
+          <ul className='align-items-center text-center'>
+          {
+            //comm.map((s, index) => <li className='align-items-center text-center' key={index}>{CommentItem(s, undefined, user, id, undefined, fillPopUpEdit, destroy)}</li>)
+          }
+          </ul>
+        </div>       
       </div>
-    </div>
+    </UserContextProvider>
   );
 }

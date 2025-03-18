@@ -49,14 +49,16 @@ function Registor()
             headers: {
                 "Content_type":"Mulipart/form-data",
             }
-        }, (resp) => {
-            console.log(resp)
-            autoLogin(resp)
         });
+
+        setTimeout(function()
+        {
+            autoLogin()
+        }, 1500); 
     }
 
     //logs the new user in
-    async function autoLogin(resp)//: any)
+    async function autoLogin()//: any)
     {
         axios.post('https://puz-sable.vercel.app/api/users/login', 
         {
@@ -74,7 +76,7 @@ function Registor()
     //displays the register page
     return(
         <UserContextProvider>
-        <form className="align-items-center text-center my-3" action="/upload" method="POST" encType="multipart/form">
+        <form className="align-items-center text-center my-3" encType="multipart/form">
             <h6 className="fw-bold">Username</h6>
             <input type="text" className="max-logo" placeholder="Username" value={form.username} onChange={handleChange} id='username'></input>
             <div className="mb-3">Your accounts username</div>

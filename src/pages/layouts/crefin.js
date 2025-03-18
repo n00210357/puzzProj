@@ -66,7 +66,7 @@ export default function CreFinPage() {
     //displays the finalize page
     return (
     <UserContextProvider>
-    <form className="align-items-center text-center my-3" action="/upload" method="POST" encType="multipart/form">
+    <form className="align-items-center text-center my-3" encType="multipart/form">
         <input type="file" className="max-logo" placeholder="Image path" onChange={handleChange} id='file'/> 
 
         <h6 className="fw-bold">Name</h6>
