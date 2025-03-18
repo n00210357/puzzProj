@@ -10,7 +10,7 @@ export default function AccoPage() {
   //sets up variables
   const [user, setUser] = useState(null);
   const { session, id, signOut } = useContext(UserContext);
-  const [comm, setComm] = useState([]);
+  //const [comm, setComm] = useState([]);
 
   //grabs user from database
   useEffect(() => {
