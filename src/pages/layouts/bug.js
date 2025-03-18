@@ -10,7 +10,7 @@ let bug;
 //shows all the accounts pages
 export default function BugReport() {
   //sets up variables
-  const [newBug, setNewBug] = useState({
+  const [newBug] = useState({
     puzzle_id: "",
     user_id: "",
     text: "",
@@ -215,6 +215,8 @@ export default function BugReport() {
           </h6>
         </button>
 
+        <h4>{errors}</h4>
+
         <h1>Loading...</h1>
 
         <div className="popupComm m-5">
@@ -266,6 +268,8 @@ export default function BugReport() {
           REPORT BUG
         </h6>
       </button>
+
+      <h4>{errors}</h4>
 
       <ul className='row align-items-center text-center'>
       {

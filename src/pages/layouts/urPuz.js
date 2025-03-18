@@ -4,14 +4,15 @@ import PuzzleItem from '../comp/puzzleComp.js';
 import UserContext from '../../contexts/userContext.js';
 import { useEffect, useState, useContext } from 'react';
 
+let puzCheck = false;
+let useCheck = false;
+
 //the search page
 export default function UrPuzzPage() {
   //sets up variables
   const [puzzles, setPuzzles] = useState([]);
   const [users, setUser] = useState([]);
   const { session, id } = useContext(UserContext);
-  let puzCheck = false;
-  let useCheck = false;
 
   //grabs all puzzles from the database
   useEffect(() => {

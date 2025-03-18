@@ -3,6 +3,7 @@ import UserContextProvider from "../../contexts/userContextProvider.tsx";
 import Sketch from "react-p5";
 import axios from 'axios';
 import UserContext from "../../contexts/userContext.js";
+import useAPI from '../../hooks/useAPI.tsx'
 import { useState, useEffect, useContext } from "react";
 import { Outline, wordFiller, countOccurrences } from "../comPuz/puzLook.js";
 import { mouseClicked} from "../comPuz/mousCont.js";
@@ -34,16 +35,12 @@ let dontAdd = false;
 let letters = ""
 let goal = [];
 let goCheck = []
-let lines = [];
-let newLine = false;
-let completion = true;
 let inputError = "";
 
 
 //MOUSE VARS
 //stores if user clicked
 let clicked = false;
-let secCli = false;
 
 //CANVAS VARS
 //A allows the canvase to be referenced
@@ -59,17 +56,49 @@ let pros
 let selectedGoal = -1;
 
 let starter = ""
+let puz;
+let editedPuz;
+let sess;
+let put;
 
 //the puzzle page
 export default function PuzEditPage()
 {  
-  const {id, session} = useContext(UserContext);
+  //sets up form data
+  const [form, setForm] = useState({
+    name: "",
+    puzzleCode: "",
+    file: null
+  });
+
+  const { session } = useContext(UserContext);
   const [puzzle, setPuzzle] = useState(); 
   const [puzzType, setPuzzType] = useState(0);
   const {rememberedPuz, puzzCode} = useContext(UserContext);
-  const [error, setError] = useState("");
+  const [errors, setError] = useState("");
+  const {putRequest, loading, error } = useAPI();
   var _id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
   
+  if (puz !== puzzle)
+  {
+    puz = puzzle
+  }
+
+  if (editedPuz !== form)
+  {
+    editedPuz = form
+  }
+
+  if (sess !== session)
+  {
+    sess = session;
+  }
+
+  if (put !== putRequest)
+  {
+    put = putRequest;
+  }
+
   //gets the puzzle data
   useEffect(() => {
     axios.get(`https://puz-sable.vercel.app/api/puzzles/${_id}`)
@@ -78,37 +107,10 @@ export default function PuzEditPage()
           starter = response.data.puzzleCode;
          })
          .catch(e => {
-          console.log(e);
+          setError(e)
          });
 
   }, [_id]);
-
-    //sets up form data
-    const [form, setForm] = useState({
-        name: "",
-        puzzleCode: "",
-        file: null
-    });
-
-    //assigns form data with puzzle data
-    if (puzzle)
-    {
-        if (!puzzle.image_path || puzzle.image_path == null || puzzle.image_path === undefined)
-        {
-            form.file = null
-        }
-
-        if (form.name === "" || form.name == null || form.name === undefined)
-        {
-            //form.name = puzzle.name
-        }
-
-        if (form.puzzleCode === "" || form.puzzleCode == null || form.puzzleCode === undefined)
-        {
-            //form.puzzleCode = puzzle.puzzleCode
-        }
-    }
-
 
   //runs the puzzles function
   if (puzzType === 1)
@@ -199,7 +201,7 @@ export default function PuzEditPage()
     //allows the finsh button to be pressed
     function lastCheck()
     {
-        if (selectedGoal != -1)
+        if (selectedGoal !== -1)
         {
             clicked = true
         }
@@ -255,7 +257,7 @@ export default function PuzEditPage()
   }
 
   //grabs the puzzles variables
-  if (starter !== "" && letters === "")
+  if ((starter !== "" && letters === "") || loading)
   {
     setPuzzType(Number(starter.split('@ ')[0]))
 
@@ -343,7 +345,10 @@ export default function PuzEditPage()
             <Sketch setup={start} draw={update}/>
           </div>
 
-          <div className="col-2"></div>
+          <div className="col-2">
+            <h4>{error}</h4>
+            <h4>{errors}</h4>
+          </div>
         </div>
       </div>
     </UserContextProvider>
@@ -1020,19 +1025,19 @@ async function checkAllGrid(p5)
         {
           for (let c = 0; c < goal.length; c++)
           {            
-            if (goCheck[c] == false)
+            if (goCheck[c] === false)
             {
               //a direction checks from all potential angles
               let dirCheck = [false, false, false, false, false, false, false, false]
 
-              if (goal[c].charAt(0) == letters.charAt(6 + (9 * (y + (x * yGridAmount)))))
+              if (goal[c].charAt(0) === letters.charAt(6 + (9 * (y + (x * yGridAmount)))))
               { 
                 for (let i = 1; i < goal[c].length; i++) 
                 {
                   //checks if goal exist EAST wards
-                  if (dirCheck[0] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * (y + ((x + i) * yGridAmount)))))
+                  if (dirCheck[0] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * (y + ((x + i) * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1043,9 +1048,9 @@ async function checkAllGrid(p5)
                   }   
                   
                   //checks if goal exist SOUTH EAST wards
-                  if (dirCheck[1] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y + i) + ((x + i) * yGridAmount)))))
+                  if (dirCheck[1] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y + i) + ((x + i) * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1056,9 +1061,9 @@ async function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist SOUTH wards
-                  if (dirCheck[2] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y + i) + (x * yGridAmount)))))
+                  if (dirCheck[2] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y + i) + (x * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1069,9 +1074,9 @@ async function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist SOUTH WEST wards
-                  if (dirCheck[3] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y + i) + ((x - i) * yGridAmount)))))
+                  if (dirCheck[3] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y + i) + ((x - i) * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1082,9 +1087,9 @@ async function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist WEST wards
-                  if (dirCheck[4] == false && goal[c].charAt(i) === letters.charAt(6 + (9 * (y + ((x - i) * yGridAmount)))))
+                  if (dirCheck[4] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * (y + ((x - i) * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1095,9 +1100,9 @@ async function checkAllGrid(p5)
                   }   
 
                   //checks if goal exist NORTH WEST wards
-                  if (dirCheck[5] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y - i) + ((x - i) * yGridAmount)))))
+                  if (dirCheck[5] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y - i) + ((x - i) * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1108,9 +1113,9 @@ async function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist NORTH wards
-                  if (dirCheck[6] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y - i) + ((x) * yGridAmount)))))
+                  if (dirCheck[6] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y - i) + ((x) * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1121,9 +1126,9 @@ async function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist NORTH EAST wards
-                  if (dirCheck[7] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y - i) + ((x + i) * yGridAmount)))))
+                  if (dirCheck[7] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y - i) + ((x + i) * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1133,7 +1138,7 @@ async function checkAllGrid(p5)
                     dirCheck[7] = true
                   }  
                   
-                  if (goCheck[c] == true)
+                  if (goCheck[c] === true)
                   {
                     break;
                   }
@@ -1204,7 +1209,7 @@ async function checkAllGrid(p5)
         //ask the user if they are finshed
         if (window.confirm("All goals are included do you want to upload")) 
         {
-          window.txt = window.location.href = '/creFin';
+          editingPuz()
         } 
         else 
         {
@@ -1231,4 +1236,31 @@ function finalCheck(p5)
   });
 
   checkAllGrid(p5);
+}
+
+function editingPuz()
+{
+  if (editedPuz.name === "" || editedPuz.name === null || editedPuz.name === undefined)
+  {
+    editedPuz.name = puz.name;
+  }
+
+  if (editedPuz.puzzleCode === "" || editedPuz.puzzleCode === null || editedPuz.puzzleCode === undefined)
+  {
+    editedPuz.puzzleCode = puz.puzzleCode;
+  }
+
+  if (editedPuz.file === "" || editedPuz.file === null || editedPuz.file === undefined)
+  {
+    editedPuz.file = puz.file;
+  }
+    
+  put(`https://puz-sable.vercel.app/api/puzzles/${puz._id}`, editedPuz, {
+    headers: {
+      "Content_type":"Mulipart/form-data",
+      Authorization: `Bearer ${sess}`
+    }
+  })
+
+  window.txt = window.location.href = '/yourPuzzles';  
 }

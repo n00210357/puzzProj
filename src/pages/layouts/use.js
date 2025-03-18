@@ -20,7 +20,7 @@ export default function UseLayout() {
   const { session, id } = useContext(UserContext);
   const [comm, setComm] = useState([]);
   const [errors, setError] = useState("");
-  const [newComm, setNewComm] = useState({
+  const [newComm] = useState({
     puzzle_id: "",
     user_id: "",
     text: "",
@@ -66,7 +66,7 @@ export default function UseLayout() {
       .catch(e => {
         console.log(e);
       });
-    }, []);
+    }, [_id]);
 
   useEffect(() => {
     axios.get('https://puz-sable.vercel.app/api/comments')
@@ -273,7 +273,7 @@ export default function UseLayout() {
   }
 
   //checks for user
-  if (user == null)
+  if (user == null || loading)
   {
     return <h1 className="card-body align-items-center text-center">Loading...</h1>
   }
@@ -310,6 +310,9 @@ export default function UseLayout() {
                 <h5 className="card-title">{user.username}</h5>
                 <p className="card-text">{user.email}</p>
                 <p className="card-text">{user.about}</p>
+
+                <p className="card-text">{error}</p>
+                <p className="card-text">{errors}</p>
               </div>
 
               <button id="clickMe" className="align-items-center text-center mx-3 my-2" value="makeComment" type="button" onClick={fillPopUpCom}>

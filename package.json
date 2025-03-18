@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@vitejs/plugin-vue": "^5.2.3",
+    "autoprefixer": "10.4.5",
     "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "cors": "^2.8.5",
@@ -43,6 +45,7 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.10",
-    "@types/react": "^19.0.8"
+    "@types/react": "^19.0.8",
+    "webpack": "^5.98.0"
   }
 }

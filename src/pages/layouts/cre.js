@@ -142,7 +142,7 @@ export default function CrePage()
   //allows the finsh button to be pressed
   function lastCheck()
   {
-    if (selectedGoal != -1)
+    if (selectedGoal !== -1)
     {
       clicked = true
     }
@@ -172,6 +172,7 @@ export default function CrePage()
     }
   }
 
+  /*
   function recoverWork()
   {
     if (Number(puzzCode.split('@ ')[0]) === 1)
@@ -199,6 +200,7 @@ export default function CrePage()
       rememberedPuz(null)
     }
   }
+  */
 
   function labelPuzzleType()
   {
@@ -220,11 +222,11 @@ export default function CrePage()
     xSketchSize = (boxSize * xGridAmount) + border * 2;
     ySketchSize = (boxSize * yGridAmount) + border * 2;
     
-    if (puzVal == 0)
+    if (puzVal === 0)
     {
       setPuzzType(0)
     }
-    else if (puzVal == 1)
+    else if (puzVal === 1)
     {
       setPuzzType(1)
     }
@@ -1045,19 +1047,19 @@ async function checkAllGrid(p5)
         {
           for (let c = 0; c < goal.length; c++)
           {            
-            if (goCheck[c] == false)
+            if (goCheck[c] === false)
             {
               //a direction checks from all potential angles
               let dirCheck = [false, false, false, false, false, false, false, false]
 
-              if (goal[c].charAt(0) == letters.charAt(6 + (9 * (y + (x * yGridAmount)))))
+              if (goal[c].charAt(0) === letters.charAt(6 + (9 * (y + (x * yGridAmount)))))
               { 
                 for (let i = 1; i < goal[c].length; i++) 
                 {
                   //checks if goal exist EAST wards
-                  if (dirCheck[0] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * (y + ((x + i) * yGridAmount)))))
+                  if (dirCheck[0] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * (y + ((x + i) * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1068,9 +1070,9 @@ async function checkAllGrid(p5)
                   }   
                   
                   //checks if goal exist SOUTH EAST wards
-                  if (dirCheck[1] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y + i) + ((x + i) * yGridAmount)))))
+                  if (dirCheck[1] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y + i) + ((x + i) * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1081,9 +1083,9 @@ async function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist SOUTH wards
-                  if (dirCheck[2] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y + i) + (x * yGridAmount)))))
+                  if (dirCheck[2] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y + i) + (x * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1094,9 +1096,9 @@ async function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist SOUTH WEST wards
-                  if (dirCheck[3] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y + i) + ((x - i) * yGridAmount)))))
+                  if (dirCheck[3] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y + i) + ((x - i) * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1107,9 +1109,9 @@ async function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist WEST wards
-                  if (dirCheck[4] == false && goal[c].charAt(i) === letters.charAt(6 + (9 * (y + ((x - i) * yGridAmount)))))
+                  if (dirCheck[4] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * (y + ((x - i) * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1120,9 +1122,9 @@ async function checkAllGrid(p5)
                   }   
 
                   //checks if goal exist NORTH WEST wards
-                  if (dirCheck[5] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y - i) + ((x - i) * yGridAmount)))))
+                  if (dirCheck[5] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y - i) + ((x - i) * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1133,9 +1135,9 @@ async function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist NORTH wards
-                  if (dirCheck[6] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y - i) + ((x) * yGridAmount)))))
+                  if (dirCheck[6] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y - i) + ((x) * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1146,9 +1148,9 @@ async function checkAllGrid(p5)
                   }  
 
                   //checks if goal exist NORTH EAST wards
-                  if (dirCheck[7] == false && goal[c].charAt(i) == letters.charAt(6 + (9 * ((y - i) + ((x + i) * yGridAmount)))))
+                  if (dirCheck[7] === false && goal[c].charAt(i) === letters.charAt(6 + (9 * ((y - i) + ((x + i) * yGridAmount)))))
                   {
-                    if (i == goal[c].length - 1)
+                    if (i === goal[c].length - 1)
                     {
                       goCheck[c] = true
                     }
@@ -1158,7 +1160,7 @@ async function checkAllGrid(p5)
                     dirCheck[7] = true
                   }  
                   
-                  if (goCheck[c] == true)
+                  if (goCheck[c] === true)
                   {
                     break;
                   }

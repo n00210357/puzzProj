@@ -11,7 +11,6 @@ import LoginForm from './pages/Login';
 import HomePage from './pages/Home';
 import SearchPage from './pages/Search';
 import CreatePage from './pages/Create';
-import FavouritePage from './pages/Favourite';
 import BugPage from './pages/Bug';
 import AccountPage from './pages/Account';
 import AccountEdit from './pages/edits/editAccount';

@@ -70,7 +70,7 @@ export default function PuzPage()
     addGoal: "",
   });
   
-  const [newComm, setNewComm] = useState({
+  const [newComm] = useState({
     puzzle_id: "",
     user_id: "",
     text: "",
@@ -503,7 +503,7 @@ export default function PuzPage()
           <div className="col-2"></div>
 
           <div className="col-8">
-            
+            <h4>{errors}</h4>
             <button id="clickMe" className="mx-3 my-2" value="makeComment" type="button" onClick={fillPopUpCom}>
               Comment
             </button>
