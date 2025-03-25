@@ -137,7 +137,7 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
       } 
     }   
 
-    if (users[0] !== undefined && users[0] !== null && users[1] !== undefined && users[1] !== null && isComm === true &&((comment.user_id === users[1]._id && comment.puzzle_id === users[0]._id) || (comment.user_id === users[0]._id && comment.puzzle_id === users[1]._id)))
+    if (users[0] !== undefined && users[0] !== null && users[1] !== undefined && users[1] !== null &&((comment.user_id === users[1]._id && comment.puzzle_id === users[0]._id) || (comment.user_id === users[0]._id && comment.puzzle_id === users[1]._id)))
     {
         
     }
