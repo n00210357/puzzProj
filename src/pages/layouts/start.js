@@ -59,7 +59,7 @@ export default function StartForm()
                 </svg>
 
                 <h1 className="fw-bold display-1">
-                    NAME
+                    Puzzle hoster
                 </h1>
             </div>
 

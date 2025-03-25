@@ -15,7 +15,7 @@ let comCheck = false;
 export default function UseLayout() {
   //sets up variables
   const { postRequest, putRequest, loading, error } = useAPI();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState([]);
   const [puzzles, setPuzzles] = useState([]); 
   const { session, id } = useContext(UserContext);
   const [comm, setComm] = useState([]);
@@ -31,8 +31,9 @@ export default function UseLayout() {
   
   //grabs user from database
   useEffect(() => {
-    if (_id !== null)
+    if (_id !== null && id !== null && (user[0] === null || user[0] === undefined))
     {
+      let users = []
       axios.get(`https://puz-sable.vercel.app/api/users/${_id}`,
       {
         headers: {
@@ -40,54 +41,61 @@ export default function UseLayout() {
         }
       })
       .then(response => {
-        setUser(response.data);
+        users[0] = response.data
+      })
+      .catch(e => {
+        console.log(e);
+      });
+
+      axios.get(`https://puz-sable.vercel.app/api/users/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${session}`
+        }
+      })
+      .then(response => {
+        users[1] = response.data
+        setUser(users)
       })
       .catch(e => {
         console.log(e);
       });
     }
-  });
-  
-  //grabs all puzzles from the database
-  useEffect(() => {
-    axios.get('https://puz-sable.vercel.app/api/puzzles')
+
+    //grabs all puzzles from the database
+    if (puzzles[0] == null)
+    {
+      axios.get('https://puz-sable.vercel.app/api/puzzles')
       .then(response => {
         let puz = []
 
-        response.data.forEach(pu => {
-          if (pu.user_id === _id)
-          {
-            puz.push(pu);
-          }
+          response.data.forEach(pu => {
+            if (pu.user_id === _id)
+            {
+              puz.push(pu);
+            }
+          });
+
+          setPuzzles(puz);
+        })
+        .catch(e => {
+          console.log(e);
         });
+    }
 
-        setPuzzles(puz);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-    }, [_id]);
-
-  useEffect(() => {
     axios.get('https://puz-sable.vercel.app/api/comments')
     .then(response => {
       if (comm.length === 0)
       {
         let com = []
     
-        axios.get('https://puz-sable.vercel.app/api/comments')
-        .then(response => {    
-          response.data.forEach(dat => {
-            if ((dat.puzzle_id === _id && dat.user_id === id) || (dat.puzzle_id === id && dat.user_id === _id))
-            {
-              com.push(dat)
-            }
-          });
-        })
-        .catch(e => {
-          console.log(e);
+        response.data.forEach(dat => {
+          if ((dat.puzzle_id === _id && dat.user_id === id) || (dat.puzzle_id === id && dat.user_id === _id))
+          {              
+            com.push(dat)
+          }
         });
-    
+
         setComm(com);      
       }
     })
@@ -140,7 +148,7 @@ export default function UseLayout() {
       setTimeout(function()
       {
         noPopup();
-      }, 1000);   
+      }, 1500);   
     }
 
   function editor()
@@ -178,8 +186,6 @@ export default function UseLayout() {
       })
     }
 
-    setComm([])
-
     setTimeout(function()
     {
       noPopup();
@@ -198,22 +204,22 @@ export default function UseLayout() {
       
     setTimeout(function()
     {  
-      let com = []
-
       axios.get('https://puz-sable.vercel.app/api/comments')
-      .then(response => {    
-        response.data.forEach(dat => {
-          if ((dat.puzzle_id === _id && dat.user_id === id) || (dat.puzzle_id === id && dat.user_id === _id))
-          {
-            com.push(dat)
-          }
-        });
+      .then(response => {
+          let com = []
+      
+          response.data.forEach(dat => {
+            if ((dat.puzzle_id === _id && dat.user_id === id) || (dat.puzzle_id === id && dat.user_id === _id))
+            {              
+              com.push(dat)
+            }
+          });
+          
+          setComm(com);    
       })
       .catch(e => {
         console.log(e);
-      });
-
-      setComm(com);      
+      });     
     }, 1500); 
   }
 
@@ -244,36 +250,29 @@ export default function UseLayout() {
       document.getElementById("file rep").value = null;
     }
 
-    axios.get('https://puz-sable.vercel.app/api/comments')
-    .then(response => {
-      let com = []
-      let reply = []
-
-      response.data.forEach(dat => {
-        if (dat.puzzle_id === _id)
-        {
-          com.push(dat)
-        }
-      });
-
-      response.data.forEach(dat => {
-        com.forEach(rep => {
-          if (dat.puzzle_id === rep._id)
-          {
-            reply.push(dat)
+    setTimeout(function()
+    {  
+      axios.get('https://puz-sable.vercel.app/api/comments')
+      .then(response => {
+        let com = []
+    
+        response.data.forEach(dat => {
+          if ((dat.puzzle_id === _id && dat.user_id === id) || (dat.puzzle_id === id && dat.user_id === _id))
+          {              
+            com.push(dat)
           }
-        });  
+        });
+        
+        setComm(com);      
+      })
+      .catch(e => {
+        console.log(e);
       });
-
-      setComm(com);      
-    })
-    .catch(e => {
-      console.log(e);
-    });
+    }, 1500); 
   }
 
   //checks for user
-  if (user == null || loading)
+  if (user[0] == null || loading)
   {
     return <h1 className="card-body align-items-center text-center">Loading...</h1>
   }
@@ -281,14 +280,19 @@ export default function UseLayout() {
   //sets up image
   let image;
 
-  if (user.image_path && user.image_path !== null && user.image_path !== undefined)
+  if (user[0].image_path && user[0].image_path !== null && user[0].image_path !== undefined)
   {
-    image = user.image_path;
+    image = user[0].image_path;
   }
   else
   {
     image = img
   }
+
+    if (image.charAt(44) === "u" && image.charAt(45) === "n" && image.charAt(46) === "d" && image.charAt(47) === "e")
+    {
+      image = img
+    }
 
   //displays the users account
   return (
@@ -296,7 +300,7 @@ export default function UseLayout() {
       <div>   
           <div className="row"> 
             <div className="col-4 overflow-scroll">
-              <h4>{user.username}'s Puzzles </h4>
+              <h4 className="align-items-center text-center">{user[0].username}'s Puzzles </h4>
               <ul className='align-items-center text-center'>
               {
                 puzzles.map((puzzle, index) => <li className='align-items-center text-center my-3' key={index}>{PuzzleItem(puzzle, user, session, id)}</li>)
@@ -307,24 +311,25 @@ export default function UseLayout() {
             <div className="col-4 align-items-center text-center">
               <div className="card-body align-items-center text-center">
                 <img src={image} alt="profile"/>
-                <h5 className="card-title">{user.username}</h5>
-                <p className="card-text">{user.email}</p>
-                <p className="card-text">{user.about}</p>
+                <h5 className="card-title">{user[0].username}</h5>
+                <p className="card-text">{user[0].email}</p>
+                <p className="card-text">{user[0].about}</p>
 
                 <p className="card-text">{error}</p>
                 <p className="card-text">{errors}</p>
-              </div>
+              </div>     
+            </div>
+
+            <div className="col-4 overflow-scroll align-items-center text-center">
+              <h4>{user[0].username} & your messages </h4>
 
               <button id="clickMe" className="align-items-center text-center mx-3 my-2" value="makeComment" type="button" onClick={fillPopUpCom}>
                 Message
-              </button>          
-            </div>
+              </button>     
 
-            <div className="col-4 overflow-scroll">
-              <h4>{user.username} & your messages </h4>
               <ul className='align-items-center text-center'>
               {
-                comm.map((s, index) => <li className='align-items-center text-center' key={index}>{CommentItem(s, undefined, user, id, undefined, fillPopUpEdit, destroy)}</li>)
+                comm.map((s, index) => <li className='align-items-center text-center' key={index}>{CommentItem(false, s, undefined, user, id, undefined, fillPopUpEdit, destroy)}</li>)
               }
               </ul>
             </div>

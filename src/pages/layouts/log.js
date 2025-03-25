@@ -55,34 +55,30 @@ export default function LoginForm()
                 </svg>
 
                 <h1 className="fw-bold display-1">
-                    NAME
+                    Puzzle hoster
                 </h1>
             </div>
 
             <div className="align-items-center text-center my-3">
-            <h6 className="fw-bold">Email</h6>
-            <input type="text" className="fmax-logo" placeholder="Email" value={form.email} onChange={handleChange} id='email'></input>
+                <h6 className="fw-bold">Email</h6>
+                <input type="text" className="fmax-logo" placeholder="Email" value={form.email} onChange={handleChange} id='email'></input>
 
-            <h6 className="fw-bold">Password</h6>
-            <input type="text" className="max-logo" placeholder="Password" value={form.password} onChange={handleChange} id='password'></input>
+                <h6 className="fw-bold">Password</h6>
+                <input type="text" className="max-logo" placeholder="Password" value={form.password} onChange={handleChange} id='password'></input>
 
-            <h6 className="fw-bold">{error}</h6>
+                <h6 className="fw-bold">{error}</h6>
 
-            <button id="clickMe" className="mx-3 my-2" value="LOGIN" type="button" onClick={handlePress}>
-                <h3 className="but">
-                    Login
-                </h3>
-            </button>
+                <button id="clickMe" className="mx-3 my-2" value="LOGIN" type="button" onClick={handlePress}>
+                    <h3 className="but">
+                        Login
+                    </h3>
+                </button>
 
-                <div>
-                    <button className="mx-3 my-2">
-                        <a href="../">
-                            <h3 className="but">
-                                Back
-                            </h3>
-                        </a>
-                    </button>
-                </div>
+                <a href="https://puzzlehoster.netlify.app/">
+                    <h3 className="but">
+                        Back
+                    </h3>
+                </a>
             </div>
         </UserContextProvider>
     )

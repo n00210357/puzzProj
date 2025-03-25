@@ -71,6 +71,8 @@ function Registor()
         })
     }
 
+    function backward(){window.history.back()}
+
     if (loading) return <h1>Loading</h1>
 
     //displays the register page
@@ -104,16 +106,12 @@ function Registor()
                     Register
                 </h3>
             </button>
-
-            <div>
-                <button className="mx-3 my-2">
-                    <a href="../">
-                        <h3 className="but">
-                            Back
-                        </h3>
-                    </a>
-                </button>
-            </div>
+               
+            <a href="https://puzzlehoster.netlify.app/">
+                <h3 className="but">
+                    Back
+                </h3>
+            </a>
         </form>
         </UserContextProvider>
     )

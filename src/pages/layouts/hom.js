@@ -20,7 +20,7 @@ export default function HomPage()
                     </h4>
 
                     <h5 className="align-items-center text-center">
-                        Features
+                        New features
                     </h5>
 
                     <ul className="list-group list-group-flush">

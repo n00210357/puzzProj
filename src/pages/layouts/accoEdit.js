@@ -116,9 +116,12 @@ export default function AccoEdit() {
                 "Content_type":"Mulipart/form-data",
                 Authorization: `Bearer ${session}`
             }
-        }, (data) => {
-           window.location.href = '/account';
         });
+
+        if (error === null)
+        {
+            window.location.href = '/account';
+        }
     }
 
     //warns the user that the are about to change their accounts details

@@ -21,7 +21,7 @@ export default function PuzzleItem(puzzle, users, session, id){
     }
   }
 
-  if (user === null && users === Array)
+  if (user === null && (users[1] !== null || users[1] !== undefined))
   {
     for(let i = 0; i < users.length; i++)
     {
@@ -69,7 +69,7 @@ export default function PuzzleItem(puzzle, users, session, id){
               <img style={{maxwidth: '400px', maxheight: '400px', width:'100%', height: 'auto'}} src={image} alt="profile"/>
               <h5 className="card-title">{puzzle.name}</h5>
               <p className="card-text m-0">Made by {user.username}</p>
-              <p className="card-text m-0">Created at {puzzle.createdAt}</p>
+              <p className="card-text m-0">Created at {puzzle.createdAt.slice(0, 10)}</p>
             </a>
           </div>
         </UserContextProvider>
@@ -85,7 +85,7 @@ export default function PuzzleItem(puzzle, users, session, id){
             <img style={{maxwidth: '400px', maxheight: '400px', width:'100%', height: 'auto'}} src={image} alt="profile"/>
             <h5 className="card-title">{puzzle.name}</h5>
             <p className="card-text m-0">Made by {user.username}</p>
-            <p className="card-text m-0">Created at {puzzle.createdAt}</p>
+            <p className="card-text m-0">Created at {puzzle.createdAt.slice(0, 10)}</p>
           </a>
 
           <div className="container align-items-center text-center my-2">

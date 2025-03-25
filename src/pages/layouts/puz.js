@@ -510,7 +510,7 @@ export default function PuzPage()
 
             <ul className='align-items-center text-center'>
             {
-              comm.map((s, index) => <li className='align-items-center text-center' key={index}>{CommentItem(s, replies, users, id, fillPopUpRep, fillPopUpEdit, destroy)}</li>)
+              comm.map((s, index) => <li className='align-items-center text-center' key={index}>{CommentItem(true, s, replies, users, id, fillPopUpRep, fillPopUpEdit, destroy)}</li>)
             }
             </ul>
           </div>

@@ -67,9 +67,8 @@ export default function CrePage()
   });
 
   const [puzzType, setPuzzType] = useState(0);
-
   const [puzVal, setPuzVal] = useState(0)
-
+  
   if (puzzType === 1)
   {
     window.setInterval(rememberWork, 10000);
@@ -222,14 +221,10 @@ export default function CrePage()
     xSketchSize = (boxSize * xGridAmount) + border * 2;
     ySketchSize = (boxSize * yGridAmount) + border * 2;
     
-    if (puzVal === 0)
-    {
-      setPuzzType(0)
-    }
-    else if (puzVal === 1)
-    {
-      setPuzzType(1)
-    }
+
+    setPuzzType(Number(puzVal))
+
+    console.log(puzzType)
   }
 
   function wrongPuz()
@@ -267,6 +262,8 @@ export default function CrePage()
       return mp5.remove;
     }
   }, []);
+
+  console.log(puzzType)
 
   if (puzzType === 0)
   {
@@ -326,9 +323,9 @@ export default function CrePage()
     );
   }
 
-    //the word search page
-    if (puzzType === 1)
-    {
+  //the word search page
+  if (puzzType === 1)
+  {
     return(
       <UserContextProvider>
         <div className="align-items-center text-center my-3 row">

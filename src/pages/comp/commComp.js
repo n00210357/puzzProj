@@ -4,10 +4,11 @@ import img from '../../hooks/userPlaceholder.png'
 import { RepItem } from "./repComp.js";
 
 //the comment item       
-export function CommentItem(comment, replies, users, id, fillPopUpRep, fillPopUpEdit, destroy){
+export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, fillPopUpEdit, destroy, isMess){
     //sets up the image
     let image = null;
     let user = null;
+    let messagedUser = null
     let userImage = null;
     let reps = []
     let repUsers = [];
@@ -24,7 +25,7 @@ export function CommentItem(comment, replies, users, id, fillPopUpRep, fillPopUp
         }
     }
 
-    if (user === null && users === Array)
+    if ((user === null || user === undefined) && isComm === true)
     {
         for(let i = 0; i < users.length; i++)
         {
@@ -35,9 +36,10 @@ export function CommentItem(comment, replies, users, id, fillPopUpRep, fillPopUp
             }
         }
     }  
-    else
+    else if (user === null || user === undefined)
     {
-        user = users;
+        user = users[0];
+        messagedUser = users[1];
     }
 
     if (replies !== undefined)
@@ -61,14 +63,18 @@ export function CommentItem(comment, replies, users, id, fillPopUpRep, fillPopUp
             }
         }
     }
-
-    if (userImage === null && user !== null)
+    
+    if (user && user !== null && user !== undefined && comment.user_id === user._id)
     {
         if (user.image_path && user.image_path !== null && user.image_path !== undefined)
         {
             if (user.image_path.charAt(0) === "h" && user.image_path.charAt(1) === "t" && user.image_path.charAt(2) === "t" && user.image_path.charAt(3) === "p")
             {
                 userImage = user.image_path;
+            }
+            else if (user.image_path === undefined)
+            {
+                userImage = img
             }
             else
             {
@@ -79,6 +85,37 @@ export function CommentItem(comment, replies, users, id, fillPopUpRep, fillPopUp
         {
           userImage = img
         }
+    }
+    else if (messagedUser !== null && messagedUser !== undefined && comment.user_id === messagedUser._id)
+    {
+        if (messagedUser.image_path && messagedUser.image_path !== null && messagedUser.image_path !== undefined)
+        {
+            if (messagedUser.image_path.charAt(0) === "h" && messagedUser.image_path.charAt(1) === "t" && messagedUser.image_path.charAt(2) === "t" && messagedUser.image_path.charAt(3) === "p")
+            {
+                userImage = messagedUser.image_path;
+            }
+            else if (messagedUser.image_path === undefined)
+            {
+                userImage = img
+            }
+            else
+            {
+                userImage = `http://api-image.s3.eu-west-1.amazonaws.com/${messagedUser.image_path}`;
+            }
+        }
+        else
+        {
+            userImage = img
+        }
+    }
+    else
+    {
+        userImage = img
+    }
+
+    if (userImage.charAt(44) === "u" && userImage.charAt(45) === "n" && userImage.charAt(46) === "d" && userImage.charAt(47) === "e")
+    {
+        userImage = img
     }
 
     function runMake()
@@ -100,8 +137,17 @@ export function CommentItem(comment, replies, users, id, fillPopUpRep, fillPopUp
       } 
     }   
 
+    if (users[0] !== undefined && users[0] !== null && users[1] !== undefined && users[1] !== null && ((comment.user_id === users[1]._id && comment.puzzle_id === users[0]._id) || (comment.user_id === users[0]._id && comment.puzzle_id === users[1]._id)))
+    {
+        
+    }
+    else
+    {
+        return;
+    }
+
     //displays the comment
-    if (user !== null && userImage !== null && user._id === id && users !== Array)
+    if (user !== null && userImage !== null && user._id === id && comment.user_id === id && isComm === false)
     {
         return (
             <UserContextProvider>            
@@ -122,31 +168,25 @@ export function CommentItem(comment, replies, users, id, fillPopUpRep, fillPopUp
             </UserContextProvider>
         );
     }
-    else if (user !== null && userImage !== null && users !== Array)
+    else if (isComm === false && messagedUser !== undefined && messagedUser !== null)
     {
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center border border-5 m-3">
                     <div className="d-flex flex-row position-relative">
                         <img className="mx-2 mt-2" style={{maxWidth: '50px', height: 'auto'}} src={userImage} alt="profile"/>
-                        <p className="mx-0 mt-2">{user.username}</p>
+                        <p className="mx-0 mt-2">{messagedUser.username}</p>
                     </div>
     
                     <img style={{maxwidth: '200px', maxheight: '200px', width:'100%', height: 'auto'}} src={image} alt=""/>
                     <p className="card-text">{comment.text}</p>
-    
-                    <ul className='align-items-center text-center'>
-                    {
-                        reps.map((rep, index) => <li className='align-items-center text-center' key={index}>{RepItem(rep, repUsers, id, fillPopUpEdit, destroy)}</li>)
-                    }
-                    </ul>
                 </div>
             </UserContextProvider>
         );
     }
 
     //displays the comment
-    if (user !== null && userImage !== null && user._id === id)
+    if (user !== null && userImage !== null && user._id === id && comment.user_id === id)
     {
         return (
             <UserContextProvider>            
