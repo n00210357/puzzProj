@@ -71,8 +71,6 @@ function Registor()
         })
     }
 
-    function backward(){window.history.back()}
-
     if (loading) return <h1>Loading</h1>
 
     //displays the register page
