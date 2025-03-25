@@ -1,5 +1,6 @@
 //imports
 import UserContextProvider from "../../contexts/userContextProvider.tsx";
+import img from '../../hooks/userPlaceholder.png';
 
 //the message item
 export default function MessageItem(message){
