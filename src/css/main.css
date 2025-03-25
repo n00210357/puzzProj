@@ -71,6 +71,15 @@
   --bs-highlight-bg: #fff3cd;
 }
 
+.butHov
+{
+  background-color: white;
+}
+
+.butHov :hover {
+  background-color: dimgray;
+}
+
 *,
 *::before,
 *::after {

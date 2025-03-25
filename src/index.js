@@ -20,6 +20,7 @@ import YourPuzzlePage from './pages/YourPuzzles';
 import EditPuzzlePage from './pages/EditPuzzle';
 import UsersPage from './pages/Users';
 import UserPage from './pages/User';
+import Assetspage from './pages/Asset';
 
 const router = createBrowserRouter([
   //start page
@@ -66,6 +67,9 @@ const router = createBrowserRouter([
 
   //user page
   {    path: "/use/:id",    element: <UserPage/>  },
+    
+  //user page
+  {    path: "/assets",    element: <Assetspage/>  },
 ])
 
 //root creator
