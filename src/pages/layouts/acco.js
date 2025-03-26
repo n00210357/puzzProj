@@ -13,6 +13,8 @@ let comment;
 let comCheck = false;
 let messa = [];
 
+let databaseProblem = 0;
+
 //account pages function
 export default function AccoPage() {
   //sets up variables
@@ -140,10 +142,51 @@ export default function AccoPage() {
     }
   });
 
+  if (databaseProblem === 1)
+  {
+    return (
+      <UserContextProvider>
+        <h1 className='align-items-center text-center m-0 my-3'>Trouble connecting to database</h1>
+        <h1 className='align-items-center text-center m-0 my-3'>Try again later</h1>
+      </UserContextProvider>)
+  }
+  else if (databaseProblem === 2)
+  {
+
+    return (
+      <UserContextProvider>
+        <h1 className='align-items-center text-center m-0 my-3'>Your user is not found</h1>
+        <h1 className='align-items-center text-center m-0 my-3'>This could be because of trouble connecting to database</h1>
+        <h1 className='align-items-center text-center m-0 my-3'>Try again later</h1>
+      </UserContextProvider>)
+  }
+
   //checks for user
   if (user == null || loading)
   {
-    return <h1 className="card-body align-items-center text-center">Loading...</h1>
+    setTimeout(function()
+    {  
+
+      if (loading === true)
+      {
+        databaseProblem = 1;
+      }
+      else if (user === null)
+      {
+        databaseProblem = 2;
+      }
+
+    }, 30000); 
+
+    return (
+      <UserContextProvider>
+        <h1 className='align-items-center text-center m-0 my-3'>Loading...</h1>
+        
+        <div className='align-items-center text-center'>
+          <div className="spinner-border" role="status"/>
+        </div>
+      </UserContextProvider>
+     );
   }
 
   (function() {

@@ -71,16 +71,30 @@
   --bs-highlight-bg: #fff3cd;
 }
 
-.butHov
-{
+div.butHov button {
   background-color: white;
+}
+
+div.butHov p{
   color: black;
 }
 
-.butHov :hover{
+div.butHov svg {
+  color: black;
+}
+
+div.butHov:hover button:hover, p:hover, svg:hover {
   background-color: black;
+}
+
+div.butHov:hover p{
   color: white;
 }
+
+div.butHov:hover svg {
+  color: white;
+}
+
 
 .bigImg
 {

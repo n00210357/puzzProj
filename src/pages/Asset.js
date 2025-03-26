@@ -14,7 +14,7 @@ export default function Assetspage()
             <div className='my-5'>
             <h1 className='align-items-center text-center m-3'>Loading assets</h1>
 
-                <h1 className='align-items-center text-center m-0'>Loading</h1>
+                <h1 className='align-items-center text-center m-0 my-3'>Loading...</h1>
                 <div className='align-items-center text-center'>
                     <div className="spinner-border" role="status"/>
                 </div>
@@ -23,8 +23,8 @@ export default function Assetspage()
             <div className='align-items-center text-center row mx-3 my-5'>
                 <h1 className='align-items-center text-center m-3'>Button assets</h1>
                 
-                <div className="col-2 align-items-center text-center flex-fill butHov">
-                    <button className="align-items-center text-center w-100 ms-1 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Button">
+                <div className="col-2 align-items-center text-center flex-fill butHov p-0 ms-1">
+                    <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Button">
                         <a href="../home">
                             <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-0-circle-fill me-3" viewBox="0 0 16 16">
