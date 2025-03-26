@@ -74,10 +74,36 @@
 .butHov
 {
   background-color: white;
+  color: black;
 }
 
-.butHov :hover {
-  background-color: dimgray;
+.butHov :hover{
+  color: white;
+}
+
+.butHov button:hover {
+  background-color: black;
+}
+
+.bigImg
+{
+  max-width: 500px;
+  max-height: 500px;
+  height: auto;
+}
+
+.midImg
+{
+  max-width: 100px;
+  max-height: 100px;
+  height: auto;
+}
+
+.smalImg
+{
+  max-width: 35px;
+  max-height: 35px;
+  height: auto;
 }
 
 *,

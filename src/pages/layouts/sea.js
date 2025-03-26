@@ -58,7 +58,7 @@ export default function SeaPage() {
     <div>
       <ul className='row align-items-center text-center'>
       {
-        puzzles.map((puzzle, index) => <li className='col-4 align-items-center text-center' key={index}>{PuzzleItem(puzzle, users, session, id)}</li>)
+        puzzles.map((puzzle, index) => <li className='col-md-4 align-items-center text-center' key={index}>{PuzzleItem(puzzle, users, session, id)}</li>)
       }
       </ul>
     </div>
