@@ -78,11 +78,8 @@
 }
 
 .butHov :hover{
-  color: white;
-}
-
-.butHov button:hover {
   background-color: black;
+  color: white;
 }
 
 .bigImg
