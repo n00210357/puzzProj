@@ -30,11 +30,11 @@ export default function AccoPage() {
     user_id: "",
     text: "",
     file: null
-  });
+  }); 
 
   //grabs user from database
   useEffect(() => {
-    if (id !== null)
+    if (id !== null && user === null)
     {
       axios.get(`https://puz-sable.vercel.app/api/users/${id}`,
       {
@@ -62,7 +62,7 @@ export default function AccoPage() {
                 puz.push(pu);
               }
             });
-  
+
             setPuzzles(puz);
         })
         .catch(e => {
@@ -82,7 +82,7 @@ export default function AccoPage() {
                 com.push(dat)
               }
             });
-    
+
             setComm(com); 
         })
         .catch(e => {
@@ -124,7 +124,7 @@ export default function AccoPage() {
               }
             });
           });
-  
+
           setMess(mes);   
         })
         .catch(e => {
@@ -142,22 +142,21 @@ export default function AccoPage() {
     }
   });
 
-  if (databaseProblem === 1)
+  if (databaseProblem === 1 && loading)
   {
     return (
       <UserContextProvider>
-        <h1 className='align-items-center text-center m-0 my-3'>Trouble connecting to database</h1>
-        <h1 className='align-items-center text-center m-0 my-3'>Try again later</h1>
+        <h1 className='align-items-center text-center m-0 my-5'>Trouble connecting to database</h1>
+        <h1 className='align-items-center text-center m-0 my-5'>Try again later</h1>
       </UserContextProvider>)
   }
-  else if (databaseProblem === 2)
+  else if (databaseProblem === 2 && user == null)
   {
-
     return (
       <UserContextProvider>
-        <h1 className='align-items-center text-center m-0 my-3'>Your user is not found</h1>
-        <h1 className='align-items-center text-center m-0 my-3'>This could be because of trouble connecting to database</h1>
-        <h1 className='align-items-center text-center m-0 my-3'>Try again later</h1>
+        <h1 className='align-items-center text-center m-0 my-5'>Your user is not found</h1>
+        <h1 className='align-items-center text-center m-0 my-5'>This could be because of trouble connecting to database</h1>
+        <h1 className='align-items-center text-center m-0 my-5'>Try again later</h1>
       </UserContextProvider>)
   }
 
@@ -369,6 +368,26 @@ export default function AccoPage() {
     }, 1500); 
   }
 
+  setTimeout(function()
+  {  
+    axios.get('https://puz-sable.vercel.app/api/comments')
+    .then(response => {
+      let com = []
+    
+      response.data.forEach(dat => {
+        if (dat.user_id === id || dat.puzzle_id === id)
+        {              
+          com.push(dat)
+        }
+      });
+
+      setComm(com);       
+    })
+    .catch(e => {
+      console.log(e);
+    });
+  }, 30000); 
+
   function noPopup()
   {
     document.querySelector(".popupComm").style.display = "none";
@@ -395,72 +414,148 @@ export default function AccoPage() {
       document.getElementById("text rep").value = "";
       document.getElementById("file rep").value = null;
     }
-
-    setTimeout(function()
-    {  
-      axios.get('https://puz-sable.vercel.app/api/comments')
-      .then(response => {
-        let com = []
-      
-        response.data.forEach(dat => {
-          if (dat.user_id === id || dat.puzzle_id === id)
-          {              
-            com.push(dat)
-          }
-        });
-  
-        setComm(com);       
-      })
-      .catch(e => {
-        console.log(e);
-      });
-    }, 1500); 
   }
 
-  if (mess === null || mess === undefined || mess.length === 0)
+  let slideIndex = 1;
+
+  // Next/previous controls
+  function plusSlides() {
+    showSlides(slideIndex += 1);
+  }
+
+  function minusSlides() {
+    showSlides(slideIndex -= 1);
+  }
+
+  function carsolDot()
   {
-      //displays the users account
-  return (
-    <UserContextProvider>            
+    for(let i = 0; i < puzzles.length; i++)
+    {
+      <span className="dot" onClick={() => currentSlide(i + 1)}></span>
+    }
+  }
+
+  // Thumbnail image controls
+  function currentSlide(n) {
+    showSlides(slideIndex = n);
+  }
+
+  function showSlides(n) {
+    let i;
+    let slides = document.getElementsByClassName("mySlides");
+    let dots = document.getElementsByClassName("dot");
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
+
+    for (i = 0; i < slides.length; i++) 
+    {
+      slides[i].style.display = "none";
+    }
+
+    for (i = 0; i < dots.length; i++)   
+    {
+      dots[i].className = dots[i].className.replace(" active", "");
+    }
+    
+    if (slides[slideIndex-1])
+    {
+      slides[slideIndex-1].style.display = "block";  
+    }
+    if (dots[slideIndex-1])
+    {
+      dots[slideIndex-1].className += " active";
+    }
+  }
+
+  if (mess === null || mess === undefined || mess.length === 0 || comm.length === 0)
+  {
+    //displays the users account
+    return (
+    <UserContextProvider>  
       <div className='row align-items-center text-center'>
-        <div className="col-4 overflow-scroll">
-            <h4>Your Puzzles</h4>
-            <ul className='align-items-center text-center'>
-            {
-              puzzles.map((puzzle, index) => <li className='align-items-center text-center my-3' key={index}>{PuzzleItem(puzzle, user, session, id)}</li>)
-            }
-          </ul>
+        <div className="col-4 ps-3">
+          <h4 className='align-items-center text-center my-3'>Your puzzles</h4>
+
+          <div className="slideshow-container align-items-center text-center">
+          {
+            puzzles.map((puzzle, index) => <div className='mySlides fade align-items-center text-center my-3 ms-4' key={index}>{PuzzleItem(puzzle, user, session, id)}</div>)
+          }
+
+            <div className="d-flex flex-row">
+              <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
+                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={minusSlides}>
+                  <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-left" viewBox="0 0 16 16">
+                    <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                  </svg>
+                  </div>
+                </button>
+              </div>    
+
+              <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
+                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={plusSlides}>
+                  <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
+                      <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                    </svg>
+                  </div>
+                </button>
+              </div>    
+            </div>
+          </div>
+          <br/>
         </div>
 
         <div className="col-4">
           <div className="card-body align-items-center text-center">
-            <img src={image} alt="profile"/>
-            <h5 className="card-title">{user.username}</h5>
-            <p className="card-text">{user.email}</p>
-            <p className="card-text">{user.about}</p>
-            <p className="card-text">{error}</p>
-            <p className="card-text">{errors}</p>
+            <img className='rounded-5 border border-4 border-dark bigImg' src={image} alt="Your account's pic"/>
+
+            <h4 className='align-items-center text-center my-3'>{user.username}</h4>
+
+            <p className='align-items-center text-center notHov'>{user.email}</p>
+            <p className='align-items-center text-center notHov'>{user.about}</p>
+            <p className='align-items-center text-center notHov'>Created at {user.createdAt.slice(0, 10)}</p>
+
+            <h3 className='align-items-center text-center my-3 redText'>{error}</h3>
+            <h3 className='align-items-center text-center my-3 redText'>{errors}</h3>
           </div>
 
-          <div className="container align-items-center text-center my-2">
-            <button className="mx-3 my-2">
-              <a href="../accoEdit">
-                <h3 className="but">
-                  EDIT
-                </h3>
-              </a>
-            </button>
-      
-            <button id="click" className="mx-3 my-2" value="check" type="button" onClick={warn}>
-                <h3 className="but">
-                    DELETE
-                </h3>
-            </button>
+          <div className="align-items-center text-center d-flex flex-row">
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Edit your account details">
+                <a href="../accoEdit">
+                  <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square me-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                      <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                    </svg>
+
+                    <p className='my-0 d-none d-md-block'>
+                      Edit
+                    </p>
+                  </div>
+                </a>
+              </button>
+            </div> 
+
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Delete your account" onClick={warn}>
+                  <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-0-circle-fill me-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                      <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                    </svg>
+
+                    <p className='my-0 d-none d-md-block'>
+                      Delete
+                    </p>
+                  </div>
+              </button>
+            </div> 
           </div>
         </div>
 
         <div className="col-4 overflow-scroll">
-          <h4>No messages </h4>
+          <h4 className='align-items-center text-center my-3'>No messages</h4>
         </div>       
       </div>
 
@@ -519,53 +614,109 @@ export default function AccoPage() {
   return (
     <UserContextProvider>            
       <div className='row align-items-center text-center'>
-        <div className="col-4 overflow-scroll">
-            <h4>Your Puzzles</h4>
-            <ul className='align-items-center text-center'>
+        <div className="col-4 ps-3">
+          <h4 className='align-items-center text-center my-3'>Your puzzles</h4>
+
+          <div className="slideshow-container align-items-center text-center">
             {
-              puzzles.map((puzzle, index) => <li className='align-items-center text-center my-3' key={index}>{PuzzleItem(puzzle, user, session, id)}</li>)
-            }
-          </ul>
+              puzzles.map((puzzle, index) => <div className='mySlides fade align-items-center text-center my-3 ms-4' key={index}>{PuzzleItem(puzzle, user, session, id)}</div>)
+           }
+
+            <div className="d-flex flex-row">
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
+                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={minusSlides}>
+                  <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-left me-md-3" viewBox="0 0 16 16">
+                      <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                    </svg>
+                  </div>
+                </button>
+              </div>    
+
+              <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
+                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={plusSlides}>
+                  <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-right me-md-3" viewBox="0 0 16 16">
+                      <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                    </svg>
+                  </div>
+                </button>
+              </div>    
+            </div>
+          </div>
+          <br/>
+
         </div>
 
         <div className="col-4">
           <div className="card-body align-items-center text-center">
-            <img src={image} alt="profile"/>
-            <h5 className="card-title">{user.username}</h5>
-            <p className="card-text">{user.email}</p>
-            <p className="card-text">{user.about}</p>
-            <p className="card-text">{error}</p>
-            <p className="card-text">{errors}</p>
+            <img className='rounded-5 border border-4 border-dark bigImg' src={image} alt="Your account's pic"/>
+
+            <h4 className='align-items-center text-center my-3'>{user.username}</h4>
+
+            <p className='align-items-center text-center notHov'>{user.email}</p>
+            <p className='align-items-center text-center notHov'>{user.about}</p>
+            <p className='align-items-center text-center notHov'>Created at {user.createdAt.slice(0, 10)}</p>
+
+            <h3 className='align-items-center text-center my-3 redText'>{error}</h3>
+            <h3 className='align-items-center text-center my-3 redText'>{errors}</h3>
           </div>
 
-          <div className="container align-items-center text-center my-2">
-            <button className="mx-3 my-2">
-              <a href="../accoEdit">
-                <h3 className="but">
-                  EDIT
-                </h3>
-              </a>
-            </button>
-      
-            <button id="click" className="mx-3 my-2" value="check" type="button" onClick={warn}>
-                <h3 className="but">
-                    DELETE
-                </h3>
-            </button>
+          <div className="align-items-center text-center d-flex flex-row">
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Edit your account details">
+                <a href="../accoEdit">
+                  <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-pencil-square me-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                      <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                      <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                    </svg>
+
+                    <p className='my-0 d-none d-md-block'>
+                      Edit
+                    </p>
+                  </div>
+                </a>
+              </button>
+            </div> 
+
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Delete your account" onClick={warn}>
+                  <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-0-circle-fill me-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                      <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                    </svg>
+
+                    <p className='my-0 d-none d-md-block'>
+                      Delete
+                    </p>
+                  </div>
+              </button>
+            </div> 
           </div>
         </div>
 
         <div className="col-4 overflow-scroll">
-          <h4>Your messages </h4>
+          <h4 className='align-items-center text-center my-3'>Messages</h4>
           
           <div>
-            <select id="foo"></select>
+            <select className="align-items-center text-center rounded-1 border border-4 border-dark p-3" id="foo"/>
           </div>
 
-          <div>
-            <button id="clickMe" className="align-items-center text-center mx-3 my-2" value="makeComment" type="button" onClick={fillPopUpCom}>
-              Message
-            </button>     
+          <div className="my-3">
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" value="makeComment" data-toggle="tooltip" title="Message this user" onClick={fillPopUpCom}>
+                <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-chat-right me-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                    <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2z"/>
+                  </svg>
+
+                  <p className='my-0 d-none d-md-block'>
+                    Message
+                  </p>
+                </div>
+              </button>
+            </div>   
           </div>
 
           <ul className='align-items-center text-center'>
