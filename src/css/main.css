@@ -99,6 +99,16 @@ div.butHov:hover svg {
   background-color: unset !important;
 }
 
+p.react
+{
+  color: blue
+}
+
+p.react:hover
+{
+  color: turquoise
+}
+
 .redText
 {
   color: red;
@@ -114,8 +124,8 @@ div.butHov:hover svg {
 
 .midImg
 {
-  max-width: 100px;
-  max-height: 100px;
+  max-width: 250px;
+  max-height: 250px;
   width: 100%;
   height: auto;
 }

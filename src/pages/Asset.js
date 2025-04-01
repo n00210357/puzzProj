@@ -48,6 +48,12 @@ export default function Assetspage()
                 <div className='align-items-center text-center'>
                     <select className="align-items-center text-center rounded-1 border border-4 border-dark p-3" id="foo"/>
                 </div>
+
+                <h1 className='align-items-center text-center m-3'>Text input</h1>
+                
+                <div className='align-items-center text-center'>
+                    <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Edit comment" id='edit com text'/>
+                </div>
             </div>
 
             <div className='my-5'>
@@ -75,6 +81,10 @@ export default function Assetspage()
 
                 <div className='my-3'>
                     <h3 className='align-items-center text-center my-3 redText'>ERROR</h3>
+                </div>
+
+                <div className='my-3'>
+                    <p className='align-items-center text-center my-3 react notHov'>react</p>
                 </div>
             </div>
 
@@ -109,30 +119,9 @@ export default function Assetspage()
                     <h2 className='align-items-center text-center'>Samll account pic</h2>
 
                     <div className='align-items-center text-center'>
-                        <img className='rounded-5 border border-2 border-dark smalImg' src={img} alt="Samll account pic"/>
+                        <img className='rounded-5 border border-2 border-dark smalImg mx-2 mt-2' src={img} alt="Samll account pic"/>
                     </div>
                 </div>
-            </div>
-
-            <div className='my-5'>
-                <h1 className='align-items-center text-center m-3'>Cards assets</h1>
-
-
-                <div className ="border border-5 align-items-center text-center" style={{minwidth: '400px', minheight: '400px'}}>
-                    <a className="align-items-center text-center p-0" href="./home">
-                        <img className='rounded-1 border border-4 border-dark bigImg' src={pla} alt="Big pic"/>
-                        <h6 className='align-items-center text-center my-3'>Name</h6>
-                        <p className='align-items-center text-center'>Created at 00/00/00</p>
-                    </a>
-
-                    <a className="card-body align-items-center text-center p-0" href="./home">
-                        <p className='align-items-center text-center'>Made by Username</p>
-                    </a>
-                        
-                    <div className="container align-items-center text-center my-2">
-                    </div>
-                </div>
-
             </div>
             <Bottom/>
         </SessionProvider>

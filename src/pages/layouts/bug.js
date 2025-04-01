@@ -209,51 +209,85 @@ export default function BugReport() {
   {
     return ( 
       <div className="align-items-center text-center">
-        <button id="clickMe" className="mx-3 my-2" value="INSERT" type="button" onClick={fillPopUpCom}>
-          <h6>
-            REPORT BUG
-          </h6>
-        </button>
+      <div className="align-items-center text-center butHov p-0 ms-1">
+        <button className="align-items-center text-center rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Bring up a bug" onClick={fillPopUpCom}>
+            <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-bug-fill me-md-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                <path d="M4.978.855a.5.5 0 1 0-.956.29l.41 1.352A5 5 0 0 0 3 6h10a5 5 0 0 0-1.432-3.503l.41-1.352a.5.5 0 1 0-.956-.29l-.291.956A5 5 0 0 0 8 1a5 5 0 0 0-2.731.811l-.29-.956z"/>
+                <path d="M13 6v1H8.5v8.975A5 5 0 0 0 13 11h.5a.5.5 0 0 1 .5.5v.5a.5.5 0 1 0 1 0v-.5a1.5 1.5 0 0 0-1.5-1.5H13V9h1.5a.5.5 0 0 0 0-1H13V7h.5A1.5 1.5 0 0 0 15 5.5V5a.5.5 0 0 0-1 0v.5a.5.5 0 0 1-.5.5zm-5.5 9.975V7H3V6h-.5a.5.5 0 0 1-.5-.5V5a.5.5 0 0 0-1 0v.5A1.5 1.5 0 0 0 2.5 7H3v1H1.5a.5.5 0 0 0 0 1H3v1h-.5A1.5 1.5 0 0 0 1 11.5v.5a.5.5 0 1 0 1 0v-.5a.5.5 0 0 1 .5-.5H3a5 5 0 0 0 4.5 4.975"/>
+              </svg>
 
-        <h4>{errors}</h4>
+              <p className='my-0 d-none d-md-block'>
+                REPORT BUG
+              </p>
+            </div>
+          </button>
+        </div>    
 
-        <h1>Loading...</h1>
+        <h3 className='align-items-center text-center my-3 redText'>{errors}</h3>
+
+        <h1 className='align-items-center text-center m-0 my-3'>Loading...</h1>
+                
+        <div className='align-items-center text-center'>
+          <div className="spinner-border" role="status"/>
+        </div>
 
         <div className="popupComm m-5">
         <div className="popup-content">
           <div>
-            <input type="text" className="max-logo m-3" placeholder="Text" id='text comm'/>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Text" id='text comm'/>
           </div>
           <div>
-            <input type="file" className="max-logo" placeholder="Image path" id='file comm'/>
+            <input type="file" className="max-logo my-3" placeholder="Image path" id='file comm'/>
           </div>
 
-          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
-              Cancel
-          </button>
-
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={makeBug}>
-              Confirm
-          </button>
+          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Back
+                </p>
+              </div>
+            </button>
+          
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Creates comment" onClick={makeBug}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Send
+                </p>
+              </div>
+            </button>
+          </div>  
         </div>
       </div>
 
       <div className="popupEdit m-5">
         <div className="popup-content">
           <div>
-            <input type="text" className="max-logo m-3" placeholder="Edit comment" id='edit com text'/>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Edit comment" id='edit com text'/>
           </div>
+
           <div>
-            <input type="file" className="max-logo" placeholder="Image path" id='edit com file' name='file'/>
+            <input type="file" className="max-logo my-3" placeholder="Image path" id='edit com file'/>
           </div>
 
-          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
-              Cancel
-          </button>
-
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={editor}>
-              Confirm
-          </button>
+          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Back
+                </p>
+              </div>
+            </button>
+          
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Edits comment" onClick={editor}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Edit
+                </p>
+              </div>
+            </button>
+          </div>          
         </div>
       </div>
       </div>
@@ -263,13 +297,22 @@ export default function BugReport() {
   //displays the bugs
   return (
     <div className="align-items-center text-center">
-      <button id="clickMe" className="mx-3 my-2" value="INSERT" type="button" onClick={fillPopUpCom}>
-        <h6>
-          REPORT BUG
-        </h6>
-      </button>
+      <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+        <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Bring up a bug" onClick={fillPopUpCom}>
+            <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-bug-fill me-md-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                <path d="M4.978.855a.5.5 0 1 0-.956.29l.41 1.352A5 5 0 0 0 3 6h10a5 5 0 0 0-1.432-3.503l.41-1.352a.5.5 0 1 0-.956-.29l-.291.956A5 5 0 0 0 8 1a5 5 0 0 0-2.731.811l-.29-.956z"/>
+                <path d="M13 6v1H8.5v8.975A5 5 0 0 0 13 11h.5a.5.5 0 0 1 .5.5v.5a.5.5 0 1 0 1 0v-.5a1.5 1.5 0 0 0-1.5-1.5H13V9h1.5a.5.5 0 0 0 0-1H13V7h.5A1.5 1.5 0 0 0 15 5.5V5a.5.5 0 0 0-1 0v.5a.5.5 0 0 1-.5.5zm-5.5 9.975V7H3V6h-.5a.5.5 0 0 1-.5-.5V5a.5.5 0 0 0-1 0v.5A1.5 1.5 0 0 0 2.5 7H3v1H1.5a.5.5 0 0 0 0 1H3v1h-.5A1.5 1.5 0 0 0 1 11.5v.5a.5.5 0 1 0 1 0v-.5a.5.5 0 0 1 .5-.5H3a5 5 0 0 0 4.5 4.975"/>
+              </svg>
 
-      <h4>{errors}</h4>
+              <p className='my-0 d-none d-md-block'>
+                REPORT BUG
+              </p>
+            </div>
+          </button>
+        </div>    
+
+      <h3 className='align-items-center text-center my-3 redText'>{errors}</h3>
 
       <ul className='row align-items-center text-center'>
       {
@@ -280,38 +323,59 @@ export default function BugReport() {
     <div className="popupComm m-5">
         <div className="popup-content">
           <div>
-            <input type="text" className="max-logo m-3" placeholder="Text" id='text comm'/>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Text" id='text comm'/>
           </div>
           <div>
-            <input type="file" className="max-logo" placeholder="Image path" id='file comm'/>
+            <input type="file" className="max-logo my-3" placeholder="Image path" id='file comm'/>
           </div>
 
-          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
-              Cancel
-          </button>
-
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={makeBug}>
-              Confirm
-          </button>
+          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Back
+                </p>
+              </div>
+            </button>
+          
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Creates comment" onClick={makeBug}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Send
+                </p>
+              </div>
+            </button>
+          </div>  
         </div>
       </div>
 
       <div className="popupEdit m-5">
         <div className="popup-content">
           <div>
-            <input type="text" className="max-logo m-3" placeholder="Edit comment" id='edit com text'/>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Edit comment" id='edit com text'/>
           </div>
+
           <div>
-            <input type="file" className="max-logo" placeholder="Image path" id='edit com file' name='file'/>
+            <input type="file" className="max-logo my-3" placeholder="Image path" id='edit com file'/>
           </div>
 
-          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
-              Cancel
-          </button>
-
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={editor}>
-              Confirm
-          </button>
+          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Back
+                </p>
+              </div>
+            </button>
+          
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Edits comment" onClick={editor}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Edit
+                </p>
+              </div>
+            </button>
+          </div>          
         </div>
       </div>
     </div>

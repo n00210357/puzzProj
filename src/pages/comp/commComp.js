@@ -147,23 +147,63 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
     }
 
     //displays the comment
-    if (user !== null && userImage !== null && user._id === id && comment.user_id === id && isComm === false)
+    if (user !== null && userImage !== null && user._id === id && comment.user_id === id && isComm === false && image !== null)
     {
         return (
             <UserContextProvider>            
-                <div className="card-body align-items-center text-center border border-5 m-3">
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3  position-relative">
                     <div className="d-flex flex-row position-relative">
-                        <img className="mx-2 mt-2" style={{maxWidth: '50px', height: 'auto'}} src={userImage} alt="profile"/>
-                        <p className="mx-0 mt-2">{user.username}</p>
-        
-                        <div className="d-flex flex-row position-absolute end-0">
-                            <p className="mx-2 mt-2" onClick={editorForm}>Edit</p>
-                            <p className="mx-2 mt-2" onClick={warn}>Delete</p>
+                        <img className='rounded-5 border border-2 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center notHov'>{user.username}</p>
+                    </div>
+
+                    <div className="mb-2 position-relative">
+                        <div className="position-relative d-flex flex-row">
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={editorForm}>Edit</p>
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={warn}>Delete</p>
                         </div>
                     </div>
         
-                    <img style={{maxwidth: '100px', maxheight: '100px', width:'100%', height: 'auto'}} src={image} alt=""/>
-                    <p className="card-text">{comment.text}</p>
+                    <img className='rounded-1 border border-4 border-dark midImg' src={image} alt="Small pic"/>
+                    <p className='align-items-center text-center notHov'>{comment.text}</p>
+                </div>
+            </UserContextProvider>
+        );
+    }
+    else if (user !== null && userImage !== null && user._id === id && comment.user_id === id && isComm === false)
+    {
+        return (
+            <UserContextProvider>            
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
+                    <div className="d-flex flex-row position-relative">
+                        <img className='rounded-5 border border-2 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center notHov'>{user.username}</p>
+                    </div>
+
+                    <div className="mb-2 position-relative">
+                        <div className="position-relative d-flex flex-row">
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={editorForm}>Edit</p>
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={warn}>Delete</p>
+                        </div>
+                    </div>
+            
+                    <p className='align-items-center text-center notHov'>{comment.text}</p>
+                </div>
+            </UserContextProvider>
+        );
+    }
+    else if (isComm === false && messagedUser !== undefined && messagedUser !== null && image !== null)
+    {
+        return (
+            <UserContextProvider>            
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
+                    <div className="d-flex flex-row position-relative">
+                        <img className='rounded-5 border border-2 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center notHov'>{messagedUser.username}</p>
+                    </div>
+    
+                    <img className='rounded-1 border border-4 border-dark midImg' src={image} alt="Small pic"/>
+                    <p className='align-items-center text-center notHov'>{comment.text}</p>
                 </div>
             </UserContextProvider>
         );
@@ -172,38 +212,97 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
     {
         return (
             <UserContextProvider>            
-                <div className="card-body align-items-center text-center border border-5 m-3">
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
                     <div className="d-flex flex-row position-relative">
-                        <img className="mx-2 mt-2" style={{maxWidth: '50px', height: 'auto'}} src={userImage} alt="profile"/>
-                        <p className="mx-0 mt-2">{messagedUser.username}</p>
+                        <img className='rounded-5 border border-2 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center notHov'>{messagedUser.username}</p>
                     </div>
-    
-                    <img style={{maxwidth: '200px', maxheight: '200px', width:'100%', height: 'auto'}} src={image} alt=""/>
-                    <p className="card-text">{comment.text}</p>
+        
+                    <p className='align-items-center text-center notHov'>{comment.text}</p>
                 </div>
             </UserContextProvider>
         );
     }
 
     //displays the comment
-    if (user !== null && userImage !== null && user._id === id && comment.user_id === id)
+    if (user !== null && userImage !== null && user._id === id && comment.user_id === id && image !== null)
     {
         return (
             <UserContextProvider>            
-                <div className="card-body align-items-center text-center border border-5 m-3">
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
                     <div className="d-flex flex-row position-relative">
-                        <img className="mx-2 mt-2" style={{maxWidth: '50px', height: 'auto'}} src={userImage} alt="profile"/>
-                        <p className="mx-0 mt-2">{user.username}</p>
+                        <img className='rounded-5 border border-2 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center notHov'>{user.username}</p>
+                    </div>
 
-                        <div className="d-flex flex-row position-absolute end-0">
-                            <p className="mx-2 mt-2" onClick={runMake}>Reply</p>
-                            <p className="mx-2 mt-2" onClick={editorForm}>Edit</p>
-                            <p className="mx-2 mt-2" onClick={warn}>Delete</p>
+                    <div className="mb-2 position-relative">
+                        <div className="position-relative d-flex flex-row">
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={runMake}>Reply</p>
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={editorForm}>Edit</p>
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={warn}>Delete</p>
                         </div>
                     </div>
 
-                    <img style={{maxwidth: '200px', maxheight: '200px', width:'100%', height: 'auto'}} src={image} alt=""/>
-                    <p className="card-text">{comment.text}</p>
+                    <img className='rounded-1 border border-4 border-dark midImg' src={image} alt="Small pic"/>
+                    <p className='align-items-center text-center notHov'>{comment.text}</p>
+
+                    <ul className='align-items-center text-center'>
+                    {
+                        reps.map((rep, index) => <li className='align-items-center text-center' key={index}>{RepItem(rep, repUsers, id, fillPopUpEdit, destroy)}</li>)
+                    }
+                    </ul>
+                </div>
+            </UserContextProvider>
+        );
+    }
+    else if (user !== null && userImage !== null && user._id === id && comment.user_id === id)
+    {
+        return (
+            <UserContextProvider>            
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
+                    <div className="d-flex flex-row position-relative">
+                        <img className='rounded-5 border border-2 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center notHov'>{user.username}</p>
+                    </div>
+
+                    <div className="mb-2 position-relative">
+                        <div className="position-relative d-flex flex-row">
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={runMake}>Reply</p>
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={editorForm}>Edit</p>
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={warn}>Delete</p>
+                        </div>
+                    </div>
+    
+                    <p className='align-items-center text-center notHov'>{comment.text}</p>
+    
+                    <ul className='align-items-center text-center'>
+                    {
+                        reps.map((rep, index) => <li className='align-items-center text-center' key={index}>{RepItem(rep, repUsers, id, fillPopUpEdit, destroy)}</li>)
+                    }
+                    </ul>
+                </div>
+            </UserContextProvider>
+        );
+    }
+    else if (user !== null && userImage !== null && image !== null)
+    {
+        return (
+            <UserContextProvider>            
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
+                    <div className="d-flex flex-row position-relative">
+                        <img className='rounded-5 border border-2 border-dark smalImg' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center notHov'>{user.username}</p>
+                    </div>
+
+
+                    <div className="mb-2 position-relative">
+                        <div className="position-relative d-flex flex-row">
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={runMake}>Reply</p>
+                        </div>
+                    </div>
+
+                    <img className='rounded-1 border border-4 border-dark midImg' src={image} alt="Small pic"/>
+                    <p className='align-items-center text-center notHov'>{comment.text}</p>
 
                     <ul className='align-items-center text-center'>
                     {
@@ -218,19 +317,20 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
     {
         return (
             <UserContextProvider>            
-                <div className="card-body align-items-center text-center border border-5 m-3">
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
                     <div className="d-flex flex-row position-relative">
-                        <img className="mx-2 mt-2" style={{maxWidth: '50px', height: 'auto'}} src={userImage} alt="profile"/>
-                        <p className="mx-0 mt-2">{user.username}</p>
-
-                        <div className="d-flex flex-row position-absolute end-0">
-                            <p className="mx-2 mt-2" onClick={runMake}>Reply</p>
-                        </div>
+                        <img className='rounded-5 border border-2 border-dark smalImg' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center notHov'>{user.username}</p>
                     </div>
 
-                    <img style={{maxwidth: '200px', maxheight: '200px', width:'100%', height: 'auto'}} src={image} alt=""/>
-                    <p className="card-text">{comment.text}</p>
-
+                    <div className="mb-2 position-relative">
+                        <div className="position-relative d-flex flex-row">
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={runMake}>Reply</p>
+                        </div>
+                    </div>
+    
+                    <p className='align-items-center text-center notHov'>{comment.text}</p>
+    
                     <ul className='align-items-center text-center'>
                     {
                         reps.map((rep, index) => <li className='align-items-center text-center' key={index}>{RepItem(rep, repUsers, id, fillPopUpEdit, destroy)}</li>)

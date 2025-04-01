@@ -140,27 +140,33 @@ export default function AccoEdit() {
     return(
         <UserContextProvider>
         <form className="align-items-center text-center my-3" encType="multipart/form">
-            <h6 className="fw-bold">Username</h6>
-            <input type="text" className="max-logo" placeholder="Username" value={form.username} onChange={handleChange} id='username'></input>
-            <div className="mb-3">Your accounts username</div>
+            <div className='container'>
+            <h6 className='align-items-center text-center my-3'>Username</h6>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Username" value={form.username} onChange={handleChange} id='username'/>
+            <p className='align-items-center text-center notHov'>Your accounts username</p>
 
-            <h6 className="fw-bold">Email</h6>
-            <input type="text" className="fmax-logo" placeholder="Email" value={form.email} onChange={handleChange} id='email'></input>
-            <div className="mb-3">An email can only be used once</div>
+            <h6 className='align-items-center text-center my-3'>Email</h6>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Email" value={form.email} onChange={handleChange} id='email'/>
+            <p className='align-items-center text-center notHov'>An email can only be used once</p>
 
-            <h6 className="fw-bold">About</h6>
-            <input type="text" className="max-logo" placeholder="About" value={form.about} onChange={handleChange} id='about'></input>
-            <div className="mb-3">About</div>
+            <h6 className='align-items-center text-center my-3'>About</h6>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="About" value={form.about} onChange={handleChange} id='about'/>
+            <p className='align-items-center text-center notHov'>About you</p>
 
             <input type="file" className="max-logo" placeholder="Image path" onChange={handleChange} id='file' name='file'/>
 
-            <h6 className="fw-bold">{error}</h6>
+            <h3 className='align-items-center text-center my-3 redText'>{error}</h3>
 
-            <button id="click" className="mx-3 my-2" value="check" type="button" onClick={warn}>
-                <h3 className="but">
-                    SUBMIT
-                </h3>
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+            <button className="align-items-center text-center w-50 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Submit changes" value="check" type="button" onClick={warn}>
+                <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                    <p className='my-0'>
+                        Submit
+                    </p>
+                </div>
             </button>
+            </div>
+            </div>
         </form>
         </UserContextProvider>
     )
