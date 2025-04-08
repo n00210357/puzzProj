@@ -12,7 +12,6 @@ import { mouseClicked} from "../comPuz/mousCont.js";
 let start
 let update
 
-
 //GRID VARS
 //grid box size
 let boxSize = 50;
@@ -444,7 +443,11 @@ export default function PuzPage()
     return(
       <UserContextProvider>
         <div className="align-items-center text-center">
-          <h1>LOADING...</h1>
+          <h1 className='align-items-center text-center m-0 my-3'>Loading...</h1>
+        
+          <div className='align-items-center text-center'>
+            <div className="spinner-border" role="status"/>
+          </div>
         </div>
       </UserContextProvider>
     )
@@ -474,7 +477,11 @@ export default function PuzPage()
     return(
       <UserContextProvider>
         <div className="align-items-center text-center">
-          <h1>LOADING...</h1>
+          <h1 className='align-items-center text-center m-0 my-3'>Loading...</h1>
+        
+          <div className='align-items-center text-center'>
+            <div className="spinner-border" role="status"/>
+          </div>
         </div>
       </UserContextProvider>
     )
@@ -503,10 +510,21 @@ export default function PuzPage()
           <div className="col-2"></div>
 
           <div className="col-8">
-            <h4>{errors}</h4>
-            <button id="clickMe" className="mx-3 my-2" value="makeComment" type="button" onClick={fillPopUpCom}>
-              Comment
-            </button>
+            <h3 className='align-items-center text-center my-3 redText'>{errors}</h3>
+
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Add a comment" onClick={fillPopUpCom}>
+                <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-chat-right me-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                    <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2z"/>
+                  </svg>
+
+                  <p className='my-0 d-none d-md-block'>
+                    Comment
+                  </p>
+               </div>
+              </button>
+            </div>  
 
             <ul className='align-items-center text-center'>
             {
@@ -522,57 +540,88 @@ export default function PuzPage()
       <div className="popupComm m-5">
         <div className="popup-content">
           <div>
-            <input type="text" className="max-logo m-3" placeholder="Text" id='text comm'/>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Text" id='text comm'/>
           </div>
           <div>
-            <input type="file" className="max-logo" placeholder="Image path" id='file comm'/>
+            <input type="file" className="max-logo my-3" placeholder="Image path" id='file comm'/>
           </div>
-
-          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
-              Cancel
-          </button>
-
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={makeComm}>
-              Confirm
-          </button>
+      
+          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Back
+                </p>
+              </div>
+            </button>
+                
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Creates comment" onClick={makeComm}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Send
+                </p>
+              </div>
+            </button>
+          </div>  
         </div>
       </div>
-
+      
       <div className="popupEdit m-5">
         <div className="popup-content">
           <div>
-            <input type="text" className="max-logo m-3" placeholder="Edit comment" id='edit com text'/>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Edit message" id='edit com text'/>
           </div>
+      
           <div>
-            <input type="file" className="max-logo" placeholder="Image path" id='edit com file' name='file'/>
+            <input type="file" className="max-logo my-3" placeholder="Image path" id='edit com file'/>
           </div>
-
-          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
-              Cancel
-          </button>
-
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={editor}>
-              Confirm
-          </button>
+      
+          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Back
+                </p>
+               </div>
+            </button>
+                
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Edits comment" onClick={editor}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Edit
+                </p>
+              </div>
+            </button>
+          </div>          
         </div>
       </div>
 
       <div className="popupRep m-5">
         <div className="popup-content">
           <div>
-            <input type="text" className="max-logo m-3" placeholder="Reply text" id='text rep'></input>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Text" id='text rep'/>
           </div>
           <div>
-            <input type="file" className="max-logo" placeholder="Image path" id='file rep' name='file'/>
+            <input type="file" className="max-logo my-3" placeholder="Image path" id='file rep'/>
           </div>
-
-          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
-              Cancel
-          </button>
-
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={makeReply}>
-              Confirm
-          </button>
+      
+          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Back
+                </p>
+              </div>
+            </button>
+                
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Creates comment" onClick={makeReply}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Send
+                </p>
+              </div>
+            </button>
+          </div>  
         </div>
       </div>
     </UserContextProvider>

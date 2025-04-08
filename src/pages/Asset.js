@@ -52,7 +52,7 @@ export default function Assetspage()
                 <h1 className='align-items-center text-center m-3'>Text input</h1>
                 
                 <div className='align-items-center text-center'>
-                    <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Edit comment" id='edit com text'/>
+                    <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100 maxLen" placeholder="Edit comment" id='edit com text'/>
                 </div>
             </div>
 
@@ -76,7 +76,7 @@ export default function Assetspage()
                 </div>
 
                 <div className='my-3'>
-                    <p className='align-items-center text-center notHov'>average text</p>
+                    <p className="align-items-center text-center notHov">average text</p>
                 </div>
 
                 <div className='my-3'>

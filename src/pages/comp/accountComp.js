@@ -22,11 +22,11 @@ export default function UserItem(user){
   //displays your account
   return (
     <UserContextProvider>            
-      <a className="card-body align-items-center text-center p-0" href={url}>
-        <img src={image} alt="profile"/>
-        <h5 className="card-title">{user.username}</h5>
-        <p className="card-text">{user.email}</p>
+      <a className="card border border-4 border-dark align-items-center text-center p-3" href={url}>
+        <img className='rounded-5 border border-4 border-dark bigImg' src={image} alt="Big account pic"/>
+        <h4 className='align-items-center text-center my-3'>{user.username}</h4>
+        <p className="align-items-center text-center notHov">{user.email}</p>
       </a>
-      </UserContextProvider>
+    </UserContextProvider>
   );
 }

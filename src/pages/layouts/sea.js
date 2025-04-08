@@ -50,7 +50,14 @@ export default function SeaPage() {
   //checks for puzzles
   if (!puzzles[0])
   {
-    return <h1 className='align-items-center text-center'>Loading...</h1>
+    return (                
+      <div className='align-items-center text-center'>
+        <h1 className='align-items-center text-center m-0 my-3'>Loading...</h1>
+        <div className='align-items-center text-center'>
+          <div className="spinner-border" role="status"/>
+        </div>
+      </div>
+    );
   }
 
   //displays the search page
@@ -58,7 +65,7 @@ export default function SeaPage() {
     <div>
       <ul className='row align-items-center text-center'>
       {
-        puzzles.map((puzzle, index) => <li className='col-md-4 align-items-center text-center' key={index}>{PuzzleItem(puzzle, users, session, id)}</li>)
+        puzzles.map((puzzle, index) => <li className='col-sm-12 col-md-4 align-items-center text-center' key={index}>{PuzzleItem(puzzle, users, session, id)}</li>)
       }
       </ul>
     </div>

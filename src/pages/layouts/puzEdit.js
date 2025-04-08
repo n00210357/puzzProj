@@ -81,12 +81,27 @@ export default function PuzEditPage()
   
   if (puz !== puzzle)
   {
-    puz = puzzle
+    puz = puzzle;
+
+    if (puz.file && (!puz.image_path || puz.image_path == null || puz.image_path === undefined))
+    {
+      form.file = null
+    }
+
+    if (puz.name && (form.name === "" || form.name == null || form.name === undefined))
+    {
+      form.name = puz.name
+    }
+
+    if (puz.puzzleCode && (form.puzzleCode === "" || form.puzzleCode == null || form.puzzleCode === undefined))
+    {
+      form.puzzleCode = puz.puzzleCode
+    }
   }
 
   if (editedPuz !== form)
   {
-    editedPuz = form
+    editedPuz = form;
   }
 
   if (sess !== session)
@@ -250,7 +265,10 @@ export default function PuzEditPage()
     return(
       <UserContextProvider>
         <div className="align-items-center text-center">
-          <h1>LOADING...</h1>
+          <h1 className='align-items-center text-center m-0 my-3'>Loading...</h1>
+          <div className='align-items-center text-center'>
+            <div className="spinner-border" role="status"/>
+          </div>
         </div>
       </UserContextProvider>
     )
@@ -280,7 +298,10 @@ export default function PuzEditPage()
     return(
       <UserContextProvider>
         <div className="align-items-center text-center">
-          <h1>LOADING...</h1>
+          <h1 className='align-items-center text-center m-0 my-3'>Loading...</h1>
+          <div className='align-items-center text-center'>
+            <div className="spinner-border" role="status"/>
+          </div>
         </div>
       </UserContextProvider>
     )
@@ -294,61 +315,80 @@ export default function PuzEditPage()
     <UserContextProvider>
       <div className="align-items-center text-center">
         <div className="row">
-          <div className="col-2">
+          <div className="col-sm-12 col-md-2">
 
           </div>
 
-          <div className="col-8">
-            <input type="file" className="max-logo" placeholder="Image path" onChange={handleChange} id='file' name='file'/>
+          <div className="col-sm-12 col-md-8">
+            <input type="file" className="my-3" placeholder="Image path" onChange={handleChange} id='file' name='file'/>
 
-            <p className="">Name</p>
-            <input type="text" className="max-logo mb-3" placeholder="name" value={form.name} onChange={handleChange} id='name'></input>
+            <p className='align-items-center text-center notHov mb-0 mt-3'>The puzzles name</p>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100 maxLen" placeholder="Name" value={form.name} onChange={handleChange} id='name'/>
+            <h3 className='align-items-center text-center my-3 redText'>{error}</h3>
+            <h3 className='align-items-center text-center my-3 redText'>{errors}</h3>
           </div>
 
-          <div className="col-2"></div>
+          <div className="col-sm-12 col-md-2"></div>
 
-          <div className="col-2 align-items-center text-center ">
-            <input type="text" className="max-logo position-relative top-0 start-50" placeholder="addGoal" value={form.addGoal} onChange={handleChange} id='addGoal'></input>
+          <div className="col-sm-12 col-md-2 align-items-center text-center d-inline-flex flex-sm-row flex-md-column justify-content-center">
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100 maxLen position-relative top-0 start-sm-0 start-md-50" placeholder="New goal" value={form.addGoal} onChange={handleChange} id='addGoal'></input>
 
-            <button id="clickMe" className="mx-3 my-2 position-relative top-0 start-50" value="INSERT" type="button" onMouseEnter={dontDeselect} onClick={goalAdder}>
-              <h6>
-                insert into goal
-              </h6>
-            </button>
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={goalAdder}>
+                <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                  <p className='d-md-block my-0'>
+                    insert your new goal
+                  </p>
+                </div>
+              </button>
+            </div>
 
-            <button id="clickMe" className="mx-3 my-2 position-relative top-0 start-50" value="INSERT" type="button" onMouseEnter={dontDeselect} onClick={removal}>
-              <h6>
-                delete from goal
-              </h6>
-            </button>
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={removal}>
+                <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                  <p className='d-md-block my-0'>
+                    delete from goal
+                  </p>
+                </div>
+              </button>
+            </div>
 
-            <button id="clickMe" className="mx-3 my-2 position-relative top-0 start-50" value="INSERT" type="button" onMouseEnter={dontDeselect} onClick={gridFiller}>
-              <h6>
-                fill grid gaps
-              </h6>
-            </button>
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={gridFiller}>
+                <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                  <p className='d-md-block my-0'>
+                    fill in the grid gaps
+                  </p>
+                </div>
+              </button>
+            </div>
 
-            <button id="clickMe" className="mx-3 my-2 position-relative top-0 start-50" value="INSERT" type="button" onMouseEnter={dontDeselect} onClick={lastCheck}>
-              <h6>
-                finshed puzzle
-              </h6>
-            </button>
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={lastCheck}>
+                <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                  <p className='d-md-block my-0'>
+                    finshed puzzle
+                  </p>
+                </div>
+              </button>
+            </div>
 
-            <button id="clickMe" className="mx-3 my-2 position-relative top-0 start-50" value="INSERT" type="button" onMouseEnter={dontDeselect} onClick={wrongPuz}>
-              <h6>
-                back
-              </h6>
-            </button>
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={wrongPuz}>
+                <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                  <p className='d-md-block my-0'>
+                    Back
+                  </p>
+                </div>
+              </button>
+            </div>
           </div>
 
-          <div className="col-8">
+          <div className="col-sm-12 col-md-8">
             <Sketch setup={start} draw={update}/>
           </div>
 
-          <div className="col-2">
-            <h4>{error}</h4>
-            <h4>{errors}</h4>
-          </div>
+          <div className="col-sm-12 col-md-2"></div>
         </div>
       </div>
     </UserContextProvider>

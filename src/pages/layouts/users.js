@@ -23,7 +23,14 @@ export default function UsersLayout() {
   //checks for the users
   if (!users[0])
   {
-    return <h1 className='align-items-center text-center'>Loading</h1>
+    return (
+      <div>
+        <h1 className='align-items-center text-center m-0 my-3'>Loading...</h1>
+        <div className='align-items-center text-center'>
+          <div className="spinner-border" role="status"/>
+        </div>
+      </div>
+    );
   }
 
   //displays the users
@@ -31,7 +38,7 @@ export default function UsersLayout() {
     <div>
       <ul className='row align-items-center text-center'>
       {
-        users.map((user, index) => <li className='col-4 align-items-center text-center' key={index}>{UserItem(user)}</li>)
+        users.map((user, index) => <li className='col-sm-12 col-md-4 align-items-center text-center my-3' key={index}>{UserItem(user)}</li>)
       }
     </ul>
     </div>

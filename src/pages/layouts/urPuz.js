@@ -72,5 +72,12 @@ export default function UrPuzzPage() {
     );
   }
 
-  return <h1 className='align-items-center text-center'>Loading...</h1>
+  return( 
+    <div>
+      <h1 className='align-items-center text-center m-0 my-3'>Loading...</h1>
+      <div className='align-items-center text-center'>
+        <div className="spinner-border" role="status"/>
+      </div>
+    </div>
+  )
 }

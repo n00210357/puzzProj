@@ -45,12 +45,26 @@ export function wordFiller(p5, letters, boxSize, border)
   //goes through the storage string to grab the letters and their cords
   for(let i = 0; i < countOccurrences(letters, ', ') / 3; i++)
   {
-    let z = i * 3
+    let z = i * 3;
     p5.textSize(32);
     p5.textAlign(p5.CENTER, p5.CENTER);
-    p5.text(letters.split(', ')[2 + z].toUpperCase(), 
-    Math.floor(letters.split(', ')[0 + z]) * (boxSize) + (boxSize / 2) + border, 
-    Math.floor(letters.split(', ')[1 + z]) * (boxSize) + (boxSize / 2) + border)
+
+    if (letters.split(', ')[2 + z].toUpperCase() !== '~')
+    {
+      p5.fill(0);
+      p5.text(letters.split(', ')[2 + z].toUpperCase(), 
+      Math.floor(letters.split(', ')[0 + z]) * (boxSize) + (boxSize / 2) + border, 
+      Math.floor(letters.split(', ')[1 + z]) * (boxSize) + (boxSize / 2) + border);
+    }
+    else
+    {
+      p5.fill(150, 150, 160);
+      p5.rectMode(p5.CENTER);
+      p5.rect(Math.floor(letters.split(', ')[0 + z]) * (boxSize) + (boxSize / 2) + border, 
+           Math.floor(letters.split(', ')[1 + z]) * (boxSize) + (boxSize / 2) + border,
+           boxSize * 0.75, boxSize * 0.75);
+      p5.rectMode(p5.CORNER);
+    }
   }
 }
 

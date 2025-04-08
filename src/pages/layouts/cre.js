@@ -28,6 +28,7 @@ let hovingOverButton = false;
 let letters = "0, 0, A"//, 0, 1, C, 0, 2, E, 0, 5, F, 0, 9, G";
 let inputError = "";
 let goal = [];
+let oldGoal = [];
 let goCheck = []
 
 //MOUSE VARS
@@ -47,6 +48,8 @@ let ySketchSize
 const regex = /[^A-Za-z0-9]/;
 let pros
 let selectedGoal = -1;
+let puzzlet;
+let ind = 0;
 
 //the create page
 export default function CrePage()
@@ -68,11 +71,19 @@ export default function CrePage()
 
   const [puzzType, setPuzzType] = useState(0);
   const [puzVal, setPuzVal] = useState(0)
+  const [key, setKey] = useState([{ans: 'None', clue:''}])
+
+  puzzlet = puzzType;
   
   if (puzzType === 1)
   {
     window.setInterval(rememberWork, 10000);
     wordsearch()
+  }
+  else if (puzzType === 2)
+  {
+    window.setInterval(rememberWork, 10000);
+    crossword()
   }
   else if (puzzCode !== null)
   {
@@ -147,7 +158,15 @@ export default function CrePage()
     }
     
     rememberWork()
-    finalCheck(pros)
+
+    if (puzzType === 1)
+    {
+      finalCheck(pros)
+    }
+    else if (puzzType === 2)
+    {
+      crossCheck();
+    }
   }
 
   function rememberWork()
@@ -205,11 +224,11 @@ export default function CrePage()
   {
     if (puzVal === 0)
     {
-      return(<p className="align-items-center text-center m-0">Choose a puzzle</p>)
+      return(<p className='align-items-center text-center notHov'>Choose a puzzle</p>)
     }
     else if (puzVal === 1)
     {
-      return(<p className="align-items-center text-center m-0">Wordsearch</p>)
+      return(<p className='align-items-center text-center notHov'>Wordsearch</p>)
     }
   }
 
@@ -223,8 +242,6 @@ export default function CrePage()
     
 
     setPuzzType(Number(puzVal))
-
-    console.log(puzzType)
   }
 
   function wrongPuz()
@@ -263,31 +280,32 @@ export default function CrePage()
     }
   }, []);
 
-  console.log(puzzType)
-
   if (puzzType === 0)
   {
     return(
       <UserContextProvider>
-        <div className="align-items-center text-center my-3 row">
-          <h2>Select the puzzles details</h2>   
-          <div className="row"> 
-            <div className="col-4"></div>
+        <div className="align-items-center text-center my-3 row">  
+          <h4 className='align-items-center text-center my-3'>Select the puzzles details</h4>
 
-            <div className="col-4">
+          <div className="row"> 
+            <div className="col-lg-4 col-md-12"></div>
+
+            <div className="col-lg-4 col-md-12">
             
             <label className="my-3">
               {labelPuzzleType()}
 
-              <select id="puzSel" onChange={handleSelect}>
+              <select className="align-items-center text-center rounded-1 border border-4 border-dark p-3" id="puzSel" onChange={handleSelect}>
                 <option value={0}>Not selected</option>
                 <option value={1}>Wordsearch</option>
+                <option value={2}>Crossword</option>
+                <option value={3}>Sudoku</option>
               </select>
             </label>
 
-              <p>The amount of boxes on the X axis</p>
+            <p className='align-items-center text-center notHov  mt-3 mb-0'>The amount of boxes on the X axis</p>
               <div>
-                <input type="text" className="max-logo" placeholder="xGrid" value={form.xGrid} onChange={handleChange} id='xGrid'                  
+                <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100 maxLen" placeholder="xGrid" value={form.xGrid} onChange={handleChange} id='xGrid'                  
                   onKeyPress={(event) => {
                     if (!/[0-9]/.test(event.key)) 
                     {
@@ -297,9 +315,9 @@ export default function CrePage()
                 </input>
               </div>
 
-              <p>The amount of boxes on the Y axis</p>
+              <p className='align-items-center text-center notHov mt-3 mb-0'>The amount of boxes on the Y axis</p>
               <div>
-                <input type="text" className="max-logo" placeholder="yGrid" value={form.yGrid} onChange={handleChange} id='yGrid'                  
+                <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100 maxLen" placeholder="yGrid" value={form.yGrid} onChange={handleChange} id='yGrid'                  
                   onKeyPress={(event) => {
                     if (!/[0-9]/.test(event.key)) 
                     {
@@ -309,14 +327,22 @@ export default function CrePage()
                 </input>
               </div>
 
-              <button id="start" className="mx-3 my-2" type="button" onClick={startPuz}>
-                <h6>
-                  START
-                </h6>
-              </button>
+              <div className="align-items-center text-center flex-fill butHov p-0 ms-1 my-4">
+                    <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Start making the puzzle" onClick={startPuz}>
+                            <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-puzzle-fill me-md-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                                <path d="M3.112 3.645A1.5 1.5 0 0 1 4.605 2H7a.5.5 0 0 1 .5.5v.382c0 .696-.497 1.182-.872 1.469a.5.5 0 0 0-.115.118l-.012.025L6.5 4.5v.003l.003.01q.005.015.036.053a.9.9 0 0 0 .27.194C7.09 4.9 7.51 5 8 5c.492 0 .912-.1 1.19-.24a.9.9 0 0 0 .271-.194.2.2 0 0 0 .036-.054l.003-.01v-.008l-.012-.025a.5.5 0 0 0-.115-.118c-.375-.287-.872-.773-.872-1.469V2.5A.5.5 0 0 1 9 2h2.395a1.5 1.5 0 0 1 1.493 1.645L12.645 6.5h.237c.195 0 .42-.147.675-.48.21-.274.528-.52.943-.52.568 0 .947.447 1.154.862C15.877 6.807 16 7.387 16 8s-.123 1.193-.346 1.638c-.207.415-.586.862-1.154.862-.415 0-.733-.246-.943-.52-.255-.333-.48-.48-.675-.48h-.237l.243 2.855A1.5 1.5 0 0 1 11.395 14H9a.5.5 0 0 1-.5-.5v-.382c0-.696.497-1.182.872-1.469a.5.5 0 0 0 .115-.118l.012-.025.001-.006v-.003l-.003-.01a.2.2 0 0 0-.036-.053.9.9 0 0 0-.27-.194C8.91 11.1 8.49 11 8 11s-.912.1-1.19.24a.9.9 0 0 0-.271.194.2.2 0 0 0-.036.054l-.003.01v.002l.001.006.012.025c.016.027.05.068.115.118.375.287.872.773.872 1.469v.382a.5.5 0 0 1-.5.5H4.605a1.5 1.5 0 0 1-1.493-1.645L3.356 9.5h-.238c-.195 0-.42.147-.675.48-.21.274-.528.52-.943.52-.568 0-.947-.447-1.154-.862C.123 9.193 0 8.613 0 8s.123-1.193.346-1.638C.553 5.947.932 5.5 1.5 5.5c.415 0 .733.246.943.52.255.333.48.48.675.48h.238z"/>
+                              </svg>
+
+                              <p className='my-0 d-none d-md-block'>
+                                Start
+                              </p>
+                            </div>
+                    </button>
+                </div>  
             </div>
 
-            <div className="col-4"></div>
+            <div className="col-lg-4 col-md-12"></div>
           </div>
         </div>
       </UserContextProvider>
@@ -329,50 +355,205 @@ export default function CrePage()
     return(
       <UserContextProvider>
         <div className="align-items-center text-center my-3 row">
-          <div className="col-2 align-items-center text-center ">
-            <input type="text" className="max-logo position-relative top-50 start-50" placeholder="addGoal" value={form.addGoal} onChange={handleChange} id='addGoal'></input>
+          <div className="col-sm-12 col-md-2 align-items-center text-center d-inline-flex flex-sm-row flex-md-column justify-content-center">
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100 maxLen position-relative top-0 start-sm-0 start-md-50" placeholder="New goal" value={form.addGoal} onChange={handleChange} id='addGoal'></input>
 
-            <button id="clickMe" className="mx-3 my-2 position-relative top-50 start-50" value="INSERT" type="button" onMouseEnter={dontDeselect} onClick={goalAdder}>
-              <h6>
-                insert into goal
-              </h6>
-            </button>
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={goalAdder}>
+                <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                  <p className='d-md-block my-0'>
+                    insert your new goal
+                  </p>
+                </div>
+              </button>
+            </div>
 
-            <button id="clickMe" className="mx-3 my-2 position-relative top-50 start-50" value="INSERT" type="button" onMouseEnter={dontDeselect} onClick={removal}>
-              <h6>
-                delete from goal
-              </h6>
-            </button>
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={removal}>
+                <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                  <p className='d-md-block my-0'>
+                    delete from goal
+                  </p>
+                </div>
+              </button>
+            </div>
 
-            <button id="clickMe" className="mx-3 my-2 position-relative top-50 start-50" value="INSERT" type="button" onMouseEnter={dontDeselect} onClick={gridFiller}>
-              <h6>
-                fill grid gaps
-              </h6>
-            </button>
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={gridFiller}>
+                <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                  <p className='d-md-block my-0'>
+                    fill in the grid gaps
+                  </p>
+                </div>
+              </button>
+            </div>
 
-            <button id="clickMe" className="mx-3 my-2 position-relative top-50 start-50" value="INSERT" type="button" onMouseEnter={dontDeselect} onClick={lastCheck}>
-              <h6>
-                finshed puzzle
-              </h6>
-            </button>
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={lastCheck}>
+                <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                  <p className='d-md-block my-0'>
+                    finshed puzzle
+                  </p>
+                </div>
+              </button>
+            </div>
 
-            <button id="clickMe" className="mx-3 my-2 position-relative top-50 start-50" value="INSERT" type="button" onMouseEnter={dontDeselect} onClick={wrongPuz}>
-              <h6>
-                back
-              </h6>
-            </button>
+            <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={wrongPuz}>
+                <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                  <p className='d-md-block my-0'>
+                    Back
+                  </p>
+                </div>
+              </button>
+            </div>
           </div>
 
-          <div className="col-8">
+          <div className="col-sm-12 col-md-8">
             <Sketch setup={start} draw={update}/>
           </div>
 
-          <div className="col-2">
-
+          <div className="col-sm-12 col-md-2">
+            
           </div>
         </div>
       </UserContextProvider>
     )
+}
+
+console.log(goal)
+
+if (goal !== oldGoal && goal.length >= 1)
+{
+  setKey(goal);
+  oldGoal = goal;
+}
+else if (key[0].ans != 'None' && key !== goal)
+{
+  setKey([{ans: 'None', clue:'None'}])
+}
+
+const makeComm = () =>
+{       
+  goal[ind].clue = document.getElementById("text comm").value;
+  
+  noPopup();
+}
+ 
+function noPopup()
+{
+  document.querySelector(".popupComm").style.display = "none";
+  document.getElementById("text comm").value = "";
+}
+  
+function assignClue()
+{
+  document.querySelector(".popupComm").style.display = "flex";
+}
+
+if (puzzType === 2)
+{
+  return(
+    <UserContextProvider>
+      <div className="align-items-center text-center my-3 row">
+        <div className="col-sm-12 col-md-2 align-items-center text-center d-inline-flex flex-sm-row flex-md-column justify-content-center">
+          <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+            <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={crosswordKey}>
+              <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                <p className='d-md-block my-0'>
+                  Find goals
+                </p>
+              </div>
+            </button>
+          </div>
+
+          <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+            <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={gridFiller}>
+              <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                <p className='d-md-block my-0'>
+                  Block off empty spaces
+                </p>
+              </div>
+            </button>
+          </div>
+
+          <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+            <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={lastCheck}>
+              <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                <p className='d-md-block my-0'>
+                  finshed puzzle
+                </p>
+              </div>
+            </button>
+          </div>
+
+          <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+            <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={wrongPuz}>
+              <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                <p className='d-md-block my-0'>
+                  Back
+                </p>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <div className="col-sm-12 col-md-8">
+          <Sketch setup={start} draw={update}/>
+        </div>
+
+        <div className="col-sm-12 col-md-2">
+          <ul className='row align-items-center text-center'>
+          {
+            key.map((goa, index) => <li className='col-12 align-items-center text-center' key={index}>
+              <div className="align-items-center text-center flex-fill butHov p-0 ms-1" onClick={() => {ind = index}}>
+                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Assign clue" onClick={assignClue}>
+                  <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                    <p className='my-3'>
+                      {goa.ans}
+                    </p>
+                  </div>
+
+                  <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                    <p className='my-3'>
+                      {goa.clue}
+                    </p>
+                  </div>
+                </button>
+              </div>  
+            </li>)
+          }
+          </ul>
+        </div>
+
+        <div className="popupComm m-5">
+            <div className="popup-content">
+              <div>
+                <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Text" id='text comm'/>
+              </div>
+        
+              <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+                <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+                  <div className='fw-bolder justify-content-center py-3'>
+                    <p className='my-0'>
+                      Back
+                    </p>
+                  </div>
+                </button>
+                  
+                <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Assign clue" onClick={makeComm}>
+                  <div className='fw-bolder justify-content-center py-3'>
+                    <p className='my-0'>
+                      Add
+                    </p>
+                  </div>
+                </button>
+              </div>  
+            </div>
+          </div>
+      </div>
+    </UserContextProvider>
+  )
 }}
 
 function wordsearch()
@@ -425,19 +606,6 @@ function wordsearch()
         selectedGoal = -1;
       }
     }
-
-    //draws the outline
-    let all = Outline(p5, xGridAmount, yGridAmount, border, clicked, boxSize, selectedGoal, recX, recY)
-
-    p5 = all[0]
-    xGridAmount = all[1]
-    yGridAmount = all[2]
-    border = all[3]
-    clicked = all[4]
-    boxSize = all[5]
-    selectedGoal = all[6]
-    recX = all[7]
-    recY = all[8]
   
     //refreshs selected goal
     if (p5.clicked === false && droppable === false)
@@ -452,7 +620,136 @@ function wordsearch()
     }
     
     wordFiller(p5, letters, boxSize, border)
-    puzzleKey(p5);
+
+    //creates borders
+    p5.fill(0)
+    p5.rect(0, 0, xSketchSize, border)
+    p5.rect(0, 0, border, ySketchSize)
+    p5.rect(p5.width - border, 0, border, ySketchSize)
+    p5.rect(0, p5.height - border, xSketchSize, border)
+
+    workSearchKey(p5);
+
+    //fills the grid
+    p5.fill(255)
+    p5.textAlign(p5.CENTER)
+    p5.textSize(12);
+    p5.text(letters, 1, p5.height - (border - 24), xSketchSize)
+
+    //draws the outline
+    let all = Outline(p5, xGridAmount, yGridAmount, border, clicked, boxSize, selectedGoal, recX, recY)
+
+    p5 = all[0]
+    xGridAmount = all[1]
+    yGridAmount = all[2]
+    border = all[3]
+    clicked = all[4]
+    boxSize = all[5]
+    selectedGoal = all[6]
+    recX = all[7]
+    recY = all[8]
+
+    //allows the user to add to the grid
+    if (dontAdd === false && clicked === true && selectedGoal === -1 && (p5.keyIsPressed && ((p5.keyCode >= 65 && p5.keyCode <= 90) || (p5.keyCode >= 97 && p5.keyCode <= 122))))
+    {
+      addToGrid(null, p5)
+      p5.keyCode = null;
+      clicked = false;    
+    }
+  }
+}
+
+function crossword()
+{    
+  //draws once at start
+  start = (p5, canvasParentRef) => {
+    //draws sketch
+    p5.createCanvas(xSketchSize, ySketchSize).parent(canvasParentRef)
+    pros = p5
+  }
+
+  update = (p5) => {
+    if (p5.mouseButton === "left")
+    {
+      let clic = mouseClicked(p5, clicked, boxed)
+      pros = clic[0]
+      clicked = clic[1]
+      boxed = clic[2]
+    }
+
+    //moves the text over to the left
+    p5.textAlign(p5.LEFT);
+
+    //refreshs the background
+    p5.background(220);
+
+    //highlights a boxs if the mouse is over it or clicked
+    if ((p5.mouseX >= (0 + border) && p5.mouseX <= (p5.width - border) && p5.mouseY >= (0 + border) && p5.mouseY <= (p5.height - border)) || (clicked === true && selectedGoal === -1 && boxed === true))
+    {
+      if (p5.keyCode === 190)
+      {
+        addToGrid(String((recX - (border / boxSize)) + ', ' + ((recY - (border / boxSize)))  + ', ~'), p5)
+        p5.keyCode = null;
+        clicked = false;
+      }
+
+      //checks if clicked of just hovering over
+      if (clicked === false)
+      {
+        p5.fill(150);
+      }
+      else if ((clicked === true && selectedGoal === -1) || boxed === true)
+      {
+        boxed = true;
+        p5.fill(50);
+      }
+
+      //draws the square to darken
+      p5.rect(recX * boxSize, recY * boxSize, boxSize, boxSize);
+    }  
+    else if(selectedGoal !== -1 && ((p5.mouseX >= p5.width || p5.mouseX >= 0) || (p5.mouseY >= p5.width || p5.mouseY >= 0)))
+    {
+      boxed = false;
+
+      if (clicked === false && hovingOverButton === false)
+      {
+        selectedGoal = -1;
+      }
+    }
+  
+    //refreshs selected goal
+    if (p5.clicked === false && droppable === false)
+    {
+      selectedGoal = -1
+    }
+  
+    //when space bar click it checks the grid
+    if (selectedGoal === -1 && p5.keyIsPressed && p5.keyCode === 32)
+    {
+      checkAllGrid(p5)
+    }
+    
+    wordFiller(p5, letters, boxSize, border)
+    
+    //creates borders
+    p5.fill(0)
+    p5.rect(0, 0, xSketchSize, border)
+    p5.rect(0, 0, border, ySketchSize)
+    p5.rect(p5.width - border, 0, border, ySketchSize)
+    p5.rect(0, p5.height - border, xSketchSize, border)
+
+    //draws the outline
+    let all = Outline(p5, xGridAmount, yGridAmount, border, clicked, boxSize, selectedGoal, recX, recY);
+
+    p5 = all[0]
+    xGridAmount = all[1]
+    yGridAmount = all[2]
+    border = all[3]
+    clicked = all[4]
+    boxSize = all[5]
+    selectedGoal = all[6]
+    recX = all[7]
+    recY = all[8]
 
     //fills the grid
     p5.fill(255)
@@ -489,16 +786,9 @@ async function addToGrid(dragged, p5)
   pros.keyCode = null;
 }
 
-//draws the border and the puzzle key
-function puzzleKey(p5)
-{
-  //creates borders
-  p5.fill(0)
-  p5.rect(0, 0, xSketchSize, border)
-  p5.rect(0, 0, border, ySketchSize)
-  p5.rect(p5.width - border, 0, border, ySketchSize)
-  p5.rect(0, p5.height - border, xSketchSize, border)
-    
+//draws the wordsearch key
+function workSearchKey(p5)
+{    
   //draws currently assign goal
   p5.fill(255);
   p5.textSize(20);
@@ -539,6 +829,62 @@ function puzzleKey(p5)
   {
     dragDropWord(p5)
   }
+}
+
+//draws the crossword key
+function crosswordKey()
+{    
+  //draws currently assign goal
+  if (pros !== undefined)
+  {
+    pros.fill(255);
+    pros.textSize(20);
+    pros.textAlign(pros.LEFT, pros.CENTER);
+  }
+  let newWord = "";
+  let newgoal = [];
+
+  //checks the x axis
+  for(let y = 0; y < yGridAmount; y++)
+  { 
+    for(let t = 0; t < xGridAmount; t++)
+    {     
+      if (letters.charAt(6 + (9 * (y + (t * yGridAmount)))) !== '~')
+      {       
+        newWord += letters.charAt(6 + (9 * (y + (t * yGridAmount))))
+      }
+      else
+      {
+        if (newWord.length >= 2)
+        {
+          newgoal.push({ans: newWord, clue: ""});
+        }
+
+        newWord = "";
+      }  
+    }
+
+    if (newWord.length >= 2)
+    {
+      newgoal.push({ans: newWord, clue: ""});
+    }
+
+    newWord = "";
+  }
+
+ //draws all the words in the newgoal
+  for(let i = 0; i < newgoal.length; i++)
+  {
+    for(let l = 0; l < newgoal.length; l++)
+    {
+      if (newgoal[l] === newgoal[i] && l !== i)
+      {
+        newgoal.splice(i, i)
+      }
+    };
+  }
+
+  goal = newgoal
 }
 
 //select a goal with the mouse
@@ -610,7 +956,7 @@ function removeFromGoal()
   selectedGoal = -1;
 }
 
-//allows users to drag words from goal into the crossword grid
+//allows users to drag words from goal into the wordsearch grid
 function dragDropWord(p5)
 {
   //rotates the placing of the words letters with space bar
@@ -927,7 +1273,7 @@ async function lettSorter(newby)
   for(let i = 0; i < countOccurrences(letters, ', ') / 3; i++)
   {
     let z = i * 3
-    console.log()
+
     //checks if newby is just a letter or is from the user dragging in the word
     if (newby.length === 1)
     {
@@ -1038,7 +1384,7 @@ async function checkAllGrid(p5)
     //checks the y axis
     for(let y = 0; y < yGridAmount; y++)
     {    
-      if (String(x) === letters.split(', ')[(x * yGridAmount) * 3] && String(y) === letters.split(', ')[1 + ((y + (x * yGridAmount)) * 3)])
+      if (puzzlet === 1 && String(x) === letters.split(', ')[(x * yGridAmount) * 3] && String(y) === letters.split(', ')[1 + ((y + (x * yGridAmount)) * 3)])
       {
         if (filling === 0 || filling === 1 || filling === 2)
         {
@@ -1183,14 +1529,21 @@ async function checkAllGrid(p5)
           //adds random letters to the grid  
           if (countOccurrences(letters, String(x+', '+y+', ')) === 0)
           {
-            ran = (Math.floor(Math.random() * (91 - 65)) + 65);
-            addToGrid(String(x + ', ' + y  + ', ' + String.fromCharCode(ran).toUpperCase()), p5)
+            if (puzzlet === 1)
+            {
+              ran = (Math.floor(Math.random() * (91 - 65)) + 65);
+              addToGrid(String(x + ', ' + y  + ', ' + String.fromCharCode(ran).toUpperCase()), p5)
+            }
+            else if (puzzlet === 2)
+            {
+              addToGrid(String(x + ', ' + y  + ', ~'), p5)
+            }
           }
         }
         else
         {
           //asks the user if they want the random gaps to be automatically filled
-          if (window.confirm(x + ' ' + y + ' are empty grid boxes do you want to randomly fill all the empty ones')) 
+          if (window.confirm(x + ' ' + y + ' are empty grid boxes, do you want to randomly fill all the empty grid boxs')) 
           {
             if (countOccurrences(letters, String(x+', '+y+', ')) === 0)
             {
@@ -1220,13 +1573,13 @@ async function checkAllGrid(p5)
       //informs the user that they are missing some goals
       if (goCheck[i] === false)
       {
-        alert(goal[i] + ' is cannot be found in the grid')
+        alert(goal[i] + ' is cannot be found in your word searchs grid')
         break;
       }
       else if (i === goCheck.length - 1 && goCheck[i] === true)
       {
         //ask the user if they are finshed
-        if (window.confirm("All goals are included do you want to upload")) 
+        if (window.confirm("All goals are included within the word search, are you sure you are finished and want to upload")) 
         {
           window.txt = window.location.href = '/creFin';
         } 
@@ -1243,7 +1596,7 @@ async function checkAllGrid(p5)
   goCheck = []
 }
 
-//does the final check of the crossword
+//does the final check of the wordsearch
 function finalCheck(p5)
 {
   filling = 2;
@@ -1255,4 +1608,59 @@ function finalCheck(p5)
   });
 
   checkAllGrid(p5);
+}
+
+function crossCheck()
+{
+  let breaker = false;
+
+  //checks the x axis
+  for(let x = 0; x < xGridAmount; x++)
+  {
+    //stops x when called
+    if (breaker === true)
+    {
+      break;
+    }
+    
+    //checks the y axis
+    for(let y = 0; y < yGridAmount; y++)
+    {    
+      if (String(x) === letters.split(', ')[(x * yGridAmount) * 3] && String(y) === letters.split(', ')[1 + ((y + (x * yGridAmount)) * 3)])
+      {
+
+      }
+      else 
+      {
+        if (filling === 3)
+        {
+          //adds random letters to the grid  
+          if (countOccurrences(letters, String(x+', '+y+', ')) === 0)
+          {
+            addToGrid(String(x + ', ' + y  + ', ~'), pros)
+          }
+          else
+          {
+            //asks the user if they want the random gaps to be automatically filled
+            if (window.confirm(x + ' ' + y + ' are empty grid boxes, do you want to randomly fill all the empty grid boxs')) 
+            {
+              if (countOccurrences(letters, String(x+', '+y+', ')) === 0)
+              {
+                addToGrid(String(x + ', ' + y  + ', ~'), pros);
+              }
+         
+              filling = 3
+              window.txt = "You pressed OK!";
+            } 
+            else 
+            {
+              window.txt = "You pressed Cancel!";
+              breaker = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
 }

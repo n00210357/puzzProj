@@ -78,24 +78,70 @@ export default function BugItem(bug, users, id, fillPopUpEdit, destroy){
     }
 
     //displays the bug
+    if (user !== null && userImage !== null && user._id === id && image === null)
+    {
+        return (
+            <UserContextProvider>            
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3">
+                    <h4 className='align-items-center text-center my-3'>{solved}</h4>
+        
+                    <div className="d-flex flex-row position-relative my-3">
+                        <img className='rounded-5 border border-3 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center my-3 notHov'>{user.username}</p>
+       
+                        <div className="d-flex flex-row position-absolute end-0">
+                                <p className='align-items-center text-center my-3 react notHov mx-2' onClick={editorForm}>Edit</p>
+                                <p className='align-items-center text-center my-3 react notHov mx-2' onClick={warn}>Delete</p>
+                        </div>
+                    </div>
+        
+                    <div className="mx-3">
+                        <p className='align-items-center text-center my-3 notHov'>{bug.text}</p>
+                    </div>
+                </div>
+            </UserContextProvider>
+        );
+    }
+    else if (user !== null && userImage !== null && image === null)
+    {
+        return (
+            <UserContextProvider>            
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3">
+                    <h4 className='align-items-center text-center my-3'>{solved}</h4>
+       
+                    <div className="d-flex flex-row position-relative">
+                        <img className='rounded-5 border border-3 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center my-3 notHov'>{user.username}</p>
+                    </div>
+        
+                    <p className='align-items-center text-center my-3 notHov'>{bug.text}</p>
+                </div>
+            </UserContextProvider>
+        );
+    }
+
+    //displays the bug
     if (user !== null && userImage !== null && user._id === id)
     {
         return (
             <UserContextProvider>            
-                <div className="card-body align-items-center text-center border border-5 m-3">
-                    <h3>{solved}</h3>
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3">
+                    <h4 className='align-items-center text-center my-3'>{solved}</h4>
+
                     <div className="d-flex flex-row position-relative my-3">
-                        <img className="mx-2 mt-2" style={{maxWidth: '50px', height: 'auto'}} src={userImage} alt="profile"/>
-                        <p className="mx-0 mt-2">{user.username}</p>
+                    <img className='rounded-5 border border-3 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center my-3 notHov'>{user.username}</p>
 
                         <div className="d-flex flex-row position-absolute end-0">
-                            <p className="mx-2 mt-2" onClick={editorForm}>Edit</p>
-                            <p className="mx-2 mt-2" onClick={warn}>Delete</p>
+                            <p className='align-items-center text-center my-3 react notHov mx-2' onClick={editorForm}>Edit</p>
+                            <p className='align-items-center text-center my-3 react notHov mx-2' onClick={warn}>Delete</p>
                         </div>
                     </div>
 
-                    <img style={{maxwidth: '100px', maxheight: '100px', width:'100%', height: 'auto'}} src={image} alt=""/>
-                    <p className="card-text my-3">{bug.text}</p>
+                    <div className="mx-3">
+                        <img className='rounded-1 border border-4 border-dark bigImg' src={image} alt="Bug pic"/>
+                        <p className='align-items-center text-center my-3 notHov'>{bug.text}</p>
+                    </div>
                 </div>
             </UserContextProvider>
         );
@@ -104,16 +150,18 @@ export default function BugItem(bug, users, id, fillPopUpEdit, destroy){
     {
         return (
             <UserContextProvider>            
-                <div className="card-body align-items-center text-center border border-5 m-3">
-                    <h3>{solved}</h3>
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3">
+                    <h4 className='align-items-center text-center my-3'>{solved}</h4>
 
                     <div className="d-flex flex-row position-relative">
-                        <img className="mx-2 mt-2" style={{maxWidth: '50px', height: 'auto'}} src={userImage} alt="profile"/>
-                        <p className="mx-0 mt-2">{user.username}</p>
+                    <img className='rounded-5 border border-3 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center my-3 notHov'>{user.username}</p>
                     </div>
 
-                    <img style={{maxwidth: '200px', maxheight: '200px', width:'100%', height: 'auto'}} src={image} alt=""/>
-                    <p className="card-text">{bug.text}</p>
+                    <div className="mx-3">
+                        <img className='bigImg' src={image} alt="Bug pic"/>
+                        <p className='align-items-center text-center my-3 notHov'>{bug.text}</p>
+                    </div>
                 </div>
             </UserContextProvider>
         );

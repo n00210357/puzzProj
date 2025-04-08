@@ -271,10 +271,61 @@ export default function UseLayout() {
     }, 1500); 
   }
 
+  
+  let slideIndex = 1;
+
+  // Next/previous controls
+  function plusSlides() {
+    showSlides(slideIndex += 1);
+  }
+
+  function minusSlides() {
+    showSlides(slideIndex -= 1);
+  }
+
+  // Thumbnail image controls
+  function currentSlide(n) {
+    showSlides(slideIndex = n);
+  }
+
+  function showSlides(n) {
+    let i;
+    let slides = document.getElementsByClassName("mySlides");
+    let dots = document.getElementsByClassName("dot");
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
+
+    for (i = 0; i < slides.length; i++) 
+    {
+      slides[i].style.display = "none";
+    }
+
+    for (i = 0; i < dots.length; i++)   
+    {
+      dots[i].className = dots[i].className.replace(" active", "");
+    }
+    
+    if (slides[slideIndex-1])
+    {
+      slides[slideIndex-1].style.display = "block";  
+    }
+    if (dots[slideIndex-1])
+    {
+      dots[slideIndex-1].className += " active";
+    }
+  }
+
   //checks for user
   if (user[0] == null || loading)
   {
-    return <h1 className="card-body align-items-center text-center">Loading...</h1>
+    return (
+      <div className="align-items-center text-center">
+        <h1 className='align-items-center text-center m-0 my-3'>Loading...</h1>
+        <div className='align-items-center text-center'>
+          <div className="spinner-border" role="status"/>
+        </div>
+      </div>
+    )
   }
   
   //sets up image
@@ -299,33 +350,100 @@ export default function UseLayout() {
     <UserContextProvider>    
       <div>   
           <div className="row"> 
-            <div className="col-4 overflow-scroll">
-              <h4 className="align-items-center text-center">{user[0].username}'s Puzzles </h4>
-              <ul className='align-items-center text-center'>
-              {
-                puzzles.map((puzzle, index) => <li className='align-items-center text-center my-3' key={index}>{PuzzleItem(puzzle, user, session, id)}</li>)
-              }
-              </ul>
+            <div className="col-4 ps-3 d-none d-md-block">
+              <h4 className='align-items-center text-center my-3'>Your puzzles</h4>
+                <div className="slideshow-container align-items-center text-center">
+                {
+                  puzzles.map((puzzle, index) => <div className='mySlides fade align-items-center text-center my-3 ms-4' key={index}>{PuzzleItem(puzzle, user, session, id)}</div>)
+                }
+            
+                <div className="d-flex flex-row">
+                  <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
+                    <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={minusSlides}>
+                      <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-left me-md-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                          <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                        </svg>
+                      </div>
+                    </button>
+                  </div>    
+            
+                  <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
+                    <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={plusSlides}>
+                      <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
+                          <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                        </svg>
+                      </div>
+                    </button>
+                  </div>    
+                </div>
+              </div>
+            <br/>
             </div>
             
-            <div className="col-4 align-items-center text-center">
+            <div className="col-sm-12 col-md-4 align-items-center text-center">
               <div className="card-body align-items-center text-center">
-                <img src={image} alt="profile"/>
-                <h5 className="card-title">{user[0].username}</h5>
-                <p className="card-text">{user[0].email}</p>
-                <p className="card-text">{user[0].about}</p>
+                <img className='rounded-5 border border-4 border-dark bigImg' src={image} alt="This users account"/>
+                <h4 className='align-items-center text-center my-3'>{user[0].username}</h4>
+                <p className='align-items-center text-center notHov'>{user[0].email}</p>
+                <p className='align-items-center text-center notHov'>{user[0].about}</p>
 
-                <p className="card-text">{error}</p>
-                <p className="card-text">{errors}</p>
+                <h3 className='align-items-center text-center my-3 redText'>{error}</h3>
+                <h3 className='align-items-center text-center my-3 redText'>{errors}</h3>
               </div>     
             </div>
 
-            <div className="col-4 overflow-scroll align-items-center text-center">
-              <h4>{user[0].username} & your messages </h4>
+            <div className="col-sm-12 col-0 ps-3 d-block d-md-none">
+              <h4 className='align-items-center text-center my-3'>Your puzzles</h4>        
+                <div className="slideshow-container align-items-center text-center">
+                {
+                  puzzles.map((puzzle, index) => <div className='mySlides fade align-items-center text-center my-3 ms-4' key={index}>{PuzzleItem(puzzle, user, session, id)}</div>)
+                }            
+           
+                  <div className="d-flex flex-row">
+                    <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
+                      <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={minusSlides}>
+                        <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-left me-md-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                            <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+                          </svg>
+                        </div>
+                      </button>
+                    </div>    
+            
+                    <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
+                      <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={plusSlides}>
+                        <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
+                            <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                          </svg>
+                        </div>
+                      </button>
+                    </div>    
+                  </div>
+                </div>
+              <br/>
+            </div>   
 
-              <button id="clickMe" className="align-items-center text-center mx-3 my-2" value="makeComment" type="button" onClick={fillPopUpCom}>
-                Message
-              </button>     
+            <div className="col-sm-12 col-md-4 overflow-scroll align-items-center text-center">
+              <h4 className="align-items-center text-center my-3">{user[0].username} & your messages </h4>
+
+              <div className="my-3">
+                <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+                  <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" value="makeComment" data-toggle="tooltip" title="Message this user" onClick={fillPopUpCom}>
+                    <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-chat-right me-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                        <path d="M2 1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9.586a2 2 0 0 1 1.414.586l2 2V2a1 1 0 0 0-1-1zm12-1a2 2 0 0 1 2 2v12.793a.5.5 0 0 1-.854.353l-2.853-2.853a1 1 0 0 0-.707-.293H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2z"/>
+                      </svg>
+
+                      <p className='my-0 d-none d-md-block'>
+                        Message
+                      </p>
+                    </div>
+                  </button>
+                </div>   
+              </div>   
 
               <ul className='align-items-center text-center'>
               {
@@ -335,46 +453,65 @@ export default function UseLayout() {
             </div>
           </div>    
 
-      <div className="popupComm m-5">
+ <div className="popupComm m-5">
         <div className="popup-content">
           <div>
-            <input type="text" className="max-logo m-3" placeholder="Text" id='text comm'/>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Text" id='text comm'/>
           </div>
           <div>
-            <input type="file" className="max-logo" placeholder="Image path" id='file comm'/>
+            <input type="file" className="max-logo my-3" placeholder="Image path" id='file comm'/>
           </div>
 
-          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
-              Cancel
-          </button>
-
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={makeComm}>
-              Confirm
-          </button>
+          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Back
+                </p>
+              </div>
+            </button>
+          
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Creates comment" onClick={makeComm}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Send
+                </p>
+              </div>
+            </button>
+          </div>  
         </div>
       </div>
 
       <div className="popupEdit m-5">
         <div className="popup-content">
           <div>
-            <input type="text" className="max-logo m-3" placeholder="Edit comment" id='edit com text'/>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Edit message" id='edit com text'/>
           </div>
+
           <div>
-            <input type="file" className="max-logo" placeholder="Image path" id='edit com file' name='file'/>
+            <input type="file" className="max-logo my-3" placeholder="Image path" id='edit com file'/>
           </div>
 
-          <button id="clickMe" className="mx-3 my-2" type="button" onClick={noPopup}>
-              Cancel
-          </button>
-
-          <button id="clickMe" className="mx-3 my-2" value="REGISTER" type="button" onClick={editor}>
-              Confirm
-          </button>
+          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Back
+                </p>
+              </div>
+            </button>
+          
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Edits comment" onClick={editor}>
+              <div className='fw-bolder justify-content-center py-3'>
+                <p className='my-0'>
+                  Edit
+                </p>
+              </div>
+            </button>
+          </div>          
         </div>
       </div>
     </div>
-    </UserContextProvider>
-
-    
+    </UserContextProvider>    
   );
 }

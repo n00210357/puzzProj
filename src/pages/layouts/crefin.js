@@ -66,31 +66,38 @@ export default function CreFinPage() {
     //displays the finalize page
     return (
     <UserContextProvider>
-    <form className="align-items-center text-center my-3" encType="multipart/form">
-        <input type="file" className="max-logo" placeholder="Image path" onChange={handleChange} id='file'/> 
+    <form className="align-items-center text-center my-3 row" encType="multipart/form">
+    <div className="col-md-3 col-12"></div>
+        <div className="col-md-6 col-12">
+            <input type="file" className="max-logo" placeholder="Image path" onChange={handleChange} id='file'/> 
 
-        <h6 className="fw-bold">Name</h6>
-        <input type="text" className="max-logo" placeholder="Name" value={form.name} onChange={handleChange} id='name'></input>
-        <div className="mb-3">Name</div>
+            <h4 className='align-items-center text-center my-3'>What do you want to name your puzzle</h4>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100 maxLen" placeholder="Puzzle name" value={form.name} onChange={handleChange} id='name'/>
 
-            <h6 className="fw-bold">{error}</h6>
+            <h3 className='align-items-center text-center my-3 redText'>{error}</h3>
 
-            <button id="clickMe" className="mx-3 my-2" value="CREATE" type="button" onClick={handleSubmit}>
-                <h3 className="but">
-                    Create
-                </h3>
-            </button>
-
-            <div>
-                <button className="mx-3 my-2">
-                    <a href="/create">
-                        <h3 className="but">
-                            Back
-                        </h3>
-                    </a>
+            <div className="align-items-center text-center flex-fill butHov p-0 mx-3 my-3">
+                <button id="clickMe" className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" value="CREATE" type="button" onClick={handleSubmit}>
+                    <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                        <p className='my-0'>
+                            Create
+                        </p>
+                    </div>
                 </button>
             </div>
 
+            <div className="align-items-center text-center flex-fill butHov p-0 mx-3 my-3">
+                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark">
+                    <a href="/create">
+                        <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                            <p className='my-0'>
+                                Back
+                            </p>
+                        </div>
+                    </a>
+                </button>
+            </div>
+        </div>
     </form>
     </UserContextProvider>
     );

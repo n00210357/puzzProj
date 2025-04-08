@@ -64,9 +64,9 @@ export default function PuzzleItem(puzzle, users, session, id){
   {
     return (
       <UserContextProvider className="align-items-center text-center">  
-        <div className ="card border border-4 border-darkalign-items-center text-center position-relative top-0 start-50 translate-middle-x" style={{minwidth: '400px', minheight: '400px'}}>
+        <div className ="card border border-4 border-dark align-items-center text-center position-relative top-0 start-50 translate-middle-x" style={{minwidth: '400px', minheight: '400px'}}>
           <a className="card-body align-items-center text-center p-0" href={url}>
-            <img className='rounded-1 border border-4 border-dark bigImg' src={image} alt="Puzzles pic"/>
+            <img className='rounded-1 border border-4 border-dark bigImg mt-3' src={image} alt="Puzzles pic"/>
             <h4 className='align-items-center text-center my-3'>{puzzle.name}</h4>
             <p className='align-items-center text-center notHov'>Made by {user.username}</p>
             <p className='align-items-center text-center notHov'>Created at {puzzle.createdAt.slice(0, 10)}</p>
@@ -82,7 +82,7 @@ export default function PuzzleItem(puzzle, users, session, id){
     <UserContextProvider className="align-items-center text-center">  
       <div className ="card border border-4 border-dark align-items-center text-center position-relative top-0 start-50 translate-middle-x" style={{minwidth: '400px', minheight: '400px'}}>
         <a className="card-body align-items-center text-center p-0" href={url}>
-          <img className='rounded-1 border border-4 border-dark bigImg' src={image} alt="Your puzzles pic"/>
+          <img className='rounded-1 border border-4 border-dark bigImg mt-3' src={image} alt="Your puzzles pic"/>
           <h4 className='align-items-center text-center my-3'>{puzzle.name}</h4>
           <p className='align-items-center text-center notHov'>Made by {user.username}</p>
           <p className='align-items-center text-center notHov'>Created at {puzzle.createdAt.slice(0, 10)}</p>

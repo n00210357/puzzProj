@@ -95,8 +95,18 @@ div.butHov:hover svg {
   color: white;
 }
 
+.startLink:hover
+{
+  background-color: black;
+}
+
 .notHov{
   background-color: unset !important;
+}
+
+.maxLen
+{
+  max-width: 750px;
 }
 
 p.react
