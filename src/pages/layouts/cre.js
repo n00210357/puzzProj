@@ -35,6 +35,7 @@ let goCheck = []
 //stores if user clicked
 let clicked = false;
 let dontAdd = false;
+let pause = false;
 
 //CANVAS VARS
 //A allows the canvase to be referenced
@@ -435,6 +436,7 @@ else if (key[0].ans != 'None' && key !== goal)
 
 const makeComm = () =>
 {       
+  pause = true;
   goal[ind].clue = document.getElementById("text comm").value;
   
   noPopup();
@@ -442,6 +444,7 @@ const makeComm = () =>
  
 function noPopup()
 {
+  pause = false;
   document.querySelector(".popupComm").style.display = "none";
   document.getElementById("text comm").value = "";
 }
@@ -503,19 +506,19 @@ if (puzzType === 2)
         </div>
 
         <div className="col-sm-12 col-md-2">
-          <ul className='row align-items-center text-center'>
+          <ul className='align-items-center text-center'>
           {
             key.map((goa, index) => <li className='col-12 align-items-center text-center' key={index}>
               <div className="align-items-center text-center flex-fill butHov p-0 ms-1" onClick={() => {ind = index}}>
                 <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Assign clue" onClick={assignClue}>
                   <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
-                    <p className='my-3'>
+                    <p className="m-0">
                       {goa.ans}
                     </p>
                   </div>
 
                   <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
-                    <p className='my-3'>
+                    <p className="m-0">
                       {goa.clue}
                     </p>
                   </div>
@@ -566,6 +569,8 @@ function wordsearch()
   }
 
   update = (p5) => {
+    if (pause === false)
+    {
     if (p5.mouseButton === "left")
     {
       let clic = mouseClicked(p5, clicked, boxed)
@@ -657,6 +662,7 @@ function wordsearch()
       clicked = false;    
     }
   }
+  }
 }
 
 function crossword()
@@ -669,6 +675,8 @@ function crossword()
   }
 
   update = (p5) => {
+    if (pause === false)
+    {
     if (p5.mouseButton === "left")
     {
       let clic = mouseClicked(p5, clicked, boxed)
@@ -765,6 +773,7 @@ function crossword()
       clicked = false;    
     }
   }
+  }
 }
 
 //allows the user to add a Letter to the grid
@@ -841,6 +850,7 @@ function crosswordKey()
     pros.textSize(20);
     pros.textAlign(pros.LEFT, pros.CENTER);
   }
+
   let newWord = "";
   let newgoal = [];
 
@@ -872,6 +882,34 @@ function crosswordKey()
     newWord = "";
   }
 
+  //checks the y axis
+  for(let x = 0; x < xGridAmount; x++)
+  { 
+    for(let v = 0; v < xGridAmount; v++)
+    {     
+      if (letters.charAt(6 + (9 * (v + (x * yGridAmount)))) !== '~')
+      {       
+        newWord += letters.charAt(6 + (9 * (v + (x * yGridAmount))))
+      }
+      else
+      {
+        if (newWord.length >= 2)
+        {
+          newgoal.push({ans: newWord, clue: ""});
+        }
+    
+        newWord = "";
+      }  
+    }
+    
+    if (newWord.length >= 2)
+    {
+      newgoal.push({ans: newWord, clue: ""});
+    }
+    
+    newWord = "";
+  }
+
  //draws all the words in the newgoal
   for(let i = 0; i < newgoal.length; i++)
   {
@@ -884,6 +922,7 @@ function crosswordKey()
     };
   }
 
+  console.log(newgoal)
   goal = newgoal
 }
 

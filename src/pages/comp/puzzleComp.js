@@ -69,7 +69,7 @@ export default function PuzzleItem(puzzle, users, session, id){
             <img className='rounded-1 border border-4 border-dark bigImg mt-3' src={image} alt="Puzzles pic"/>
             <h4 className='align-items-center text-center my-3'>{puzzle.name}</h4>
             <p className='align-items-center text-center notHov'>Made by {user.username}</p>
-            <p className='align-items-center text-center notHov'>Created at {puzzle.createdAt.slice(0, 10)}</p>
+            <p className='align-items-center text-center notHov'>Created on {puzzle.createdAt.slice(0, 10)}</p>
           </a>
         </div>
       </UserContextProvider>
@@ -85,7 +85,7 @@ export default function PuzzleItem(puzzle, users, session, id){
           <img className='rounded-1 border border-4 border-dark bigImg mt-3' src={image} alt="Your puzzles pic"/>
           <h4 className='align-items-center text-center my-3'>{puzzle.name}</h4>
           <p className='align-items-center text-center notHov'>Made by {user.username}</p>
-          <p className='align-items-center text-center notHov'>Created at {puzzle.createdAt.slice(0, 10)}</p>
+          <p className='align-items-center text-center notHov'>Created on {puzzle.createdAt.slice(0, 10)}</p>
         </a>
 
         <div className="align-items-center text-center my-2 d-flex flex-row">

@@ -38,8 +38,7 @@ export default function Assetspage()
                             </div>
                         </a>
                     </button>
-                </div>          
-
+                </div>        
             </div>
 
             <div className='my-5'>

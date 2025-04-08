@@ -56,7 +56,7 @@ export default function HomPage()
                                     word searches
                                 </h6>
 
-                                <p className="align-items-center text-center notHov">User's can know create, edit, delete and solve word searches</p>
+                                <p className="align-items-center text-center notHov">User's can now create, edit, delete and solve word searches</p>
                             </li>
 
                             <li className="align-items-center text-center list-group-item">
@@ -64,7 +64,7 @@ export default function HomPage()
                                     comments
                                 </h6>
 
-                                <p className="align-items-center text-center notHov">wordsearch's can be commented on</p>
+                                <p className="align-items-center text-center notHov">word searches can be commented on</p>
                             </li>
 
                             <li className="align-items-center text-center list-group-item">

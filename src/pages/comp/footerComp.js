@@ -92,7 +92,7 @@ export default function Bottom()
 
                             <div className='d-flex flex-row my-0'>                                
                                 <p className='my-0 d-none d-md-block pe-1'>
-                                    report
+                                    Report
                                 </p>
                                 
 

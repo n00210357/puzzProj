@@ -531,7 +531,7 @@ export default function AccoPage() {
 
             <p className='align-items-center text-center notHov'>{user.email}</p>
             <p className='align-items-center text-center notHov'>{user.about}</p>
-            <p className='align-items-center text-center notHov'>Created at {user.createdAt.slice(0, 10)}</p>
+            <p className='align-items-center text-center notHov'>Created on {user.createdAt.slice(0, 10)}</p>
 
             <h3 className='align-items-center text-center my-3 redText'>{error}</h3>
             <h3 className='align-items-center text-center my-3 redText'>{errors}</h3>
@@ -667,7 +667,7 @@ export default function AccoPage() {
 
             <p className='align-items-center text-center notHov'>{user.email}</p>
             <p className='align-items-center text-center notHov'>{user.about}</p>
-            <p className='align-items-center text-center notHov'>Created at {user.createdAt.slice(0, 10)}</p>
+            <p className='align-items-center text-center notHov'>Created on {user.createdAt.slice(0, 10)}</p>
 
             <h3 className='align-items-center text-center my-3 redText'>{error}</h3>
             <h3 className='align-items-center text-center my-3 redText'>{errors}</h3>
