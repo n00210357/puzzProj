@@ -151,7 +151,7 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
     {
         return (
             <UserContextProvider>            
-                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3  position-relative">
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
                     <div className="d-flex flex-row position-relative">
                         <img className='rounded-5 border border-2 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
                         <p className='align-items-center text-center notHov'>{user.username}</p>

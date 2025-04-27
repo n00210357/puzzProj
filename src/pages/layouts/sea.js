@@ -63,9 +63,9 @@ export default function SeaPage() {
   //displays the search page
   return (
     <div>
-      <ul className='row align-items-center text-center'>
+      <ul className='row align-items-center text-center overflow-scroll'>
       {
-        puzzles.map((puzzle, index) => <li className='col-sm-12 col-md-4 align-items-center text-center' key={index}>{PuzzleItem(puzzle, users, session, id)}</li>)
+        puzzles.map((puzzle, index) => <li className='col-sm-12 col-md-4 align-items-center text-center my-3' key={index}>{PuzzleItem(puzzle, users, session, id)}</li>)
       }
       </ul>
     </div>

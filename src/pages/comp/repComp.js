@@ -60,23 +60,65 @@ export function RepItem(rep, users, id, fillPopUpEdit, destroy){
     }   
 
     //displays the reply
+    if (user !== null && userImage !== null && user._id === id && image === null)
+    {
+        return (
+            <UserContextProvider>            
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
+                    <div className="d-flex flex-row position-relative">
+                        <img className='rounded-5 border border-2 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center notHov'>{user.username}</p>
+                    </div>
+        
+        
+                    <div className="mb-2 position-relative">
+                        <div className="position-relative d-flex flex-row">
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={editor}>Edit</p>
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={warn}>Delete</p>
+                        </div>
+                    </div>
+        
+                    <p className='align-items-center text-center notHov'>{rep.text}</p>
+                </div>
+            </UserContextProvider>
+        );
+    }
+    else if (user !== null && userImage !== null && image === null)
+    {
+        return (
+            <UserContextProvider>            
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
+                    <div className="d-flex flex-row position-relative">
+                        <img className='rounded-5 border border-2 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center notHov'>{user.username}</p>
+                    </div>
+        
+                    <p className='align-items-center text-center notHov'>{rep.text}</p>
+                </div>
+            </UserContextProvider>
+        );
+    }
+
     if (user !== null && userImage !== null && user._id === id)
     {
         return (
             <UserContextProvider>            
-                <div className="card-body align-items-center text-center border border-5 m-3">
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
                     <div className="d-flex flex-row position-relative">
-                        <img className="mx-2 mt-2" style={{maxWidth: '50px', height: 'auto'}} src={userImage} alt="profile"/>
-                        <p className="mx-0 mt-2">{user.username}</p>
+                        <img className='rounded-5 border border-2 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center notHov'>{user.username}</p>
+                    </div>
 
-                        <div className="d-flex flex-row position-absolute end-0">
-                            <p className="mx-2 mt-2" onClick={editor}>Edit</p>
-                            <p className="mx-2 mt-2" onClick={warn}>Delete</p>
+
+                    <div className="mb-2 position-relative">
+                        <div className="position-relative d-flex flex-row">
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={editor}>Edit</p>
+                            <p className='mx-2 mt-2 align-items-center text-center react notHov' onClick={warn}>Delete</p>
                         </div>
                     </div>
 
-                    <img style={{maxwidth: '200px', maxheight: '200px', width:'100%', height: 'auto'}} src={image} alt=""/>
-                    <p className="card-text">{rep.text}</p>
+                    <img className='rounded-1 border border-4 border-dark midImg' src={image} alt="Small pic"/>
+                    <p className='align-items-center text-center notHov'>{rep.text}</p>
                 </div>
             </UserContextProvider>
         );
@@ -85,14 +127,14 @@ export function RepItem(rep, users, id, fillPopUpEdit, destroy){
     {
         return (
             <UserContextProvider>            
-                <div className="card-body align-items-center text-center border border-5 m-3">
+                <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
                     <div className="d-flex flex-row position-relative">
-                        <img className="mx-2 mt-2" style={{maxWidth: '50px', height: 'auto'}} src={userImage} alt="profile"/>
-                        <p className="mx-0 mt-2">{user.username}</p>
+                        <img className='rounded-5 border border-2 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <p className='align-items-center text-center notHov'>{user.username}</p>
                     </div>
 
-                    <img style={{maxwidth: '200px', maxheight: '200px', width:'100%', height: 'auto'}} src={image} alt=""/>
-                    <p className="card-text">{rep.text}</p>
+                    <img className='rounded-1 border border-4 border-dark midImg' src={image} alt="Small pic"/>
+                    <p className='align-items-center text-center notHov'>{rep.text}</p>
                 </div>
             </UserContextProvider>
         );

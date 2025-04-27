@@ -159,7 +159,7 @@ export default function BugItem(bug, users, id, fillPopUpEdit, destroy){
                     </div>
 
                     <div className="mx-3">
-                        <img className='bigImg' src={image} alt="Bug pic"/>
+                        <img className='rounded-1 border border-4 border-dark bigImg' src={image} alt="Bug pic"/>
                         <p className='align-items-center text-center my-3 notHov'>{bug.text}</p>
                     </div>
                 </div>

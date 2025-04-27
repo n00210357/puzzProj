@@ -21,10 +21,6 @@ let edtImg;
 if (document.getElementById("file comm") &&  document.getElementById("file comm").files[0] !== null)
 {
   comImg = document.getElementById("file comm").files[0];
-
-  console.log(document.getElementById("file comm").files[0])
-  console.log(comImg)
-  console.log(" ")
 }
 else
 {
@@ -441,7 +437,7 @@ export default function AccoPage() {
     }
   }
 
-  let slideIndex = 1;
+  let slideIndex = 0;
 
   // Next/previous controls
   function plusSlides() {
@@ -452,38 +448,51 @@ export default function AccoPage() {
     showSlides(slideIndex -= 1);
   }
 
-  // Thumbnail image controls
-  function currentSlide(n) {
-    showSlides(slideIndex = n);
+  function showSlides() 
+  {
+    if (slideIndex < 0)
+    {
+      slideIndex = puzzles.length - 1;
+    }
+  
+    if (slideIndex >= puzzles.length)
+    {
+      slideIndex = 0;
+    }
+
+    for (let i = 0; i < puzzles.length; i++) 
+    {
+      if (document.getElementsByClassName("mySlides")[slideIndex] && (mess === null || mess === undefined || mess.length === 0 || comm.length === 0))
+      {
+        document.getElementsByClassName("mySlides")[i].style.display = "none";
+
+        document.getElementsByClassName("mySlide")[i].style.display = "none";
+      }
+      else if (document.getElementsByClassName("mySlid")[slideIndex])
+      {
+        document.getElementsByClassName("mySlid")[i].style.display = "none";
+
+        document.getElementsByClassName("mySli")[i].style.display = "none";
+      }
+    }
+
+    if (document.getElementsByClassName("mySlides")[slideIndex] && (mess === null || mess === undefined || mess.length === 0 || comm.length === 0))
+    {
+      document.getElementsByClassName("mySlides")[slideIndex].style.display = "block"; 
+      document.getElementsByClassName("mySlide")[slideIndex].style.display = "block";  
+    }
+    else if (document.getElementsByClassName("mySlid")[slideIndex])
+    {
+      document.getElementsByClassName("mySlid")[slideIndex].style.display = "block"; 
+      document.getElementsByClassName("mySli")[slideIndex].style.display = "block"; 
+    }
   }
 
-  function showSlides(n) {
-    let i;
-    let slides = document.getElementsByClassName("mySlides");
-    let dots = document.getElementsByClassName("dot");
-    if (n > slides.length) {slideIndex = 1}
-    if (n < 1) {slideIndex = slides.length}
-
-    for (i = 0; i < slides.length; i++) 
-    {
-      slides[i].style.display = "none";
-    }
-
-    for (i = 0; i < dots.length; i++)   
-    {
-      dots[i].className = dots[i].className.replace(" active", "");
-    }
-    
-    if (slides[slideIndex-1])
-    {
-      slides[slideIndex-1].style.display = "block";  
-    }
-    if (dots[slideIndex-1])
-    {
-      dots[slideIndex-1].className += " active";
-    }
-  }
-
+  setTimeout(function()
+  { 
+    showSlides() 
+  }, 3000); 
+  
   if (mess === null || mess === undefined || mess.length === 0 || comm.length === 0)
   {
     //displays the users account
@@ -495,7 +504,7 @@ export default function AccoPage() {
 
           <div className="slideshow-container align-items-center text-center">
           {
-            puzzles.map((puzzle, index) => <div className='mySlides fade align-items-center text-center my-3 ms-4' key={index}>{PuzzleItem(puzzle, user, session, id)}</div>)
+            puzzles.map((puzzle, index) => <li className='mySlides align-items-center text-center my-3 ms-4' key={index}>{PuzzleItem(puzzle, user, session, id)}</li>)
           }
 
             <div className="d-flex flex-row">
@@ -505,12 +514,15 @@ export default function AccoPage() {
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-left me-md-3 d-md-none d-lg-block" viewBox="0 0 16 16">
                     <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
                   </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
+                      <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
+                    </svg>
                   </div>
                 </button>
               </div>    
 
               <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
-                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={plusSlides}>
+                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go forward" onClick={plusSlides}>
                   <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
                       <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
@@ -576,7 +588,7 @@ export default function AccoPage() {
 
           <div className="slideshow-container align-items-center text-center">
           {
-            puzzles.map((puzzle, index) => <div className='mySlides fade align-items-center text-center my-3 ms-4' key={index}>{PuzzleItem(puzzle, user, session, id)}</div>)
+            puzzles.map((puzzle, index) => <li className='mySlide align-items-center text-center my-3 ms-4' key={index}>{PuzzleItem(puzzle, user, session, id)}</li>)
           }
 
             <div className="d-flex flex-row">
@@ -591,7 +603,7 @@ export default function AccoPage() {
               </div>    
 
               <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
-                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={plusSlides}>
+                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go forward" onClick={plusSlides}>
                   <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
                       <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
@@ -626,12 +638,12 @@ export default function AccoPage() {
   return (
     <UserContextProvider>            
       <div className='row align-items-center text-center'>
-      <div className="col-4 ps-3 d-none d-md-block">
+        <div className="col-4 ps-3 d-none d-md-block">
           <h4 className='align-items-center text-center my-3'>Your puzzles</h4>
 
           <div className="slideshow-container align-items-center text-center">
           {
-            puzzles.map((puzzle, index) => <div className='mySlides fade align-items-center text-center my-3 ms-4' key={index}>{PuzzleItem(puzzle, user, session, id)}</div>)
+            puzzles.map((puzzle, index) => <li className='mySlid align-items-center text-center my-3 ms-4' key={index}>{PuzzleItem(puzzle, user, session, id)}</li>)
           }
 
             <div className="d-flex flex-row">
@@ -646,7 +658,7 @@ export default function AccoPage() {
               </div>    
 
               <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
-                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={plusSlides}>
+                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go forward" onClick={plusSlides}>
                   <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
                       <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
@@ -712,7 +724,7 @@ export default function AccoPage() {
 
           <div className="slideshow-container align-items-center text-center">
           {
-            puzzles.map((puzzle, index) => <div className='mySlides fade align-items-center text-center my-3 ms-4' key={index}>{PuzzleItem(puzzle, user, session, id)}</div>)
+            puzzles.map((puzzle, index) => <li className='mySli align-items-center text-center my-3 ms-4' key={index}>{PuzzleItem(puzzle, user, session, id)}</li>)
           }
 
             <div className="d-flex flex-row">
@@ -727,7 +739,7 @@ export default function AccoPage() {
               </div>    
 
               <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
-                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={plusSlides}>
+                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go forward" onClick={plusSlides}>
                   <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
                       <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>

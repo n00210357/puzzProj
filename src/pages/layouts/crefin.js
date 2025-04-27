@@ -46,7 +46,10 @@ export default function CreFinPage() {
                 Authorization: `Bearer ${session}`
             }
         }, (data) => {
-            window.location.href = '/search';
+            setTimeout(function()
+            {
+                window.location.href = '/search';
+            }, 5000); 
         });
     }
 
@@ -63,6 +66,7 @@ export default function CreFinPage() {
 
     if(loading === true) return <h1>Loading API...</h1>
 
+    console.log(form.puzzleCode)
     //displays the finalize page
     return (
     <UserContextProvider>
@@ -78,11 +82,13 @@ export default function CreFinPage() {
 
             <div className="align-items-center text-center flex-fill butHov p-0 mx-3 my-3">
                 <button id="clickMe" className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" value="CREATE" type="button" onClick={handleSubmit}>
-                    <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
-                        <p className='my-0'>
-                            Create
-                        </p>
-                    </div>
+                    <a href="../yourPuzzles">
+                        <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                            <p className='my-0'>
+                                Create
+                            </p>
+                        </div>
+                    </a>
                 </button>
             </div>
 

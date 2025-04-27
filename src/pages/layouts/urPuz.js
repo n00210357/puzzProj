@@ -63,7 +63,7 @@ export default function UrPuzzPage() {
     //displays the search page
     return (
       <div>
-        <ul className='row align-items-center text-center'>
+        <ul className='row align-items-center text-center overflow-scroll'>
         {
           puzzles.map((puzzle, index) => <li className='col-4 align-items-center text-center' key={index}>{PuzzleItem(puzzle, users, session, id)}</li>)
         }
