@@ -57,12 +57,6 @@ let starter = ""
 
 let comment;
 
-let preWord = 0;
-let worLen = 0;
-let newWord = "";
-let xLett = [];
-let yLett = [];
-
 //the puzzle page
 export default function PuzPage()
 {
@@ -992,14 +986,16 @@ function crossword()
       p5.textSize(32);
       p5.textAlign(p5.CENTER, p5.CENTER);
 
-      preWord = 0;
-      worLen = 0;
-      newWord = "";
-      xLett = [];
-      yLett = [];
+      let worLen = 0;
+      let newWord = "";
+      let xLett = [];
+      let yLett = [];
       
       if (lett && lett.length > 1)
       {
+        let newWord = "";
+        let preWord = 0;
+
         for (let x = 0; x < yGridAmount; x++)
         {
           if (newWord.length > 1)
@@ -1011,37 +1007,32 @@ function crossword()
           worLen = 0;
           newWord = "";
 
+          // eslint-disable-next-line no-loop-func
           lett.forEach(l => {
-            let newerWord = "";
-            let preerWord = 0;
-
             if (Number(l.charAt(3)) === x)
             {
-              if (newerWord === "")
+              if (newWord === "")
               {
-                newerWord = l.charAt(6);
-                preerWord = Number(l.charAt(0));
+                newWord = l.charAt(6);
+                preWord = Number(l.charAt(0));
               }
                 
-              if ((Number(l.charAt(0)) - 1 === preerWord))
+              if ((Number(l.charAt(0)) - 1 === preWord))
               {                  
-                newerWord += l.charAt(6);
-                preerWord = Number(l.charAt(0));
+                newWord += l.charAt(6);
+                preWord = Number(l.charAt(0));
               }
-              else if (Number(l.charAt(0)) - 1 !== preerWord)
+              else if (Number(l.charAt(0)) - 1 !== preWord)
               {                  
-                if (newerWord.length > 1)
+                if (newWord.length > 1)
                 {
-                  xLett.push(newerWord)
+                  xLett.push(newWord)
                 }
 
-                newerWord = l.charAt(6);
-                preerWord = Number(l.charAt(0));
+                newWord = l.charAt(6);
+                preWord = Number(l.charAt(0));
               }
             }
-
-            newWord = newerWord
-            preWord = preerWord
           });
 
           if (newWord.length > 1 && x === yGridAmount - 1)
@@ -1062,38 +1053,34 @@ function crossword()
   
           preWord = 0;
           worLen = 0;
+          newWord = "";
   
+          // eslint-disable-next-line no-loop-func
           lett.forEach(l => {
-            let newerWord = "";
-            let preerWord = 0;
-
             if (Number(l.charAt(0)) === y)
             {
-              if (newerWord === "")
+              if (newWord === "")
               {
-                newerWord = l.charAt(6);
-                preerWord = Number(l.charAt(3));
+                newWord = l.charAt(6);
+                preWord = Number(l.charAt(3));
               }
                   
-              if ((Number(l.charAt(3)) - 1 === preerWord))
+              if ((Number(l.charAt(3)) - 1 === preWord))
               {                  
-                newerWord += l.charAt(6);
-                preerWord = Number(l.charAt(3));
+                newWord += l.charAt(6);
+                preWord = Number(l.charAt(3));
               }
-              else if (Number(l.charAt(3)) - 1 !== preerWord)
+              else if (Number(l.charAt(3)) - 1 !== preWord)
               {                  
-                if (newerWord.length > 1)
+                if (newWord.length > 1)
                 {
-                  yLett.push(newerWord)
+                  yLett.push(newWord)
                 }
   
-                newerWord = l.charAt(6);
-                preerWord = Number(l.charAt(3));
+                newWord = l.charAt(6);
+                preWord = Number(l.charAt(3));
               }
             }
-
-            newWord = newerWord
-            preWord = preerWord
           });
 
           if (newWord.length > 1 && y === xGridAmount - 1)
