@@ -986,6 +986,7 @@ function crossword()
       p5.textSize(32);
       p5.textAlign(p5.CENTER, p5.CENTER);
 
+      let preWord = 0;
       let worLen = 0;
       let newWord = "";
       let xLett = [];
