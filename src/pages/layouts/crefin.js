@@ -82,13 +82,11 @@ export default function CreFinPage() {
 
             <div className="align-items-center text-center flex-fill butHov p-0 mx-3 my-3">
                 <button id="clickMe" className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" value="CREATE" type="button" onClick={handleSubmit}>
-                    <a href="../yourPuzzles">
-                        <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
-                            <p className='my-0'>
-                                Create
-                            </p>
-                        </div>
-                    </a>
+                    <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                        <p className='my-0'>
+                            Create
+                        </p>
+                    </div>
                 </button>
             </div>
 
