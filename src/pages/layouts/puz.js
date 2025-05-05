@@ -204,6 +204,7 @@ export default function PuzPage()
     return mp5.remove;
   });
 
+  //makes the comment create appear
   function fillPopUpCom()
   {
     pause = true;
@@ -335,6 +336,7 @@ export default function PuzPage()
     }, 1000); 
   }
 
+  //removes all pop ups
   function noPopup()
   {
     pause = false;
@@ -385,6 +387,7 @@ export default function PuzPage()
     });
   }
 
+  //a function to be called to edit a comment
   function editor()
   {
     editComm(comment)
@@ -622,6 +625,7 @@ export default function PuzPage()
           </div>
       
           <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+          <div className="butHov flex-fill">
             <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
@@ -629,7 +633,11 @@ export default function PuzPage()
                 </p>
               </div>
             </button>
+            </div>
+
+            <div className="ms-2"></div>
                 
+            <div className="butHov flex-fill">
             <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Creates comment" onClick={makeComm}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
@@ -637,6 +645,7 @@ export default function PuzPage()
                 </p>
               </div>
             </button>
+            </div>
           </div>  
         </div>
       </div>
@@ -652,6 +661,7 @@ export default function PuzPage()
           </div>
       
           <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+          <div className="butHov flex-fill">
             <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
@@ -659,7 +669,10 @@ export default function PuzPage()
                 </p>
                </div>
             </button>
-                
+            </div>
+
+            <div className="ms-2"></div>
+            <div className="butHov flex-fill">
             <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Edits comment" onClick={editor}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
@@ -667,6 +680,7 @@ export default function PuzPage()
                 </p>
               </div>
             </button>
+            </div>
           </div>          
         </div>
       </div>
@@ -681,6 +695,7 @@ export default function PuzPage()
           </div>
       
           <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+          <div className="butHov flex-fill">
             <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
@@ -688,7 +703,11 @@ export default function PuzPage()
                 </p>
               </div>
             </button>
+            </div>
+
+            <div className="ms-2"></div>
                 
+            <div className="butHov flex-fill">
             <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Creates comment" onClick={makeReply}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
@@ -696,6 +715,7 @@ export default function PuzPage()
                 </p>
               </div>
             </button>
+            </div>
           </div>  
         </div>
       </div>
@@ -950,7 +970,7 @@ function crossword()
       } 
 
       //allows the user to add to the grid
-      if (clicked === true && selectedGoal === -1 && (p5.keyIsPressed && ((p5.keyCode >= 65 && p5.keyCode <= 90) || (p5.keyCode >= 97 && p5.keyCode <= 122))))
+      if (letters.charAt(6 + (9 * ((recY - (border / boxSize)) + ((recX - (border / boxSize)) * yGridAmount)))) !== '~' && clicked === true && selectedGoal === -1 && (p5.keyIsPressed && ((p5.keyCode >= 65 && p5.keyCode <= 90) || (p5.keyCode >= 97 && p5.keyCode <= 122))))
       {
         lettSorter(String.fromCharCode(p5.keyCode))         
         p5.keyCode = null;

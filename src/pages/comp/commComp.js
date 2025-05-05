@@ -5,7 +5,7 @@ import { RepItem } from "./repComp.js";
 
 //the comment item       
 export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, fillPopUpEdit, destroy, isMess){
-    //sets up the image
+    //sets up the variables
     let image = null;
     let user = null;
     let messagedUser = null
@@ -13,6 +13,7 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
     let reps = []
     let repUsers = [];
 
+    //gets the comment image
     if (image === null)
     {
         if (comment.image_path && comment.image_path !== null && comment.image_path !== undefined)
@@ -25,6 +26,7 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
         }
     }
 
+    //gets the comments sender
     if ((user === null || user === undefined) && isComm === true)
     {
         for(let i = 0; i < users.length; i++)
@@ -42,6 +44,7 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
         messagedUser = users[1];
     }
 
+    //gets the comments replies
     if (replies !== undefined)
     {
         for(let i = 0; i < replies.length; i++)
@@ -64,6 +67,7 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
         }
     }
     
+    //gets the senders image
     if (user && user !== null && user !== undefined && comment.user_id === user._id)
     {
         if (user.image_path && user.image_path !== null && user.image_path !== undefined)
@@ -88,6 +92,7 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
     }
     else if (messagedUser !== null && messagedUser !== undefined && comment.user_id === messagedUser._id)
     {
+        //gets the comments image
         if (messagedUser.image_path && messagedUser.image_path !== null && messagedUser.image_path !== undefined)
         {
             if (messagedUser.image_path.charAt(0) === "h" && messagedUser.image_path.charAt(1) === "t" && messagedUser.image_path.charAt(2) === "t" && messagedUser.image_path.charAt(3) === "p")
@@ -113,16 +118,19 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
         userImage = img
     }
 
+    //removes undefined images
     if (userImage.charAt(44) === "u" && userImage.charAt(45) === "n" && userImage.charAt(46) === "d" && userImage.charAt(47) === "e")
     {
         userImage = img
     }
 
+    //allows the user to make a reply
     function runMake()
     {
       fillPopUpRep(comment)
     }
 
+    //allows a user to edit their comment
     function editorForm()
     {
       fillPopUpEdit(comment)
@@ -149,6 +157,7 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
     //displays the comment
     if (user !== null && userImage !== null && user._id === id && comment.user_id === id && isComm === false && image !== null)
     {
+        //the users comment that has an image
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
@@ -172,11 +181,12 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
     }
     else if (user !== null && userImage !== null && user._id === id && comment.user_id === id && isComm === false)
     {
+        //another users comment that does not have an image
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
                     <div className="d-flex flex-row position-relative">
-                        <img className='rounded-5 border border-2 border-dark smalImg mx-2 mt-2' src={userImage} alt="Samll account pic"/>
+                        <img className='rounded-5 border border-2 border-dark smalImg mx-2 mt-2' src={userImage} alt="Small account pic"/>
                         <p className='align-items-center text-center notHov'>{user.username}</p>
                     </div>
 
@@ -194,6 +204,7 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
     }
     else if (isComm === false && messagedUser !== undefined && messagedUser !== null && image !== null)
     {
+        //A message from one user to another with an image
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
@@ -210,6 +221,7 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
     }
     else if (isComm === false && messagedUser !== undefined && messagedUser !== null)
     {
+        //A message from one user to another without an image
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
@@ -224,9 +236,9 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
         );
     }
 
-    //displays the comment
     if (user !== null && userImage !== null && user._id === id && comment.user_id === id && image !== null)
     {
+        //the users comment that does not have an image and replies
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
@@ -257,6 +269,7 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
     }
     else if (user !== null && userImage !== null && user._id === id && comment.user_id === id)
     {
+        //the users comment that does not have an image
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
@@ -286,6 +299,7 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
     }
     else if (user !== null && userImage !== null && image !== null)
     {
+        //another users comment that does have an image
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
@@ -315,6 +329,7 @@ export function CommentItem(isComm, comment, replies, users, id, fillPopUpRep, f
     }
     else if (user !== null && userImage !== null)
     {
+        //another users comment that does not have an image
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">

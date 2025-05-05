@@ -35,12 +35,12 @@ export default function UsersLayout() {
 
   //displays the users
   return (
-    <div>
+    <div className='overflow-scroll'>
       <ul className='row align-items-center text-center'>
       {
         users.map((user, index) => <li className='col-sm-12 col-md-4 align-items-center text-center my-3' key={index}>{UserItem(user)}</li>)
       }
-    </ul>
+      </ul>
     </div>
   );
 }

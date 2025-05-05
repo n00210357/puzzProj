@@ -36,7 +36,7 @@ let letters = ""
 let goal = [];
 let goCheck = []
 let inputError = "";
-
+let pause = false;
 
 //MOUSE VARS
 //stores if user clicked
@@ -60,6 +60,8 @@ let puz;
 let editedPuz;
 let sess;
 let put;
+let puzzlet;
+let ind = 0;
 
 //the puzzle page
 export default function PuzEditPage()
@@ -77,8 +79,20 @@ export default function PuzEditPage()
   const {rememberedPuz, puzzCode} = useContext(UserContext);
   const [errors, setError] = useState("");
   const {putRequest, loading, error } = useAPI();
+  const [key, setKey] = useState([{ans: 'None', clue:''}]);
   var _id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
-  
+
+  if (key[0].ans === 'None' && goal.length > 0 || (key[0].ans !== 'None' && goal !== key))
+  {
+    let goalet = [];
+    goal.forEach(go => {
+      goalet.push({ans: go.split('^')[0], clue: go.split('^')[1]})
+    });
+    setKey(goalet)
+    
+    goal = goalet
+  }
+
   if (puz !== puzzle)
   {
     puz = puzzle;
@@ -127,16 +141,27 @@ export default function PuzEditPage()
 
   }, [_id]);
 
-  //runs the puzzles function
   if (puzzType === 1)
-  {
-    wordsearch()
-  }
-  else
-  {
-    start = null
-    update = null
-  }   
+    {
+      window.setInterval(rememberWork, 10000);
+      wordsearch()
+    }
+    else if (puzzType === 2)
+    {
+      window.setInterval(rememberWork, 10000);
+      crossword()
+    }
+    else if (puzzCode !== null)
+    {
+      start = null
+      update = null
+      //recoverWork()
+    }
+    else
+    {
+      start = null
+      update = null
+    } 
 
     //changes the form
     const handleChange = (e) => {
@@ -201,57 +226,89 @@ export default function PuzEditPage()
         } 
     } 
 
-    //allows the fill button to be pressed
-    function gridFiller()
-    {
-        if (selectedGoal !== -1)
-        {
-            clicked = true
-        }
+    const makeComm = () =>
+    {       
+      pause = true;
+      goal[ind].clue = document.getElementById("text comm").value;
+        
+      noPopup();
+    }
 
-        filling = 1;
-        checkAllGrid(pros)  
-    }
-    
-    //allows the finsh button to be pressed
-    function lastCheck()
+    //removes all pop ups
+    function noPopup()
     {
-        if (selectedGoal !== -1)
-        {
-            clicked = true
-        }
-    
-        rememberWork()
-        finalCheck(pros)
+      pause = false;
+      document.querySelector(".popupComm").style.display = "none";
     }
+
+  //allows the fill button to be pressed
+  function gridFiller()
+  {
+    if (selectedGoal !== -1)
+    {
+      clicked = true
+    }
+
+    filling = 1;
+    checkAllGrid(pros)  
+
+    if (puzzType === 2)
+    {
+      alert('Please wait 15 seconds for the goals to be detected');
+
+      setTimeout(function()
+      {
+        crosswordKey(setKey);
+      }, 2000);  
+    }
+  }
+    
+  //allows the finsh button to be pressed
+  function lastCheck()
+  {
+    if (selectedGoal !== -1)
+    {
+      clicked = true
+    }
+    
+    rememberWork()
+
+    if (puzzType === 1)
+    {
+      finalCheck(pros)
+    }
+    else if (puzzType === 2)
+    {
+      crossCheck();
+    }
+  }
 
     function rememberWork()
     {
-        let puzCoding = String(puzzType) + "@ "
-        puzCoding = puzCoding + xGridAmount + "@ " + yGridAmount + "@ "
-    
-        for(let x = 0; x < goal.length; x++)
+      let puzCoding = String(puzzType) + "@ "
+      puzCoding = puzCoding + xGridAmount + "@ " + yGridAmount + "@ "
+      
+      for(let x = 0; x < goal.length; x++)
+      {
+        if (x <= goal.length - 1)
         {
-            if (x <= goal.length - 1)
-            {
-                puzCoding = puzCoding + goal[x] + "# "
-            }
+          if (puzzType === 1)
+          {
+            puzCoding = puzCoding + goal[x] + "# "
+          }
+          else if (puzzType === 2)
+          {
+            puzCoding = puzCoding + goal[x].ans + '^' + goal[x].clue + "# "
+          }
         }
-
-        puzCoding = puzCoding + letters
-
-        if (puzzCode !== puzCoding)
-        {
-            rememberedPuz(puzCoding)
-        }
+      }
     }
 
-    function wrongPuz()
-    {
-      xSketchSize = undefined
-      rememberedPuz(null)
-      setPuzzType(0)
-    }
+  function assignClue()
+  {
+    document.querySelector(".popupComm").style.display = "flex";
+    document.getElementById("text comm").value = "";
+  }
 
   //grabs all this puzzles comments
   useEffect(() => {
@@ -334,7 +391,7 @@ export default function PuzEditPage()
             <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100 maxLen position-relative top-0 start-sm-0 start-md-50" placeholder="New goal" value={form.addGoal} onChange={handleChange} id='addGoal'></input>
 
             <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
-              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={goalAdder}>
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Make a goal" onMouseEnter={dontDeselect} onClick={goalAdder}>
                 <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                   <p className='d-md-block my-0'>
                     insert your new goal
@@ -344,7 +401,7 @@ export default function PuzEditPage()
             </div>
 
             <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
-              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={removal}>
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Delete a selected goal" onMouseEnter={dontDeselect} onClick={removal}>
                 <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                   <p className='d-md-block my-0'>
                     delete from goal
@@ -354,7 +411,7 @@ export default function PuzEditPage()
             </div>
 
             <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
-              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={gridFiller}>
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Replace blank spaces with random letters" onMouseEnter={dontDeselect} onClick={gridFiller}>
                 <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                   <p className='d-md-block my-0'>
                     fill in the grid gaps
@@ -364,7 +421,7 @@ export default function PuzEditPage()
             </div>
 
             <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
-              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={lastCheck}>
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Completes the puzzle" onMouseEnter={dontDeselect} onClick={lastCheck}>
                 <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                   <p className='d-md-block my-0'>
                     finshed puzzle
@@ -374,12 +431,14 @@ export default function PuzEditPage()
             </div>
 
             <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
-              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={wrongPuz}>
+              <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect}>
+                <a href="../search">
                 <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                   <p className='d-md-block my-0'>
                     Back
                   </p>
                 </div>
+                </a>
               </button>
             </div>
           </div>
@@ -394,7 +453,110 @@ export default function PuzEditPage()
     </UserContextProvider>
   )
   }
+  else if (puzzType === 2)
+  {
+    return(
+      <UserContextProvider>
+        <div className="align-items-center text-center my-3 row">
+          <div className="col-sm-12 col-md-5 align-items-center text-center d-inline-flex flex-sm-row flex-md-column justify-content-center">
+            <div className="d-flex flex-row">
+              <div className="mx-3">
+                <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+                  <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="fills in empty spaces with blocks" onMouseEnter={dontDeselect} onClick={gridFiller}>
+                    <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                      <p className='d-md-block my-0'>
+                        Block off empty spaces and detect goals
+                      </p>
+                    </div>
+                  </button>
+                </div>
+  
+                <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+                  <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="completes the puzzle" onMouseEnter={dontDeselect} onClick={lastCheck}>
+                    <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                      <p className='d-md-block my-0'>
+                        finshed puzzle
+                      </p>
+                    </div>
+                  </button>
+                </div>
+  
+                <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+                  <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect}>
+                    <a href="../search">
+                      <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
+                        <p className='d-md-block my-0'>
+                          Back
+                        </p>
+                      </div>
+                    </a>
+                  </button>
+                </div>
+              </div>
+  
+              <div className="mx-3">
+                <ul className='align-items-center text-center p-0 overflow-scroll'>
+                {
+                  key.map((goa, index) => <li className='align-items-center text-center my-3' key={index}>
+                    <div className="align-items-center text-center flex-fill butHov p-0 ms-1" onClick={() => {ind = index}}>
+                      <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Assign clue" onClick={assignClue}>
+                        <div className='fw-bolder d-flex flex-row justify-content-center py-1'>
+                          <p className="m-0">
+                            {goa.ans}
+                          </p>
+                        </div>
+  
+                        <div className='fw-bolder d-flex flex-row justify-content-center py-1'>
+                          <p className="m-0">
+                            {goa.clue}
+                          </p>
+                        </div>
+                      </button>
+                    </div>  
+                  </li>)
+                }
+                </ul>
+              </div>
+            </div>
+          </div>
+  
+          <div className="col-sm-12 col-md-1">
+            <Sketch setup={start} draw={update}/>
+          </div>
+  
+          <div className="popupComm m-5">
+              <div className="popup-content">
+                <div>
+                  <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Text" id='text comm'/>
+                </div>
+          
+                <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+                  <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+                    <div className='fw-bolder justify-content-center py-3'>
+                      <p className='my-0'>
+                        Back
+                      </p>
+                    </div>
+                  </button>
+                    
+                  <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Assign clue" onClick={makeComm}>
+                    <div className='fw-bolder justify-content-center py-3'>
+                      <p className='my-0'>
+                        Add
+                      </p>
+                    </div>
+                  </button>
+                </div>  
+              </div>
+            </div>
+        </div>
+      </UserContextProvider>
+    )
+  }
+
+  return(<h1 className='align-items-center text-center'>Puzzle type not reconised</h1>)
 }
+
 
 function wordsearch()
 {    
@@ -406,87 +568,190 @@ function wordsearch()
   }
 
   update = (p5) => {
-    if (p5.mouseButton === "left")
+    if (pause === false)
     {
-      let clic = mouseClicked(p5, clicked, boxed)
-      pros = clic[0]
-      clicked = clic[1]
-      boxed = clic[2]
-    }
-
-    //moves the text over to the left
-    p5.textAlign(p5.LEFT);
-
-    //refreshs the background
-    p5.background(220);
-
-    //highlights a boxs if the mouse is over it or clicked
-    if ((p5.mouseX >= (0 + border) && p5.mouseX <= (p5.width - border) && p5.mouseY >= (0 + border) && p5.mouseY <= (p5.height - border)) || (clicked === true && selectedGoal === -1 && boxed === true))
-    {
-      //checks if clicked of just hovering over
-      if (clicked === false)
+      if (p5.mouseButton === "left")
       {
-        p5.fill(150);
-      }
-      else if ((clicked === true && selectedGoal === -1) || boxed === true)
-      {
-        boxed = true;
-        p5.fill(50);
+        let clic = mouseClicked(p5, clicked, boxed)
+        pros = clic[0]
+        clicked = clic[1]
+        boxed = clic[2]
       }
 
-      //draws the square to darken
-      p5.rect(recX * boxSize, recY * boxSize, boxSize, boxSize);
-    }  
-    else if(selectedGoal !== -1 && ((p5.mouseX >= p5.width || p5.mouseX >= 0) || (p5.mouseY >= p5.width || p5.mouseY >= 0)))
-    {
-      boxed = false;
+      //moves the text over to the left
+      p5.textAlign(p5.LEFT);
 
-      if (clicked === false && hovingOverButton === false)
+      //refreshs the background
+      p5.background(220);
+
+      //highlights a boxs if the mouse is over it or clicked
+      if ((p5.mouseX >= (0 + border) && p5.mouseX <= (p5.width - border) && p5.mouseY >= (0 + border) && p5.mouseY <= (p5.height - border)) || (clicked === true && selectedGoal === -1 && boxed === true))
       {
-        selectedGoal = -1;
+        //checks if clicked of just hovering over
+        if (clicked === false)
+        {
+          p5.fill(150);
+        }
+        else if ((clicked === true && selectedGoal === -1) || boxed === true)
+        {
+          boxed = true;
+          p5.fill(50);
+        }
+
+        //draws the square to darken
+        p5.rect(recX * boxSize, recY * boxSize, boxSize, boxSize);
+      }  
+      else if(selectedGoal !== -1 && ((p5.mouseX >= p5.width || p5.mouseX >= 0) || (p5.mouseY >= p5.width || p5.mouseY >= 0)))
+      {
+        boxed = false;
+
+        if (clicked === false && hovingOverButton === false)
+        {
+          selectedGoal = -1;
+        }
       }
-    }
-
-    //draws the outline
-    let all = Outline(p5, xGridAmount, yGridAmount, border, clicked, boxSize, selectedGoal, recX, recY)
-
-    p5 = all[0]
-    xGridAmount = all[1]
-    yGridAmount = all[2]
-    border = all[3]
-    clicked = all[4]
-    boxSize = all[5]
-    selectedGoal = all[6]
-    recX = all[7]
-    recY = all[8]
   
-    //refreshs selected goal
-    if (p5.clicked === false && droppable === false)
-    {
-      selectedGoal = -1
+      //refreshs selected goal
+      if (p5.clicked === false && droppable === false)
+      {
+        selectedGoal = -1
+      }
+
+      wordFiller(p5, letters, boxSize, border)
+
+      //creates borders
+      p5.fill(0)
+      p5.rect(0, 0, xSketchSize, border)
+      p5.rect(0, 0, border, ySketchSize)
+      p5.rect(p5.width - border, 0, border, ySketchSize)
+      p5.rect(0, p5.height - border, xSketchSize, border)
+
+      workSearchKey(p5);
+
+      //fills the grid
+      p5.fill(255)
+      p5.textAlign(p5.CENTER)
+      p5.textSize(12);
+      p5.text(letters, 1, p5.height - (border - 24), xSketchSize)
+
+      //draws the outline
+      let all = Outline(p5, xGridAmount, yGridAmount, border, clicked, boxSize, selectedGoal, recX, recY)
+
+      p5 = all[0]
+      xGridAmount = all[1]
+      yGridAmount = all[2]
+      border = all[3]
+      clicked = all[4]
+      boxSize = all[5]
+      selectedGoal = all[6]
+      recX = all[7]
+      recY = all[8]
+ 
+      //allows the user to add to the grid
+      if (dontAdd === false && clicked === true && selectedGoal === -1 && (p5.keyIsPressed && ((p5.keyCode >= 65 && p5.keyCode <= 90) || (p5.keyCode >= 97 && p5.keyCode <= 122))))
+      {
+        addToGrid(null, p5)
+        p5.keyCode = null;
+        clicked = false;    
+      }
     }
+  }
+}
+
+function crossword()
+{    
+  //draws once at start
+  start = (p5, canvasParentRef) => {
+    //draws sketch
+    p5.createCanvas(xSketchSize, ySketchSize).parent(canvasParentRef)
+    pros = p5
+  }
+
+  update = (p5) => {
+    if (pause === false)
+    {
+      if (p5.mouseButton === "left")
+      {
+        let clic = mouseClicked(p5, clicked, boxed)
+        pros = clic[0]
+        clicked = clic[1]
+        boxed = clic[2]
+      }
+
+      //moves the text over to the left
+      p5.textAlign(p5.LEFT);
+
+      //refreshs the background
+      p5.background(220);
+
+      //highlights a boxs if the mouse is over it or clicked
+      if ((p5.mouseX >= (0 + border) && p5.mouseX <= (p5.width - border) && p5.mouseY >= (0 + border) && p5.mouseY <= (p5.height - border)) || (clicked === true && selectedGoal === -1 && boxed === true))
+      {
+        //checks if clicked of just hovering over
+        if (clicked === false)
+        {
+          p5.fill(150);
+        }
+        else if ((clicked === true && selectedGoal === -1) || boxed === true)
+        {
+          boxed = true;
+          p5.fill(50);
+        }
+
+        //draws the square to darken
+        p5.rect(recX * boxSize, recY * boxSize, boxSize, boxSize);
+      }  
+      else if(selectedGoal !== -1 && ((p5.mouseX >= p5.width || p5.mouseX >= 0) || (p5.mouseY >= p5.width || p5.mouseY >= 0)))
+      {
+        boxed = false;
+
+        if (clicked === false && hovingOverButton === false)
+        {
+          selectedGoal = -1;
+        }
+      }
   
-    //when space bar click it checks the grid
-    if (selectedGoal === -1 && p5.keyIsPressed && p5.keyCode === 32)
-    {
-      checkAllGrid(p5)
-    }
+      //refreshs selected goal
+      if (p5.clicked === false && droppable === false)
+      {
+        selectedGoal = -1
+      }
     
-    wordFiller(p5, letters, boxSize, border)
-    puzzleKey(p5);
+      wordFiller(p5, letters, boxSize, border)
+    
+      //creates borders
+      p5.fill(0)
+      p5.rect(0, 0, xSketchSize, border)
+      p5.rect(0, 0, border, ySketchSize)
+      p5.rect(p5.width - border, 0, border, ySketchSize)
+      p5.rect(0, p5.height - border, xSketchSize, border)
 
-    //fills the grid
-    p5.fill(255)
-    p5.textAlign(p5.CENTER)
-    p5.textSize(12);
-    p5.text(letters, 1, p5.height - (border - 24), xSketchSize)
+      //draws the outline
+      let all = Outline(p5, xGridAmount, yGridAmount, border, clicked, boxSize, selectedGoal, recX, recY);
 
-    //allows the user to add to the grid
-    if (dontAdd === false && clicked === true && selectedGoal === -1 && (p5.keyIsPressed && ((p5.keyCode >= 65 && p5.keyCode <= 90) || (p5.keyCode >= 97 && p5.keyCode <= 122))))
-    {
-      addToGrid(null, p5)
-      p5.keyCode = null;
-      clicked = false;    
+      p5 = all[0]
+      xGridAmount = all[1]
+      yGridAmount = all[2]
+      border = all[3]
+      clicked = all[4]
+      boxSize = all[5]
+      selectedGoal = all[6]
+      recX = all[7]
+      recY = all[8]
+
+      //fills the grid
+      p5.fill(255)
+      p5.textAlign(p5.CENTER)
+      p5.textSize(12);
+      p5.text(letters, 1, p5.height - (border - 24), xSketchSize)
+
+      //allows the user to add to the grid
+      if (dontAdd === false && clicked === true && selectedGoal === -1 && (p5.keyIsPressed && ((p5.keyCode >= 65 && p5.keyCode <= 90) || (p5.keyCode >= 97 && p5.keyCode <= 122))))
+      {
+        addToGrid(null, p5)
+        p5.keyCode = null;
+        clicked = false;    
+      }
     }
   }
 }
@@ -510,44 +775,13 @@ async function addToGrid(dragged, p5)
   pros.keyCode = null;
 }
 
-//draws the border and the puzzle key
-function puzzleKey(p5)
-{
-  //creates borders
-  p5.fill(0)
-  p5.rect(0, 0, xSketchSize, border)
-  p5.rect(0, 0, border, ySketchSize)
-  p5.rect(p5.width - border, 0, border, ySketchSize)
-  p5.rect(0, p5.height - border, xSketchSize, border)
-    
+//draws the wordsearch key
+function workSearchKey(p5)
+{    
   //draws currently assign goal
   p5.fill(255);
   p5.textSize(20);
   p5.textAlign(p5.LEFT, p5.CENTER);
-
-  //draws all the words in the goal
-  for(let i = 0; i < goal.length; i++)
-  {
-    //checks if a goal has been selected
-    if (selectedGoal === -1)
-    {
-      goalSelect(i, p5)
-    }
-    else if (i === selectedGoal && clicked === true)
-    {
-      p5.fill(150, 150, 255)      
-      p5.text(i + 1, 4, border + i * 40 + 20)
-      p5.text(goal[i], 16, border + i * 40 + 20)
-    }
-    
-    if (i !== selectedGoal)
-    {    
-      p5.text(i + 1, 4, border + i * 40 + 20)
-      p5.text(goal[i], 16, border + i * 40 + 20)
-    }
-
-    p5.fill(255)
-  }
 
   //draws the input and delete from goal inputs
   p5.textAlign(p5.CENTER, p5.CENTER)
@@ -562,19 +796,111 @@ function puzzleKey(p5)
   }
 }
 
-//select a goal with the mouse
-function goalSelect(i, p5)
-{
-  //allows the user to select a goal
-  if ((p5.mouseX <= border && p5.mouseX >= 0) && (p5.mouseY >= (border + i * 40 + 20 / 2) && p5.mouseY <= (20 + (border + i * 40 + 20 / 2))))
+//draws the crossword key
+function crosswordKey(setKey)
+{    
+  //draws currently assign goal
+  if (pros !== undefined)
   {
-    if (selectedGoal === -1 && clicked === true && boxed === false)
-    {
-      selectedGoal = i
+    pros.fill(255);
+    pros.textSize(20);
+    pros.textAlign(pros.LEFT, pros.CENTER);
+  }
+
+  let newWord = "";
+  let newgoal = [];
+
+  //checks the x axis
+  for(let y = 0; y < yGridAmount; y++)
+  { 
+    for(let t = 0; t < xGridAmount; t++)
+    {     
+      if (letters.charAt(6 + (9 * (y + (t * yGridAmount)))) !== '~')
+      {       
+        newWord += letters.charAt(6 + (9 * (y + (t * yGridAmount))))
+      }
+      else
+      {
+        if (newWord.length >= 2)
+        {
+          newgoal.push({ans: newWord, clue: ""});
+        }
+
+        newWord = "";
+      }  
     }
 
-    p5.fill(0, 0, 255)
+    if (newWord.length >= 2)
+    {
+      newgoal.push({ans: newWord, clue: ""});
+    }
+
+    newWord = "";
   }
+
+  //checks the y axis
+  for(let x = 0; x < xGridAmount; x++)
+  { 
+    for(let v = 0; v < xGridAmount; v++)
+    {     
+      if (letters.charAt(6 + (9 * (v + (x * yGridAmount)))) !== '~')
+      {       
+        newWord += letters.charAt(6 + (9 * (v + (x * yGridAmount))))
+      }
+      else
+      {
+        if (newWord.length >= 2)
+        {
+          newgoal.push({ans: newWord, clue: ""});
+        }
+    
+        newWord = "";
+      }  
+    }
+    
+    if (newWord.length >= 2)
+    {
+      newgoal.push({ans: newWord, clue: ""});
+    }
+    
+    newWord = "";
+  }
+
+  //draws all the words in the newgoal
+  /*
+  for(let i = 0; i < newgoal.length; i++)
+  {
+    for(let l = 0; l < newgoal.length; l++)
+    {
+      if (newgoal[l] === newgoal[i] && l !== i)
+      {
+        newgoal.splice(i, i)
+      }
+    };
+  }
+
+  goal = newgoal
+  */
+
+  let gol = []
+  newgoal.forEach(newy => {
+    for(let goaly = 0; goaly < goal.length; goaly++)
+    {
+      if (newy.ans === goal[goaly].ans)
+      {
+        gol.push(goal[goaly])
+        break
+      }
+      else if (goaly === goal.length - 1)
+      {
+        gol.push({ans: newy.ans, clue: ""})
+      }
+    };
+  });
+
+  goal = gol;
+  setKey(goal)
+  newWord = "";
 }
 
 //adds a new goal
@@ -631,10 +957,10 @@ function removeFromGoal()
   selectedGoal = -1;
 }
 
-//allows users to drag words from goal into the crossword grid
+//allows users to drag words from goal into the wordsearch grid
 function dragDropWord(p5)
 {
-  //rotates the placing of the words letters with space bar
+  //rotates the placing of the words letters
   if (p5.keyIsPressed && p5.keyCode === 188 && selectedGoal !== -1)
   {
     if (dragDropDir <= 6)
@@ -948,7 +1274,7 @@ async function lettSorter(newby)
   for(let i = 0; i < countOccurrences(letters, ', ') / 3; i++)
   {
     let z = i * 3
-    console.log()
+
     //checks if newby is just a letter or is from the user dragging in the word
     if (newby.length === 1)
     {
@@ -1059,7 +1385,7 @@ async function checkAllGrid(p5)
     //checks the y axis
     for(let y = 0; y < yGridAmount; y++)
     {    
-      if (String(x) === letters.split(', ')[(x * yGridAmount) * 3] && String(y) === letters.split(', ')[1 + ((y + (x * yGridAmount)) * 3)])
+      if (puzzlet === 1 && String(x) === letters.split(', ')[(x * yGridAmount) * 3] && String(y) === letters.split(', ')[1 + ((y + (x * yGridAmount)) * 3)])
       {
         if (filling === 0 || filling === 1 || filling === 2)
         {
@@ -1204,14 +1530,21 @@ async function checkAllGrid(p5)
           //adds random letters to the grid  
           if (countOccurrences(letters, String(x+', '+y+', ')) === 0)
           {
-            ran = (Math.floor(Math.random() * (91 - 65)) + 65);
-            addToGrid(String(x + ', ' + y  + ', ' + String.fromCharCode(ran).toUpperCase()), p5)
+            if (puzzlet === 1)
+            {
+              ran = (Math.floor(Math.random() * (91 - 65)) + 65);
+              addToGrid(String(x + ', ' + y  + ', ' + String.fromCharCode(ran).toUpperCase()), p5)
+            }
+            else if (puzzlet === 2)
+            {
+              addToGrid(String(x + ', ' + y  + ', ~'), p5)
+            }
           }
         }
         else
         {
           //asks the user if they want the random gaps to be automatically filled
-          if (window.confirm(x + ' ' + y + ' are empty grid boxes do you want to randomly fill all the empty ones')) 
+          if (window.confirm(x + ' ' + y + ' are empty grid boxes, do you want to randomly fill all the empty grid boxs')) 
           {
             if (countOccurrences(letters, String(x+', '+y+', ')) === 0)
             {
@@ -1241,13 +1574,13 @@ async function checkAllGrid(p5)
       //informs the user that they are missing some goals
       if (goCheck[i] === false)
       {
-        alert(goal[i] + ' is cannot be found in the grid')
+        alert(goal[i] + ' is cannot be found in your word searchs grid')
         break;
       }
       else if (i === goCheck.length - 1 && goCheck[i] === true)
       {
         //ask the user if they are finshed
-        if (window.confirm("All goals are included do you want to upload")) 
+        if (window.confirm("All goals are included within the word search, are you sure you are finished and want to upload")) 
         {
           editingPuz()
         } 
@@ -1264,7 +1597,7 @@ async function checkAllGrid(p5)
   goCheck = []
 }
 
-//does the final check of the crossword
+//does the final check of the wordsearch
 function finalCheck(p5)
 {
   filling = 2;
@@ -1276,6 +1609,135 @@ function finalCheck(p5)
   });
 
   checkAllGrid(p5);
+}
+
+function crossCheck()
+{
+  let allGoalsComp = false;
+  filling = 1;
+  checkAllGrid(pros)  
+
+  //draws currently assign goal
+  if (pros !== undefined)
+  {
+    pros.fill(255);
+    pros.textSize(20);
+    pros.textAlign(pros.LEFT, pros.CENTER);
+  }
+  
+    let newWord = "";
+    let newgoal = [];
+  
+  //checks the x axis
+  for(let y = 0; y < yGridAmount; y++)
+  { 
+    for(let t = 0; t < xGridAmount; t++)
+    {     
+      if (letters.charAt(6 + (9 * (y + (t * yGridAmount)))) !== '~')
+      {       
+        newWord += letters.charAt(6 + (9 * (y + (t * yGridAmount))))
+      }
+      else
+      {
+        if (newWord.length >= 2)
+        {
+          newgoal.push({ans: newWord, clue: ""});
+        }
+  
+        newWord = "";
+      }  
+    }
+  
+    if (newWord.length >= 2)
+    {
+      newgoal.push({ans: newWord, clue: ""});
+    }
+  
+    newWord = "";
+  }
+  
+  //checks the y axis
+  for(let x = 0; x < xGridAmount; x++)
+  { 
+    for(let v = 0; v < xGridAmount; v++)
+    {     
+      if (letters.charAt(6 + (9 * (v + (x * yGridAmount)))) !== '~')
+      {       
+        newWord += letters.charAt(6 + (9 * (v + (x * yGridAmount))))
+      }
+      else
+      {
+        if (newWord.length >= 2)
+        {
+          newgoal.push({ans: newWord, clue: ""});
+        }
+      
+        newWord = "";
+      }  
+    }
+      
+    if (newWord.length >= 2)
+    {
+      console.log(newWord)
+      newgoal.push({ans: newWord, clue: ""});
+    }
+      
+    newWord = "";
+  }
+  
+  //draws all the words in the newgoal
+  for(let i = 0; i < newgoal.length; i++)
+  {
+    for(let l = 0; l < newgoal.length; l++)
+    {
+      if (newgoal[l] === newgoal[i] && l !== i)
+      {
+        newgoal.splice(i, i)
+      }
+    };
+  }
+
+  for(let i = 0; i < newgoal.length; i++)
+  {
+    if (newgoal[i].ans !== goal[i].ans)
+    {
+      allGoalsComp = true
+      console.log(newgoal[i].ans)
+    }
+  }
+  setTimeout(function()
+  {
+    //checks the goals
+    for(let go = 0; go < goal.length; go++)
+    {
+      if ((goal[go].ans !== null && goal[go].ans !== undefined && goal[go].ans !== '') && (goal[go].clue !== null && goal[go].clue !== undefined && goal[go].clue !== ''))
+      {
+        console.log(goal[go].clue)
+      }
+      else
+      {
+        allGoalsComp = true;
+        break;
+      }
+    }
+
+    if (allGoalsComp === true)
+    {
+      alert('Not all goals have there clues')
+    }
+    else
+    {
+      //ask the user if they are finshed
+      if (window.confirm("All goals have clues, are you sure you are finished and want to upload")) 
+      {
+        editingPuz()
+      } 
+      else 
+      {
+        window.txt = "You pressed Cancel!";
+      }
+    }
+  }, 10000);  
 }
 
 function editingPuz()

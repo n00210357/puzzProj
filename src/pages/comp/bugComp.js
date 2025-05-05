@@ -4,11 +4,12 @@ import img from '../../hooks/userPlaceholder.png'
 
 //the bug item       
 export default function BugItem(bug, users, id, fillPopUpEdit, destroy){
-    //sets up the image
+    //sets up the variables
     let image = null;
     let user = null;
     let userImage = null;
 
+    //gets the bugs image
     if (image === null)
     {
         if (bug.image_path && bug.image_path !== null && bug.image_path !== undefined)
@@ -21,6 +22,7 @@ export default function BugItem(bug, users, id, fillPopUpEdit, destroy){
         }
     }
 
+    //gets the bug reporter
     if (user === null)
     {
         for(let i = 0; i < users.length; i++)
@@ -33,6 +35,7 @@ export default function BugItem(bug, users, id, fillPopUpEdit, destroy){
         }
     }  
 
+    //gets the reports image
     if (userImage === null && user !== null)
     {
         if (user.image_path && user.image_path !== null && user.image_path !== undefined)
@@ -52,6 +55,7 @@ export default function BugItem(bug, users, id, fillPopUpEdit, destroy){
         }
     }
 
+    //allows the reporter to edit their report
     function editorForm()
     {
       fillPopUpEdit(bug)
@@ -66,8 +70,8 @@ export default function BugItem(bug, users, id, fillPopUpEdit, destroy){
       } 
     }   
 
+    //show if a bugs been solved or not
     let solved = "";
-
     if (bug.fixed === true)
     {
         solved = "Solved"
@@ -80,6 +84,7 @@ export default function BugItem(bug, users, id, fillPopUpEdit, destroy){
     //displays the bug
     if (user !== null && userImage !== null && user._id === id && image === null)
     {
+        //The users reported bugs that don't have images
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3">
@@ -104,6 +109,7 @@ export default function BugItem(bug, users, id, fillPopUpEdit, destroy){
     }
     else if (user !== null && userImage !== null && image === null)
     {
+        //everyone elses reported bugs that don't have images
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3">
@@ -123,6 +129,7 @@ export default function BugItem(bug, users, id, fillPopUpEdit, destroy){
     //displays the bug
     if (user !== null && userImage !== null && user._id === id)
     {
+        //The users reported bugs that does have a images
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3">
@@ -148,6 +155,7 @@ export default function BugItem(bug, users, id, fillPopUpEdit, destroy){
     }
     else if (user !== null && userImage !== null)
     {
+        //everyone elses reported bugs that have images
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3">

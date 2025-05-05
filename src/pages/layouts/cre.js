@@ -268,6 +268,7 @@ export default function CrePage()
   function wrongPuz()
   {
     xSketchSize = undefined
+    letters = "0, 0, A"
     rememberedPuz(null)
     setPuzzType(0)
   }
@@ -301,6 +302,7 @@ export default function CrePage()
     }
   }, []);
 
+  //makes the comment create appear
   function fillPopUpCom()
   {
     document.querySelector(".popupComm").style.display = "flex";
@@ -326,6 +328,7 @@ if (goal !== oldGoal && goal.length >= 1)
     noPopup();
   }
    
+  //removes all pop ups
   function noPopup()
   {
     pause = false;
@@ -442,7 +445,7 @@ if (goal !== oldGoal && goal.length >= 1)
             <div className="d-flex flex-row">
               <div className="mx-3">
                 <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
-                  <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" value="makeComment" data-toggle="tooltip" title="Message this user" onClick={fillPopUpCom}>
+                  <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" value="makeComment" data-toggle="tooltip" title="Make a goal" onClick={fillPopUpCom}>
                     <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                       <p className='my-0'>
                         Make a goal
@@ -452,7 +455,7 @@ if (goal !== oldGoal && goal.length >= 1)
                 </div> 
 
                 <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
-                  <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={removal}>
+                  <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Delete a selected goal" onMouseEnter={dontDeselect} onClick={removal}>
                     <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                       <p className='d-md-block my-0'>
                         delete from goal
@@ -462,7 +465,7 @@ if (goal !== oldGoal && goal.length >= 1)
                 </div>
 
                 <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
-                  <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={gridFiller}>
+                  <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Replace blank spaces with random letters" onMouseEnter={dontDeselect} onClick={gridFiller}>
                     <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                       <p className='d-md-block my-0'>
                         fill in the grid gaps
@@ -472,7 +475,7 @@ if (goal !== oldGoal && goal.length >= 1)
                 </div>
 
                 <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
-                  <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={lastCheck}>
+                  <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Completes the puzzle" onMouseEnter={dontDeselect} onClick={lastCheck}>
                     <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                       <p className='d-md-block my-0'>
                         finshed puzzle
@@ -482,7 +485,7 @@ if (goal !== oldGoal && goal.length >= 1)
                 </div>
 
                 <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
-                  <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={wrongPuz}>
+                  <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Go back to puzzle select" onMouseEnter={dontDeselect} onClick={wrongPuz}>
                     <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                       <p className='d-md-block my-0'>
                         Back
@@ -521,17 +524,19 @@ if (goal !== oldGoal && goal.length >= 1)
               <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100 maxLen position-relative top-0 start-sm-0 start-md-50 ms-1" placeholder="New goal" value={form.addGoal} onChange={handleChange} id='addGoal'/>
             </div>
         
-            <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
-              <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
-                <div className='fw-bolder justify-content-center py-3'>
-                  <p className='my-0'>
-                    Back
-                  </p>
-                </div>
-              </button>
+            <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">
+              <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
+                <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new goal" onClick={noPopup}>
+                  <div className='fw-bolder justify-content-center py-3'>
+                    <p className='my-0'>
+                      Back
+                    </p>
+                  </div>
+                </button>
+              </div>
 
               <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
-                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={goalAdder}>
+                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Add the new goal" onMouseEnter={dontDeselect} onClick={goalAdder}>
                   <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                     <p className='d-md-block my-0'>
                       insert your new goal
@@ -555,7 +560,7 @@ if (puzzType === 2)
           <div className="d-flex flex-row">
             <div className="mx-3">
               <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
-                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={gridFiller}>
+                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="fills in empty spaces with blocks" onMouseEnter={dontDeselect} onClick={gridFiller}>
                   <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                     <p className='d-md-block my-0'>
                       Block off empty spaces and detect goals
@@ -565,7 +570,7 @@ if (puzzType === 2)
               </div>
 
               <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
-                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={lastCheck}>
+                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="completes the puzzle" onMouseEnter={dontDeselect} onClick={lastCheck}>
                   <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                     <p className='d-md-block my-0'>
                       finshed puzzle
@@ -575,7 +580,7 @@ if (puzzType === 2)
               </div>
 
               <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
-                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Button" onMouseEnter={dontDeselect} onClick={wrongPuz}>
+                <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark position-relative top-0 start-0 start-md-50 my-2" data-toggle="tooltip" title="Return to puzzle select" onMouseEnter={dontDeselect} onClick={wrongPuz}>
                   <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                     <p className='d-md-block my-0'>
                       Back

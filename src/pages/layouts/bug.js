@@ -63,38 +63,40 @@ export default function BugReport() {
 
   //creates a new bug
   const makeBug = () =>
-    {       
-      newBug.puzzle_id = null;
-      newBug.user_id = id;
-      newBug.text = document.getElementById("text comm").value;
-      newBug.fixed = false;
-      newBug.file = document.getElementById("file comm").files[0];
-  
-      postRequest('https://puz-sable.vercel.app/api/bugs', newBug, {
-        headers: {
-            "Content_type":"Mulipart/form-data",
-            Authorization: `Bearer ${session}`
-        }
-      })  
-  
-      setTimeout(function()
-      {
-        noPopup();
-      }, 1000);   
-    }
-
-    function fillPopUpCom()
-    {
-      if (document.querySelector(".popupEdit"))
-      {
-        document.querySelector(".popupEdit").style.display = "none";
-        document.getElementById("edit com text").value = "";
-        document.getElementById("edit com file").value = null;  
+  {       
+    newBug.puzzle_id = null;
+    newBug.user_id = id;
+    newBug.text = document.getElementById("text comm").value;
+    newBug.fixed = false;
+    newBug.file = document.getElementById("file comm").files[0];
+ 
+    postRequest('https://puz-sable.vercel.app/api/bugs', newBug, {
+      headers: {
+        "Content_type":"Mulipart/form-data",
+        Authorization: `Bearer ${session}`
       }
+    })  
+  
+    setTimeout(function()
+    {
+      noPopup();
+    }, 1000);   
+  }
 
-      document.querySelector(".popupComm").style.display = "flex";
+  //makes the comment create appear
+  function fillPopUpCom()
+  {
+    if (document.querySelector(".popupEdit"))
+    {
+      document.querySelector(".popupEdit").style.display = "none";
+      document.getElementById("edit com text").value = "";
+      document.getElementById("edit com file").value = null;  
     }
 
+    document.querySelector(".popupComm").style.display = "flex";
+  }
+
+  //makes the comment edit appear
   function fillPopUpEdit(bu)
   {
     bug = bu;
@@ -109,6 +111,7 @@ export default function BugReport() {
     document.querySelector(".popupEdit").style.display = "flex";
   }
 
+  //edits the comment
   function editComm(s)
   {
     newBug.puzzle_id = s.puzzle_id;
@@ -170,6 +173,7 @@ export default function BugReport() {
     }, 1500); 
   }
   
+  //removes all pop ups
   function noPopup()
   {
     document.querySelector(".popupComm").style.display = "none";
@@ -199,6 +203,7 @@ export default function BugReport() {
     });
   }
 
+  //a function to be called to edit a bug
   function editor()
   {
     editComm(bug)
@@ -242,21 +247,26 @@ export default function BugReport() {
           </div>
 
           <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
-            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+          <div className="butHov flex-fill">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new bug report" onClick={noPopup}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
                   Back
                 </p>
               </div>
             </button>
-          
-            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Creates comment" onClick={makeBug}>
+            </div>
+
+            <div className="ms-2"></div>
+            <div className="butHov flex-fill">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Creates bug report" onClick={makeBug}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
                   Send
                 </p>
               </div>
             </button>
+            </div>
           </div>  
         </div>
       </div>
@@ -264,7 +274,7 @@ export default function BugReport() {
       <div className="popupEdit m-5">
         <div className="popup-content">
           <div>
-            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Edit comment" id='edit com text'/>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Edit bug report" id='edit com text'/>
           </div>
 
           <div>
@@ -272,21 +282,27 @@ export default function BugReport() {
           </div>
 
           <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
-            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+          <div className="butHov flex-fill">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new bug report" onClick={noPopup}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
                   Back
                 </p>
               </div>
             </button>
-          
-            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Edits comment" onClick={editor}>
+            </div>
+
+            <div className="ms-2"></div>
+
+            <div className="butHov flex-fill">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Edits bug report" onClick={editor}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
                   Edit
                 </p>
               </div>
             </button>
+            </div>
           </div>          
         </div>
       </div>
@@ -314,11 +330,11 @@ export default function BugReport() {
 
       <h3 className='align-items-center text-center my-3 redText'>{errors}</h3>
 
-      <ul className='row align-items-center text-center'>
+      <ul className='row align-items-center text-center overflow-scroll'>
       {
         bugs.map((bug, index) => <li className='col-4 align-items-center text-center' key={index}>{BugItem(bug, users, id, fillPopUpEdit, destroy)}</li>)
       }
-    </ul>
+      </ul>
 
     <div className="popupComm m-5">
         <div className="popup-content">
@@ -329,22 +345,28 @@ export default function BugReport() {
             <input type="file" className="max-logo my-3" placeholder="Image path" id='file comm'/>
           </div>
 
-          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
-            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+          <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">
+          <div className="butHov flex-fill">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new bug report" onClick={noPopup}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
                   Back
                 </p>
               </div>
             </button>
-          
-            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Creates comment" onClick={makeBug}>
+            </div>
+
+            <div className="ms-2"></div>
+
+            <div className="butHov flex-fill">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Creates bug report" onClick={makeBug}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
                   Send
                 </p>
               </div>
             </button>
+            </div>
           </div>  
         </div>
       </div>
@@ -352,34 +374,38 @@ export default function BugReport() {
       <div className="popupEdit m-5">
         <div className="popup-content">
           <div>
-            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Edit comment" id='edit com text'/>
+            <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Edit bug report" id='edit com text'/>
           </div>
 
           <div>
             <input type="file" className="max-logo my-3" placeholder="Image path" id='edit com file'/>
           </div>
 
-          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
-            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+          <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">
+          <div className="butHov flex-fill">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel edit bug report" onClick={noPopup}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
                   Back
                 </p>
               </div>
             </button>
+            </div>
+
+            <div className="ms-2"></div>
           
-            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Edits comment" onClick={editor}>
+            <div className="butHov flex-fill">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Edits bug report" onClick={editor}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
                   Edit
                 </p>
               </div>
             </button>
+            </div>
           </div>          
         </div>
       </div>
-    </div>
-
-    
+    </div>    
   );
 }

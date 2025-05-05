@@ -8,16 +8,16 @@ import useAPI from '../../hooks/useAPI.tsx'
 import { CommentItem } from "../comp/commComp.js";
 import { useEffect, useState, useContext } from 'react';
 
+//empty variables
 let comStop = 0;
-let comment;
+let databaseProblem = 0;
 let comCheck = false;
 let messa = [];
-
-let databaseProblem = 0;
-
+let comment;
 let comImg;
 let edtImg;
 
+//gets comment image
 if (document.getElementById("file comm") &&  document.getElementById("file comm").files[0] !== null)
 {
   comImg = document.getElementById("file comm").files[0];
@@ -27,6 +27,7 @@ else
   comImg = undefined
 }
 
+//gets comment image for editing
 if (document.getElementById("edit com file") && document.getElementById("edit com file").files[0] !== null)
 {
   edtImg = document.getElementById("edit com file").files[0];
@@ -53,10 +54,10 @@ export default function AccoPage() {
     file: null
   }); 
 
-  //grabs user from database
   useEffect(() => {
     if (id !== null && user === null)
     {
+      //grabs user from database
       axios.get(`https://puz-sable.vercel.app/api/users/${id}`,
       {
         headers: {
@@ -91,6 +92,7 @@ export default function AccoPage() {
         });
       }
 
+      //grabs the user's comments from database
       if ((comm[0] === null || comm[0] === undefined) && id !== null && comStop <= 3)
       {        
         axios.get('https://puz-sable.vercel.app/api/comments')
@@ -112,7 +114,8 @@ export default function AccoPage() {
 
         comStop = comStop + 1;      
       }
-   
+
+      //grabs the users from database   
       if ((mess[0] === null || mess[0] === undefined) && (comm[0] !== null || comm[0] !== undefined) && id !== null)
       {         
         axios.get(`https://puz-sable.vercel.app/api/users`)
@@ -154,6 +157,7 @@ export default function AccoPage() {
       }
     }
 
+    //refreshes the comments
     if (comCheck === true && comm.length === 0)
     {
       setTimeout(function()
@@ -163,6 +167,7 @@ export default function AccoPage() {
     }
   });
 
+  //checks for a database problem
   if (databaseProblem === 1 && loading)
   {
     return (
@@ -209,6 +214,7 @@ export default function AccoPage() {
      );
   }
 
+  //allows users to select users to message
   (function() {
     var elm = document.getElementById('foo'),
     df = document.createDocumentFragment();
@@ -220,7 +226,6 @@ export default function AccoPage() {
         option.appendChild(document.createTextNode(mess[i].username));
         df.appendChild(option);
     }
-
 
     if (df !== null && elm !== null)
     {
@@ -278,6 +283,7 @@ export default function AccoPage() {
     image = img
   }
 
+  //makes the comment create appear
   function fillPopUpCom()
   {
     document.querySelector(".popupEdit").style.display = "none";
@@ -286,6 +292,7 @@ export default function AccoPage() {
     document.querySelector(".popupComm").style.display = "flex";
   }
 
+  //makes the comment edit appear
   function fillPopUpEdit(comme)
   {
     comment = comme;
@@ -296,7 +303,7 @@ export default function AccoPage() {
     document.querySelector(".popupEdit").style.display = "flex";
   }
 
-  //creates a new s
+  //creates a new comment
   const makeComm = (_id) =>
   {       
     newComm.puzzle_id = _id;
@@ -317,11 +324,13 @@ export default function AccoPage() {
     }, 1500);   
   }
 
+  //a function to be called to edit a comment
   function editor()
   {
     editComm(comment)
   }
 
+  //edits a comment
   function editComm(s)
   {
     newComm.puzzle_id = s.puzzle_id;
@@ -389,6 +398,7 @@ export default function AccoPage() {
     }, 1500); 
   }
 
+  //grabs comments every 30 secs
   setTimeout(function()
   {  
     axios.get('https://puz-sable.vercel.app/api/comments')
@@ -409,6 +419,7 @@ export default function AccoPage() {
     });
   }, 30000); 
 
+  //removes all pop ups
   function noPopup()
   {
     document.querySelector(".popupComm").style.display = "none";
@@ -439,15 +450,17 @@ export default function AccoPage() {
 
   let slideIndex = 0;
 
-  // Next/previous controls
+  // moves to next slide
   function plusSlides() {
     showSlides(slideIndex += 1);
   }
 
+  // moves to previous slide
   function minusSlides() {
     showSlides(slideIndex -= 1);
   }
 
+  //controls the slides
   function showSlides() 
   {
     if (slideIndex < 0)
@@ -488,6 +501,7 @@ export default function AccoPage() {
     }
   }
 
+  //refreshes the slides
   setTimeout(function()
   { 
     showSlides() 
@@ -511,12 +525,9 @@ export default function AccoPage() {
               <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
                 <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={minusSlides}>
                   <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-left me-md-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-left d-lg-block" viewBox="0 0 16 16">
                     <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
                   </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
-                      <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
-                    </svg>
                   </div>
                 </button>
               </div>    
@@ -624,6 +635,7 @@ export default function AccoPage() {
   );
   }
 
+  //allows users to change who their messages
   if (document.getElementById('foo') && document.getElementById('foo').value != null && document.getElementById('foo').value !== undefined)
   {
     messa[0] = user
@@ -650,7 +662,7 @@ export default function AccoPage() {
               <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
                 <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={minusSlides}>
                   <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-left me-md-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-left d-lg-block" viewBox="0 0 16 16">
                     <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
                   </svg>
                   </div>
@@ -793,7 +805,8 @@ export default function AccoPage() {
             <img src={comImg} alt="No image"/>
           </div>
 
-          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+          <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">
+            <div className="butHov flex-fill">
             <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
@@ -801,14 +814,19 @@ export default function AccoPage() {
                 </p>
               </div>
             </button>
+            </div>
+
+            <div className="ms-2"></div>
           
-            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Creates comment" onClick={makeComm}>
+            <div className="butHov flex-fill">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Creates messages" onClick={makeComm}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
                   Send
                 </p>
               </div>
             </button>
+           </div>
           </div>  
         </div>
       </div>
@@ -824,7 +842,8 @@ export default function AccoPage() {
             <img src={edtImg} alt="No image"/>
           </div>
 
-          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+          <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">
+            <div className="butHov flex-fill">
             <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
@@ -832,14 +851,19 @@ export default function AccoPage() {
                 </p>
               </div>
             </button>
+            </div>
+
+            <div className="ms-2"></div>
           
-            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Edits comment" onClick={editor}>
+            <div className="butHov flex-fill">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Edits message" onClick={editor}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
                   Edit
                 </p>
               </div>
             </button>
+            </div>
           </div>          
         </div>
       </div>

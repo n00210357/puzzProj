@@ -9,6 +9,7 @@ export function RepItem(rep, users, id, fillPopUpEdit, destroy){
     let user = null;
     let userImage = null;
 
+    //gets reply image
     if (image === null)
     {
         if (rep.image_path && rep.image_path !== null && rep.image_path !== undefined)
@@ -21,6 +22,7 @@ export function RepItem(rep, users, id, fillPopUpEdit, destroy){
         }
     }
 
+    //assigns a user
     if (user === null)
     {
         for(let i = 0; i < users.length; i++)
@@ -33,6 +35,7 @@ export function RepItem(rep, users, id, fillPopUpEdit, destroy){
         }
     }  
 
+    //gets user image
     if (userImage === null && user !== null)
     {
         if (user.image_path && user.image_path !== null && user.image_path !== undefined)
@@ -45,6 +48,7 @@ export function RepItem(rep, users, id, fillPopUpEdit, destroy){
         }
     }
 
+    //alows rep to be edited
     function editor()
     {
       fillPopUpEdit(rep)
@@ -62,6 +66,7 @@ export function RepItem(rep, users, id, fillPopUpEdit, destroy){
     //displays the reply
     if (user !== null && userImage !== null && user._id === id && image === null)
     {
+        //shows a rep without an image that the view owns
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
@@ -85,6 +90,7 @@ export function RepItem(rep, users, id, fillPopUpEdit, destroy){
     }
     else if (user !== null && userImage !== null && image === null)
     {
+        //shows a rep without an image that the view does not own
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
@@ -101,6 +107,7 @@ export function RepItem(rep, users, id, fillPopUpEdit, destroy){
 
     if (user !== null && userImage !== null && user._id === id)
     {
+        //shows a rep with an image that the view owns
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">
@@ -125,6 +132,7 @@ export function RepItem(rep, users, id, fillPopUpEdit, destroy){
     }
     else if (user !== null && userImage !== null)
     {
+        //shows a rep with an image that the view does not own
         return (
             <UserContextProvider>            
                 <div className="card-body align-items-center text-center rounded-1 border border-4 border-dark m-3 position-relative">

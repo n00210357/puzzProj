@@ -1,7 +1,6 @@
 //imports
 import SessionProvider from '../contexts/userContextProvider.tsx'
 import Top from './comp/headerComp.js'
-
 import Bottom from './comp/footerComp.js'
 import UrPuzzPage from './layouts/urPuz.js'
 

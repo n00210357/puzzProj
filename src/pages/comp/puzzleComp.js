@@ -5,11 +5,12 @@ import axios from 'axios';
 
 //the puzzle item
 export default function PuzzleItem(puzzle, users, session, id){
-  //sets up image
+  //sets up variables
   let image = null;
   let user = null;
   let type = null;
 
+  //gets the puzzles image
   if (image === null)
   {
     if (puzzle.image_path && puzzle.image_path !== null && puzzle.image_path !== undefined)
@@ -22,6 +23,7 @@ export default function PuzzleItem(puzzle, users, session, id){
     }
   }
 
+  //gets the puzzles creator
   if (user === null && (users[1] !== null && users[1] !== undefined))
   {
     for(let i = 0; i < users.length; i++)
@@ -60,6 +62,7 @@ export default function PuzzleItem(puzzle, users, session, id){
     }})  
   }
 
+  //Gets the puzzles type
   if (puzzle.puzzleCode.charAt(0) === "1")
   {
     type = "Word Search";

@@ -8,6 +8,7 @@ import useAPI from '../../hooks/useAPI.tsx'
 import { CommentItem } from "../comp/commComp.js";
 import { useEffect, useState, useContext } from 'react';
 
+//empty variables
 let comment;
 let comCheck = false;
 
@@ -27,6 +28,7 @@ export default function UseLayout() {
     file: null
   });
 
+  //gets the users id from the url
   var _id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
   
   //grabs user from database
@@ -83,6 +85,7 @@ export default function UseLayout() {
         });
     }
 
+    //grabs the comments
     axios.get('https://puz-sable.vercel.app/api/comments')
     .then(response => {
       if (comm.length === 0)
@@ -104,6 +107,7 @@ export default function UseLayout() {
     });
   });
 
+  //refresh the comments if their are none
   if (comCheck === true && comm.length === 0)
   {
     setTimeout(function()
@@ -112,6 +116,7 @@ export default function UseLayout() {
     }, 2000); 
   }
 
+  //makes the message create appear
   function fillPopUpCom()
   {
     document.querySelector(".popupEdit").style.display = "none";
@@ -120,6 +125,7 @@ export default function UseLayout() {
     document.querySelector(".popupComm").style.display = "flex";
   }
 
+  //makes the message edit appear
   function fillPopUpEdit(comme)
   {
     comment = comme;
@@ -130,7 +136,7 @@ export default function UseLayout() {
     document.querySelector(".popupEdit").style.display = "flex";
   }
 
-  //creates a new s
+  //creates a new comment
   const makeComm = () =>
     {       
       newComm.puzzle_id = _id;
@@ -151,11 +157,13 @@ export default function UseLayout() {
       }, 1500);   
     }
 
+  //a function to be called to edit a message
   function editor()
   {
     editComm(comment)
   }
 
+  //edits the comments
   function editComm(s)
   {
     newComm.puzzle_id = s.puzzle_id;
@@ -223,6 +231,7 @@ export default function UseLayout() {
     }, 1500); 
   }
 
+  //removes all pop ups
   function noPopup()
   {
     document.querySelector(".popupComm").style.display = "none";
@@ -250,6 +259,7 @@ export default function UseLayout() {
       document.getElementById("file rep").value = null;
     }
 
+    //refreshes the comments
     setTimeout(function()
     {  
       axios.get('https://puz-sable.vercel.app/api/comments')
@@ -274,15 +284,17 @@ export default function UseLayout() {
   
   let slideIndex = 1;
 
-  // Next/previous controls
+  // move to the next slide
   function plusSlides() {
     showSlides(slideIndex += 1);
   }
 
+  // moves to the previous slide
   function minusSlides() {
     showSlides(slideIndex -= 1);
   }
 
+  //controls the slides
   function showSlides() 
   {
     if (slideIndex < 0)
@@ -297,14 +309,12 @@ export default function UseLayout() {
 
     for (let i = 0; i < puzzles.length; i++) 
     {
-
       document.getElementsByClassName("mySlides")[i].style.display = "none";
-
       document.getElementsByClassName("mySlides")[slideIndex].style.display = "block"; 
     }
-
   }
 
+  //refreshes the slides
   setTimeout(function()
   { 
     showSlides() 
@@ -349,14 +359,14 @@ export default function UseLayout() {
               <h4 className='align-items-center text-center my-3'>Your puzzles</h4>
                 <div className="slideshow-container align-items-center text-center">
                 {
-                  puzzles.map((puzzle, index) => <div className='mySlides fade align-items-center text-center my-3 ms-4' key={index}>{PuzzleItem(puzzle, user, session, id)}</div>)
+                  puzzles.map((puzzle, index) => <div className='mySlides align-items-center text-center my-3 ms-4' key={index}>{PuzzleItem(puzzle, user, session, id)}</div>)
                 }
             
                 <div className="d-flex flex-row">
                   <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
-                    <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={minusSlides}>
+                    <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="last puzzle" onClick={minusSlides}>
                       <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-left me-md-3 d-md-none d-lg-block" viewBox="0 0 16 16">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-left d-lg-block" viewBox="0 0 16 16">
                           <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
                         </svg>
                       </div>
@@ -364,7 +374,7 @@ export default function UseLayout() {
                   </div>    
             
                   <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
-                    <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={plusSlides}>
+                    <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="next puzzle" onClick={plusSlides}>
                       <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
                           <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
@@ -398,7 +408,7 @@ export default function UseLayout() {
            
                   <div className="d-flex flex-row">
                     <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
-                      <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={minusSlides}>
+                      <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="last puzzle" onClick={minusSlides}>
                         <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-left me-md-3 d-md-none d-lg-block" viewBox="0 0 16 16">
                             <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
@@ -408,7 +418,7 @@ export default function UseLayout() {
                     </div>    
             
                     <div className="align-items-center text-center flex-fill butHov p-0 ms-3">
-                      <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="Go back" onClick={plusSlides}>
+                      <button className="align-items-center text-center w-100 rounded-1 border border-4 border-dark" data-toggle="tooltip" title="next puzzle" onClick={plusSlides}>
                         <div className='fw-bolder d-flex flex-row justify-content-center py-3'>
                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
                             <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8"/>
@@ -448,7 +458,7 @@ export default function UseLayout() {
             </div>
           </div>    
 
- <div className="popupComm m-5">
+      <div className="popupComm m-5">
         <div className="popup-content">
           <div>
             <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Text" id='text comm'/>
@@ -457,7 +467,8 @@ export default function UseLayout() {
             <input type="file" className="max-logo my-3" placeholder="Image path" id='file comm'/>
           </div>
 
-          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+          <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">
+          <div className="butHov flex-fill">
             <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
@@ -465,14 +476,19 @@ export default function UseLayout() {
                 </p>
               </div>
             </button>
+            </div>
+
+            <div className="ms-2"></div>
           
-            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Creates comment" onClick={makeComm}>
+            <div className="butHov flex-fill">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Creates message" onClick={makeComm}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
                   Send
                 </p>
               </div>
             </button>
+            </div>
           </div>  
         </div>
       </div>
@@ -487,22 +503,28 @@ export default function UseLayout() {
             <input type="file" className="max-logo my-3" placeholder="Image path" id='edit com file'/>
           </div>
 
-          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
-            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
+          <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">
+          <div className="butHov flex-fill">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel edit message" onClick={noPopup}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
                   Back
                 </p>
               </div>
             </button>
-          
-            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Edits comment" onClick={editor}>
+            </div>
+
+            <div className="ms-2"></div>
+
+            <div className="butHov flex-fill">
+            <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Edits message" onClick={editor}>
               <div className='fw-bolder justify-content-center py-3'>
                 <p className='my-0'>
                   Edit
                 </p>
               </div>
             </button>
+            </div>
           </div>          
         </div>
       </div>
