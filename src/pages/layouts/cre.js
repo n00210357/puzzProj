@@ -626,7 +626,8 @@ if (puzzType === 2)
                 <input type="text" className="align-items-center text-center rounded-1 border border-4 border-dark px-5 py-3 w-100" placeholder="Text" id='text comm'/>
               </div>
         
-              <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+              <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">
+                <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
                 <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
                   <div className='fw-bolder justify-content-center py-3'>
                     <p className='my-0'>
@@ -634,7 +635,9 @@ if (puzzType === 2)
                     </p>
                   </div>
                 </button>
-                  
+                </div>
+
+                <div className="align-items-center text-center flex-fill butHov p-0 ms-1">
                 <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark ms-2" data-toggle="tooltip" title="Assign clue" onClick={makeComm}>
                   <div className='fw-bolder justify-content-center py-3'>
                     <p className='my-0'>
@@ -642,6 +645,7 @@ if (puzzType === 2)
                     </p>
                   </div>
                 </button>
+                </div>
               </div>  
             </div>
           </div>
@@ -762,6 +766,7 @@ function crossword()
   update = (p5) => {
     if (pause === false)
     {
+      console.log(p5.keyCode)
       if (p5.mouseButton === "left")
       {
         let clic = mouseClicked(p5, clicked, boxed)
@@ -838,7 +843,7 @@ function crossword()
       p5.text(letters, 1, p5.height - (border - 24), xSketchSize)
 
       //allows the user to add to the grid
-      if (dontAdd === false && clicked === true && selectedGoal === -1 && (p5.keyIsPressed && ((p5.keyCode >= 65 && p5.keyCode <= 90) || (p5.keyCode >= 97 && p5.keyCode <= 122))))
+      if (dontAdd === false && clicked === true && selectedGoal === -1 && (p5.keyIsPressed && ((p5.keyCode >= 65 && p5.keyCode <= 90) || (p5.keyCode >= 97 && p5.keyCode <= 122) || p5.keyCode === 222 || p5.keyCode === 8)))
       {
         addToGrid(null, p5)
         p5.keyCode = null;
@@ -851,12 +856,19 @@ function crossword()
 //allows the user to add a Letter to the grid
 async function addToGrid(dragged, p5)
 {  
-
   //checks if user is draggin a word form goal or just adding a single letter
   if (dragged === undefined || dragged === null)
   {
     letters = `${letters}, ${String(recX - (border / boxSize),)}, ${String(recY - (border / boxSize),)}, ${String.fromCharCode(p5.keyCode)}`
-    lettSorter(String.fromCharCode(p5.keyCode))
+    
+    if (p5.keyCode !== 8 || p5.keyCode !== 222)
+    {
+      lettSorter(String.fromCharCode(p5.keyCode))      
+    }
+    else
+    {
+      lettSorter('~')     
+    }
   }
   else
   {
