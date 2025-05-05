@@ -57,6 +57,12 @@ let starter = ""
 
 let comment;
 
+let preWord = 0;
+let worLen = 0;
+let newWord = "";
+let xLett = [];
+let yLett = [];
+
 //the puzzle page
 export default function PuzPage()
 {
@@ -986,11 +992,11 @@ function crossword()
       p5.textSize(32);
       p5.textAlign(p5.CENTER, p5.CENTER);
 
-      let preWord = 0;
-      let worLen = 0;
-      let newWord = "";
-      let xLett = [];
-      let yLett = [];
+      preWord = 0;
+      worLen = 0;
+      newWord = "";
+      xLett = [];
+      yLett = [];
       
       if (lett && lett.length > 1)
       {
