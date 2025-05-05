@@ -30,12 +30,10 @@ let boxed = false;
 let letters = "";
 let lette = "empty";
 let lett;
-let crosGoal = [];
 let goal = [];
 let goCheck = [];
 let lines = [];
 let newLine = false;
-let completion = true;
 
 //MOUSE VARS
 //stores if user clicked
@@ -528,7 +526,7 @@ export default function PuzPage()
 
   for(let goceck = 0; goceck < goCheck.length; goceck++)
   {
-    if (goCheck[goceck] == false)
+    if (goCheck[goceck] === false)
     {
       win = false
       break;
@@ -837,9 +835,6 @@ function wordsearch()
       p5.rect(p5.width - border, 0, border, ySketchSize)
       p5.rect(0, p5.height - border, xSketchSize, border)
 
-      //draws all the words in the goal
-      completion = true  
-
       p5.stroke('black');
       p5.strokeWeight(5);
 
@@ -987,8 +982,6 @@ function crossword()
       p5.rect(p5.width - border, 0, border, ySketchSize)
       p5.rect(0, p5.height - border, xSketchSize, border)
 
-      completion = true;
-
       p5.fill(0)
       p5.textSize(32);
       p5.textAlign(p5.CENTER, p5.CENTER);
@@ -1000,9 +993,6 @@ function crossword()
       
       if (lett && lett.length > 1)
       {
-        let newWord = "";
-        let preWord = 0;
-
         for (let x = 0; x < yGridAmount; x++)
         {
           if (newWord.length > 1)
@@ -1041,7 +1031,7 @@ function crossword()
             }
           });
 
-          if (newWord.length > 1 && x == yGridAmount - 1)
+          if (newWord.length > 1 && x === yGridAmount - 1)
           {
             xLett.push(newWord)
           }
@@ -1088,7 +1078,7 @@ function crossword()
             }
           });
 
-          if (newWord.length > 1 && y == xGridAmount - 1)
+          if (newWord.length > 1 && y === xGridAmount - 1)
           {
             yLett.push(newWord)
           }
@@ -1107,7 +1097,7 @@ function crossword()
         };
       }
 
-      if (newWord.length == goal[worLen].ans.length)
+      if (newWord.length === goal[worLen].ans.length)
       {
         if (newWord.toUpperCase() === goal[worLen].ans.toUpperCase())
         {
@@ -1378,7 +1368,7 @@ function numberer()
       if (letters.charAt(6 + (9 * (y + (t * yGridAmount)))) !== '~')
       {       
         //draws the grid number in to their grid
-        if (labeler == 2)
+        if (labeler === 2)
         {
           next += 1;
           pros.text(next, (t - 1) * boxSize + 6 + border, y * boxSize + 9 + border)              
@@ -1403,7 +1393,7 @@ function numberer()
       if (letters.charAt(6 + (9 * (v + (x * yGridAmount)))) !== '~')
       {       
         //draws the grid number in to their grid
-        if (labeler == 2)
+        if (labeler === 2)
         {
           next += 1;              
           pros.text(next, x * boxSize + 6 + border, (v - 1) * boxSize + 9 + border)              

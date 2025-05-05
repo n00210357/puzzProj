@@ -802,7 +802,7 @@ export default function AccoPage() {
           </div>
           <div>
             <input type="file" className="max-logo my-3" placeholder="Image path" id='file comm'/>
-            <img src={comImg} alt="No image"/>
+            <img src={comImg}/>
           </div>
 
           <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">
@@ -839,7 +839,7 @@ export default function AccoPage() {
 
           <div>
             <input type="file" className="max-logo my-3" placeholder="Image path" id='edit com file'/>
-            <img src={edtImg} alt="No image"/>
+            <img src={edtImg}/>
           </div>
 
           <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">

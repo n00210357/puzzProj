@@ -2,7 +2,7 @@ import SessionProvider from '../contexts/userContextProvider.tsx'
 import Top from './comp/headerComp.js'
 import Bottom from './comp/footerComp.js'
 import img from '../hooks/userPlaceholder.png';
-import pla from '../hooks/puzzlePlaceholder.png'
+
 //the account page
 export default function Assetspage()
 {

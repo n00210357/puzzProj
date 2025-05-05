@@ -76,13 +76,12 @@ export default function PuzEditPage()
   const { session } = useContext(UserContext);
   const [puzzle, setPuzzle] = useState(); 
   const [puzzType, setPuzzType] = useState(0);
-  const {rememberedPuz, puzzCode} = useContext(UserContext);
   const [errors, setError] = useState("");
   const {putRequest, loading, error } = useAPI();
   const [key, setKey] = useState([{ans: 'None', clue:''}]);
   var _id = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
 
-  if (key[0].ans === 'None' && goal.length > 0 || (key[0].ans !== 'None' && goal !== key))
+  if ((key[0].ans === 'None' && goal.length > 0) || (key[0].ans !== 'None' && goal !== key))
   {
     let goalet = [];
     goal.forEach(go => {
@@ -150,12 +149,6 @@ export default function PuzEditPage()
     {
       window.setInterval(rememberWork, 10000);
       crossword()
-    }
-    else if (puzzCode !== null)
-    {
-      start = null
-      update = null
-      //recoverWork()
     }
     else
     {

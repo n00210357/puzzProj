@@ -315,7 +315,7 @@ if (goal !== oldGoal && goal.length >= 1)
     setKey(goal);
     oldGoal = goal;
   }
-  else if (key[0].ans != 'None' && key !== goal)
+  else if (key[0].ans !== 'None' && key !== goal)
   {
     setKey([{ans: 'None', clue:'None'}])
   }
