@@ -766,7 +766,6 @@ function crossword()
   update = (p5) => {
     if (pause === false)
     {
-      console.log(p5.keyCode)
       if (p5.mouseButton === "left")
       {
         let clic = mouseClicked(p5, clicked, boxed)
