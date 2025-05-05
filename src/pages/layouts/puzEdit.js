@@ -739,7 +739,7 @@ function crossword()
       p5.text(letters, 1, p5.height - (border - 24), xSketchSize)
 
       //allows the user to add to the grid
-      if (dontAdd === false && clicked === true && selectedGoal === -1 && (p5.keyIsPressed && ((p5.keyCode >= 65 && p5.keyCode <= 90) || (p5.keyCode >= 97 && p5.keyCode <= 122))))
+      if (dontAdd === false && clicked === true && selectedGoal === -1 && (p5.keyIsPressed && ((p5.keyCode >= 65 && p5.keyCode <= 90) || (p5.keyCode >= 97 && p5.keyCode <= 122) || p5.keyCode === 222 || p5.keyCode === 8)))
       {
         addToGrid(null, p5)
         p5.keyCode = null;
@@ -752,12 +752,19 @@ function crossword()
 //allows the user to add a Letter to the grid
 async function addToGrid(dragged, p5)
 {  
-
   //checks if user is draggin a word form goal or just adding a single letter
   if (dragged === undefined || dragged === null)
-  {
-    letters = `${letters}, ${String(recX - (border / boxSize),)}, ${String(recY - (border / boxSize),)}, ${String.fromCharCode(p5.keyCode)}`
-    lettSorter(String.fromCharCode(p5.keyCode))
+  {    
+    if (p5.keyCode === 8 || p5.keyCode === 222)
+    {
+      letters = `${letters}, ${String(recX - (border / boxSize),)}, ${String(recY - (border / boxSize),)}, ~`
+      lettSorter(`${String(recX - (border / boxSize),)}, ${String(recY - (border / boxSize),)}, ~`)
+    }
+    else
+    {
+      letters = `${letters}, ${String(recX - (border / boxSize),)}, ${String(recY - (border / boxSize),)}, ${String.fromCharCode(p5.keyCode)}`
+      lettSorter(String.fromCharCode(p5.keyCode))  
+    }
   }
   else
   {

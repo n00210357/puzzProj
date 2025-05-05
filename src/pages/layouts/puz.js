@@ -624,7 +624,7 @@ export default function PuzPage()
             <input type="file" className="max-logo my-3" placeholder="Image path" id='file comm'/>
           </div>
       
-          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+          <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">
           <div className="butHov flex-fill">
             <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
               <div className='fw-bolder justify-content-center py-3'>
@@ -660,7 +660,7 @@ export default function PuzPage()
             <input type="file" className="max-logo my-3" placeholder="Image path" id='edit com file'/>
           </div>
       
-          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+          <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">
           <div className="butHov flex-fill">
             <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
               <div className='fw-bolder justify-content-center py-3'>
@@ -694,7 +694,7 @@ export default function PuzPage()
             <input type="file" className="max-logo my-3" placeholder="Image path" id='file rep'/>
           </div>
       
-          <div className="align-items-center text-center flex-fill d-flex flex-row butHov p-0 ms-1 my-3">
+          <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">
           <div className="butHov flex-fill">
             <button className="align-items-center w-100 text-center rounded-1 border border-4 border-dark me-2" data-toggle="tooltip" title="Cancel new message" onClick={noPopup}>
               <div className='fw-bolder justify-content-center py-3'>
