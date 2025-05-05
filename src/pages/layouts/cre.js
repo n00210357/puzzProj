@@ -857,16 +857,15 @@ async function addToGrid(dragged, p5)
 {  
   //checks if user is draggin a word form goal or just adding a single letter
   if (dragged === undefined || dragged === null)
-  {
-    letters = `${letters}, ${String(recX - (border / boxSize),)}, ${String(recY - (border / boxSize),)}, ${String.fromCharCode(p5.keyCode)}`
-    
-    if (p5.keyCode !== 8 || p5.keyCode !== 222)
+  {    
+    if (p5.keyCode === 8 || p5.keyCode === 222)
     {
-      lettSorter(String.fromCharCode(p5.keyCode))      
+      letters = `${letters}, ${String(recX - (border / boxSize),)}, ${String(recY - (border / boxSize),)}, ~`
     }
     else
     {
-      lettSorter('~')     
+      letters = `${letters}, ${String(recX - (border / boxSize),)}, ${String(recY - (border / boxSize),)}, ${String.fromCharCode(p5.keyCode)}`
+      lettSorter(String.fromCharCode(p5.keyCode))  
     }
   }
   else
