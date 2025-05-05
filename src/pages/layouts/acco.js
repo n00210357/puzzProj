@@ -14,28 +14,6 @@ let databaseProblem = 0;
 let comCheck = false;
 let messa = [];
 let comment;
-let comImg;
-let edtImg;
-
-//gets comment image
-if (document.getElementById("file comm") &&  document.getElementById("file comm").files[0] !== null)
-{
-  comImg = document.getElementById("file comm").files[0];
-}
-else
-{
-  comImg = undefined
-}
-
-//gets comment image for editing
-if (document.getElementById("edit com file") && document.getElementById("edit com file").files[0] !== null)
-{
-  edtImg = document.getElementById("edit com file").files[0];
-}
-else
-{
-  edtImg = undefined
-}
 
 //account pages function
 export default function AccoPage() {
@@ -802,7 +780,6 @@ export default function AccoPage() {
           </div>
           <div>
             <input type="file" className="max-logo my-3" placeholder="Image path" id='file comm'/>
-            <img src={comImg} alt='comment Image'/>
           </div>
 
           <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">
@@ -839,7 +816,6 @@ export default function AccoPage() {
 
           <div>
             <input type="file" className="max-logo my-3" placeholder="Image path" id='edit com file'/>
-            <img src={edtImg} alt='edit Image'/>
           </div>
 
           <div className="align-items-center text-center flex-fill d-flex flex-row p-0 ms-1 my-3">

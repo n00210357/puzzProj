@@ -1012,30 +1012,36 @@ function crossword()
           newWord = "";
 
           lett.forEach(l => {
+            let newerWord = "";
+            let preerWord = 0;
+
             if (Number(l.charAt(3)) === x)
             {
-              if (newWord === "")
+              if (newerWord === "")
               {
-                newWord = l.charAt(6);
-                preWord = Number(l.charAt(0));
+                newerWord = l.charAt(6);
+                preerWord = Number(l.charAt(0));
               }
                 
-              if ((Number(l.charAt(0)) - 1 === preWord))
+              if ((Number(l.charAt(0)) - 1 === preerWord))
               {                  
-                newWord += l.charAt(6);
-                preWord = Number(l.charAt(0));
+                newerWord += l.charAt(6);
+                preerWord = Number(l.charAt(0));
               }
-              else if (Number(l.charAt(0)) - 1 !== preWord)
+              else if (Number(l.charAt(0)) - 1 !== preerWord)
               {                  
-                if (newWord.length > 1)
+                if (newerWord.length > 1)
                 {
-                  xLett.push(newWord)
+                  xLett.push(newerWord)
                 }
 
-                newWord = l.charAt(6);
-                preWord = Number(l.charAt(0));
+                newerWord = l.charAt(6);
+                preerWord = Number(l.charAt(0));
               }
             }
+
+            newWord = newerWord
+            preWord = preerWord
           });
 
           if (newWord.length > 1 && x === yGridAmount - 1)
@@ -1056,33 +1062,38 @@ function crossword()
   
           preWord = 0;
           worLen = 0;
-          newWord = "";
   
           lett.forEach(l => {
+            let newerWord = "";
+            let preerWord = 0;
+
             if (Number(l.charAt(0)) === y)
             {
-              if (newWord === "")
+              if (newerWord === "")
               {
-                newWord = l.charAt(6);
-                preWord = Number(l.charAt(3));
+                newerWord = l.charAt(6);
+                preerWord = Number(l.charAt(3));
               }
                   
-              if ((Number(l.charAt(3)) - 1 === preWord))
+              if ((Number(l.charAt(3)) - 1 === preerWord))
               {                  
-                newWord += l.charAt(6);
-                preWord = Number(l.charAt(3));
+                newerWord += l.charAt(6);
+                preerWord = Number(l.charAt(3));
               }
-              else if (Number(l.charAt(3)) - 1 !== preWord)
+              else if (Number(l.charAt(3)) - 1 !== preerWord)
               {                  
-                if (newWord.length > 1)
+                if (newerWord.length > 1)
                 {
-                  yLett.push(newWord)
+                  yLett.push(newerWord)
                 }
   
-                newWord = l.charAt(6);
-                preWord = Number(l.charAt(3));
+                newerWord = l.charAt(6);
+                preerWord = Number(l.charAt(3));
               }
             }
+
+            newWord = newerWord
+            preWord = preerWord
           });
 
           if (newWord.length > 1 && y === xGridAmount - 1)
