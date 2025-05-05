@@ -49,7 +49,7 @@ export default function CreFinPage() {
             setTimeout(function()
             {
                 window.location.href = '/search';
-            }, 5000); 
+            }, 10000); 
         });
     }
 
