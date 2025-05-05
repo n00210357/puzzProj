@@ -545,7 +545,9 @@ export default function PuzPage()
       return(<h1 className="align-items-center text-center">Congratulation you solved this puzzle</h1>);
     }
     else
-    {}
+    {
+
+    }
   }
 
   //displays the puzzle
@@ -1095,11 +1097,14 @@ function crossword()
 
         for(let goCh = 0; goCh < goCheck.length; goCh++)
         {
-          if (String(goal[goCh].ans).toUpperCase() === String(xLett[goCh]).toUpperCase())
+          for(let xll = 0; xll < xLett.length; xll++)
           {
-            goCheck[goCh] = true;
-          }
-        };
+            if (String(goal[goCh].ans).toUpperCase() === String(xLett[xll]).toUpperCase())
+            {
+              goCheck[goCh] = true;
+            }
+          };
+        }
       }
 
       if (newWord.length === goal[worLen].ans.length)
