@@ -861,6 +861,7 @@ async function addToGrid(dragged, p5)
     if (p5.keyCode === 8 || p5.keyCode === 222)
     {
       letters = `${letters}, ${String(recX - (border / boxSize),)}, ${String(recY - (border / boxSize),)}, ~`
+      lettSorter(`${String(recX - (border / boxSize),)}, ${String(recY - (border / boxSize),)}, ~`)
     }
     else
     {
